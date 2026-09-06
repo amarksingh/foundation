@@ -1,0 +1,40 @@
+module.exports = {
+    testEnvironment: "node",
+    testMatch: ["**/test/**/*.test.js"],
+    transform: {},
+    moduleNameMapper: {
+        "^@ostro/support/(.*)$": "<rootDir>/../support/$1",
+        "^@ostro/support$": "<rootDir>/../support",
+        "^@ostro/contracts/(.*)$": "<rootDir>/../contracts/$1",
+        "^@ostro/contracts$": "<rootDir>/../contracts",
+        "^@ostro/container/(.*)$": "<rootDir>/../container/$1",
+        "^@ostro/container$": "<rootDir>/../container",
+        "^@ostro/filesystem/(.*)$": "<rootDir>/../filesystem/$1",
+        "^@ostro/filesystem$": "<rootDir>/../filesystem/filesystemManager.js",
+        "^@ostro/database/(.*)$": "<rootDir>/../database/$1",
+        "^@ostro/database$": "<rootDir>/../database",
+        "^@ostro/router/(.*)$": "<rootDir>/../router/$1",
+        "^@ostro/router$": "<rootDir>/../router",
+        "^@ostro/foundation/(.*)$": "<rootDir>/$1",
+        "^@ostro/foundation$": "<rootDir>/application.js",
+        "^@ostro/console/(.*)$": "<rootDir>/../console/$1",
+        "^@ostro/console$": "<rootDir>/../console",
+        "^@ostro/cache/(.*)$": "<rootDir>/../cache/$1",
+        "^@ostro/cache$": "<rootDir>/../cache",
+        "^@ostro/session/(.*)$": "<rootDir>/../session/$1",
+        "^@ostro/session$": "<rootDir>/../session",
+        "^@ostro/event/eventServiceProvider$": "<rootDir>/test/mocks/eventServiceProvider.js",
+        "^@ostro/server/request$": "<rootDir>/test/mocks/serverRequest.js",
+        "^@ostro/server/response$": "<rootDir>/test/mocks/serverResponse.js"
+    },
+    collectCoverage: true,
+    coverageDirectory: "coverage",
+    coverageReporters: ["text", "lcov", "clover"],
+    collectCoverageFrom: [
+        "<rootDir>/**/*.js",
+        "!<rootDir>/test/**",
+        "!<rootDir>/coverage/**",
+        "!<rootDir>/node_modules/**",
+        "!<rootDir>/jest.config.js"
+    ]
+};

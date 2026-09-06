@@ -33,4 +33,4 @@ class RouteServiceProvider extends ServiceProvider {
 
 }
 
-module.exports = ServiceProvider
+module.exports = RouteServiceProvider

@@ -3,8 +3,10 @@ const Filesystem = require('@ostro/filesystem/filesystem')
 const ProviderRepository = require('./providerRepository')
 const Env = require('@ostro/support/env')
 const path = require('path')
+const fs = require('fs')
 const Mix = require('./mix')
-const { isMainThread } = require('worker_threads');
+const LocaleUpdated = require('./events/localeUpdated')
+const worker_threads = require('worker_threads');
 class Application extends Container {
 
     get VERSION() {
@@ -20,6 +22,12 @@ class Application extends Container {
     _serviceProviders = [];
 
     _deferredServices = [];
+
+    _bootingCallbacks = [];
+
+    booting(callback) {
+        this._bootingCallbacks.push(callback);
+    }
 
     _loadedProviders = [];
 
@@ -102,10 +110,10 @@ class Application extends Container {
 
     setBasePath(basePath) {
         this._basePath = path.resolve(basePath);
-        if (isMainThread) {
-            process.chdir(this._basePath || process.cwd());
+        if (worker_threads.isMainThread) {
+            process.chdir(this._basePath);
         } else {
-            globalThis.APP_BASE_PATH = this._basePath || process.cwd()
+            globalThis.APP_BASE_PATH = this._basePath;
         }
 
         this.bindPathsInContainer();
@@ -133,6 +141,7 @@ class Application extends Container {
         let app = this.instance('config').get('app')
         process.env.TZ = app.timezone
         process.env.NODE_ENV = app.env
+        this._bootingCallbacks.forEach(callback => callback(this));
         this._serviceProviders.map(($p) => {
             this.bootProvider($p);
         });
@@ -213,11 +222,11 @@ class Application extends Container {
 
     registerDeferredProvider($provider, $service = null) {
 
-        this.register($provider);
+        let instance = this.register($provider);
 
         if (!this.isBooted()) {
-            this.booting(function () {
-                this.bootProvider($instance);
+            this.booting(() => {
+                this.bootProvider(instance);
             });
         }
     }
@@ -301,7 +310,7 @@ class Application extends Container {
     }
 
     viewPath(dir = '') {
-        let basePath = this['config'].get('view.paths', [])[0];
+        let basePath = this['config'] ? this['config'].get('view.paths', [])[0] : null;
 
         return path.normalize(path.join((basePath ? basePath : this._basePath + '/resources/view'), dir));
     }
@@ -339,7 +348,7 @@ class Application extends Container {
     }
 
     isDownForMaintenance() {
-        return file_exists(this.storagePath() + '/framework/down');
+        return fs.existsSync(this.storagePath() + '/framework/down');
     }
 
     getLocale() {
@@ -381,7 +390,7 @@ class Application extends Container {
     }
 
     configurationIsCached() {
-        return is_file(this.getCachedConfigPath());
+        return fs.existsSync(this.getCachedConfigPath());
     }
 
     getCachedConfigPath() {

@@ -10,7 +10,7 @@ class HttpRequest extends Request {
     error(key, defaultValue = null) {
         this[kErrors] = this[kErrors] || new ErrorBag((this.session ? this.session.get('__errors') : {}))
         if (key) {
-            return this[kErrors].first('key')
+            return this[kErrors].first(key)
         }
         return this[kErrors]
     }

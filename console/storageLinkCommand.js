@@ -47,8 +47,8 @@ class StorageLinkCommand extends Command {
         };
     }
 
-    isRemovableSymlink($link, $force) {
-        return isSymbolicLink($link) && $force;
+    async isRemovableSymlink($link, $force) {
+        return (await isSymbolicLink($link)) && $force;
     }
 }
 

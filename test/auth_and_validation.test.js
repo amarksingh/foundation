@@ -1,0 +1,133 @@
+require('@ostro/support/helpers');
+const ValidatesRequests = require('../validation/validatesRequests');
+const Authorizable = require('../auth/access/authorizable');
+const GuardResolver = require('../auth/guardResolver');
+const User = require('../auth/user');
+const ConsoleSupportServiceProvider = require('../support/providers/consoleSupportServiceProvider');
+const RouteServiceProvider = require('../providers/routeServiceProvider');
+const FoundationServiceProvider = require('../providers/foundationServiceProvider');
+const Request = require('@ostro/http/request');
+const FileRequest = require('@ostro/http/file');
+const Facade = require('@ostro/support/facades/facade');
+
+describe('Auth, Validation, and Providers', () => {
+    test("Authorizable, GuardResolver, and ConsoleSupportServiceProvider", () => {
+        const authorizable = new Authorizable();
+        expect(authorizable).toBeInstanceOf(Authorizable);
+
+        const guard = new GuardResolver();
+        expect(guard).toBeInstanceOf(GuardResolver);
+
+        const appMock = { register: jest.fn() };
+        const consoleProvider = new ConsoleSupportServiceProvider(appMock);
+        expect(consoleProvider.$providers).toHaveLength(2);
+    });
+
+    test("ValidatesRequests delegates to app validation factory", async () => {
+        const mockValidator = {
+            validate: jest.fn((data, rules, messages, customAttributes) => {
+                if (rules.fail) {
+                    return Promise.reject(new Error("Validation error"));
+                }
+                return Promise.resolve(data);
+            })
+        };
+        global.app = jest.fn((k) => {
+            if (k === "validation") return mockValidator;
+            return null;
+        });
+
+        const validator = new ValidatesRequests();
+        const req = {
+            all: () => ({ email: "test@example.com" })
+        };
+
+        const validated = await validator.validate(req, { email: "required" });
+        expect(validated).toEqual({ email: "test@example.com" });
+
+        // validateWithBag failure attaches errorBag and rejects
+        await expect(validator.validateWithBag("customBag", req, { fail: true })).rejects.toThrow();
+    });
+
+    test("User model creates API token", async () => {
+        const mockEncrypter = {
+            encrypt: jest.fn((val) => "encrypted_" + val)
+        };
+        const appFacadeMock = {
+            encrypter: mockEncrypter
+        };
+        Facade.setFacadeApplication(appFacadeMock);
+
+        const user = new User();
+        user.getKeyName = () => "id";
+        user.getAttribute = (k) => 42;
+        user.setApiToken = jest.fn();
+        user.save = jest.fn().mockResolvedValue(true);
+
+        const tokenResult = await user.createToken();
+        expect(tokenResult).toHaveProperty("accessToken");
+        expect(user.setApiToken).toHaveBeenCalledWith(tokenResult.accessToken);
+        expect(user.save).toHaveBeenCalled();
+    });
+
+    test('RouteServiceProvider lifecycle stubs', () => {
+        const appMock = {
+            singleton: jest.fn()
+        };
+        const provider = new RouteServiceProvider(appMock);
+        expect(() => {
+            provider.register();
+            provider.boot();
+            provider.routes();
+            provider.setRootControllerNamespace();
+            provider.routesAreCached();
+            provider.loadCachedRoutes();
+            provider.loadRoutes();
+        }).not.toThrow();
+    });
+
+    test('FoundationServiceProvider registers validation macro and filesystem hooks', () => {
+        const appMock = {
+            validation: {
+                validate: jest.fn((data, rules, msg) => ({ valid: true }))
+            },
+            whenHas: jest.fn((key, cb) => {
+                if (key === 'filesystem') {
+                    cb({
+                        registerToRequest: jest.fn()
+                    });
+                }
+            })
+        };
+
+        const provider = new FoundationServiceProvider(appMock);
+        provider.register();
+        provider.boot();
+
+        // Check Request macro 'validate' was defined
+        const req = new Request({});
+        req.all = () => ({ username: 'user1' });
+        const result = req.validate({ username: 'required' }, {});
+        expect(result).toEqual({ valid: true });
+        expect(appMock.whenHas).toHaveBeenCalledWith('filesystem', expect.any(Function));
+    });
+});
+
+describe('FoundationServiceProvider 100% branch coverage', () => {
+    test('macro validate default arguments', () => {
+        const appMock = {
+            validation: {
+                validate: jest.fn((data, rules, msg) => ({ valid: true, rules, msg }))
+            },
+            whenHas: jest.fn()
+        };
+        const provider = new FoundationServiceProvider(appMock);
+        provider.register();
+
+        const req = new Request({});
+        req.all = () => ({});
+        const res = req.validate();
+        expect(res.rules).toEqual({});
+        expect(res.msg).toEqual({});
+    });
+});

@@ -20,7 +20,7 @@ class LoadConfiguration {
         let files = this.getConfigurationFiles(configPath);
 
         if (files.indexOf('app') < 0) {
-            throw new Exception('Unable to load the "app" configuration file.');
+            throw new Error('Unable to load the "app" configuration file.');
         }
 
         for (let key of files) {

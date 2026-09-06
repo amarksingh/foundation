@@ -1,3 +1,4 @@
+require('@ostro/support/helpers')
 const {
     Macroable
 } = require('@ostro/support/macro')
@@ -38,8 +39,8 @@ class ExceptionManager extends Macroable {
     resolve(name) {
         let driverMethod = 'create' + (name.ucfirst()) + 'Handler';
         if ((this[kCustomHandlers][name])) {
-            return this.callCustomHandler();
-        } else if (this[driverMethod]) {
+            return this.callCustomHandler(name);
+        } else if (typeof ExceptionManager.prototype[driverMethod] == 'function') {
             return this[driverMethod]();
         } else {
             throw new Error(`Handler [{${name}}] do not supported.`);
@@ -48,7 +49,7 @@ class ExceptionManager extends Macroable {
 
     callCustomHandler(name) {
         var driver = this[kCustomHandlers][name]();
-        return this.adapt($driver);
+        return this.adapt(driver);
     }
 
     createWhoopsHandler($config) {
@@ -78,12 +79,12 @@ class ExceptionManager extends Macroable {
         this[kHandlerAdapter] = handler
     }
 
-    extends($driver, $callback) {
-        if (!config) {
-            throw new InvalidArgumentException(`Config not found for  [{${$driver}}] driver.`);
-        }
-        this[kCustomCreators][$driver] = $callback.call(this, this);
+    extend($driver, $callback) {
+        this[kCustomHandlers][$driver] = $callback.bind(this, this);
         return this;
+    }
+    extends($driver, $callback) {
+        return this.extend($driver, $callback);
     }
     __call(target, method, args) {
         return target.handler()[method](...args)

@@ -1,4 +1,5 @@
 const GeneratorCommand = require('@ostro/console/generatorCommand')
+const StringHelper = require('@ostro/support/string')
 
 class FactoryMakeCommand extends GeneratorCommand {
 
@@ -17,10 +18,10 @@ class FactoryMakeCommand extends GeneratorCommand {
     $type = 'Console command';
 
     replaceClass($stub, $name) {
-        $name = $name.replaceAll(':',' ')
+        $name = StringHelper.replaceAll($name, ':', ' ')
         $stub = super.replaceClass($stub, $name);
         let $command = this.option('command') || this.argument('name')
-        return $stub.replaceAll(['dummy:command', '{{ command }}'], $command);
+        return StringHelper.replaceAll($stub, ['dummy:command', '{{ command }}'], $command);
     }
 
     getStub() {

@@ -10,7 +10,7 @@ class ValidatesRequests {
         $messages = [], $customAttributes = []) {
         return this.validate($request, $rules, $messages, $customAttributes).catch($e => {
             $e.errorBag = $errorBag;
-            Promise.reject($e)
+            return Promise.reject($e)
         })
 
     }

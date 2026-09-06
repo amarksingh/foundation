@@ -23,7 +23,7 @@ class EventGenerateCommand extends Command {
 
     makeListeners($event, $listeners) {
         for (let $listener of $listeners) {
-            $listener = $listener.replace('/@.+$/', '');
+            $listener = $listener.replace(/@.+$/, '');
 
             this.callSilent('make:listener', Object.filter({ 'name': $listener, '--event': $event }));
         }
