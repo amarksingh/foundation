@@ -1,5 +1,8 @@
 const tokens = require('csrf')()
 const TokenMismatchException = require('@ostro/http/exception/tokenMismatchException')
+/**
+ * Class VerifyCsrfToken.
+ */
 class VerifyCsrfToken {
     
     $cookieName = 'XSRF-TOKEN';
@@ -10,6 +13,13 @@ class VerifyCsrfToken {
         //
     ];
 
+    /**
+     * handle method.
+     * @param {*} { request
+     * @param {*} response }
+     * @param {*} next
+     * @returns {any}
+     */
     handle({ request, response }, next) {
         if (
             this.isReading(request) ||
@@ -25,11 +35,22 @@ class VerifyCsrfToken {
         }
     }
 
+    /**
+     * addCookieToResponse method.
+     * @param {*} request
+     * @param {*} response
+     * @returns {any}
+     */
     addCookieToResponse(request, response) {
         request.cookie.set(this.$cookieName, request.session.token(), { httpOnly: false })
 
     }
 
+    /**
+     * inExceptArray method.
+     * @param {*} $request
+     * @returns {any}
+     */
     inExceptArray($request) {
         for (let $except of this.$except) {
             if ($request.fullUrlIs($except)) {
@@ -40,6 +61,11 @@ class VerifyCsrfToken {
         return false;
     }
 
+    /**
+     * tokensMatch method.
+     * @param {*} $request
+     * @returns {any}
+     */
     tokensMatch($request) {
         let $token = this.getTokenFromRequest($request);
         return (typeof $request.session.token() == 'string') &&
@@ -47,6 +73,11 @@ class VerifyCsrfToken {
             tokens.verify(this.$app.config['app']['key'], $token);
     }
 
+    /**
+     * getTokenFromRequest method.
+     * @param {*} $request
+     * @returns {any}
+     */
     getTokenFromRequest($request) {
         let $token = $request.input('_token') ? $request.input('_token') : $request.header('X-CSRF-TOKEN');
         let $header = $request.header('X-XSRF-TOKEN')
@@ -57,10 +88,19 @@ class VerifyCsrfToken {
         return $token;
     }
 
+    /**
+     * shouldAddXsrfTokenCookie method.
+     * @returns {any}
+     */
     shouldAddXsrfTokenCookie() {
         return this.$addHttpCookie;
     }
 
+    /**
+     * isReading method.
+     * @param {*} $request
+     * @returns {any}
+     */
     isReading($request) {
         return ['HEAD', 'GET', 'OPTIONS'].includes($request.method);
     }

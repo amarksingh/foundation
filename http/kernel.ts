@@ -1,6 +1,9 @@
 const KernelContract = require('@ostro/contracts/http/kernel')
 const HttpContext = require('./httpContext')
 const kCachedMiddleware = Symbol('cachedMiddleware')
+/**
+ * Class Kernel.
+ */
 class Kernel extends KernelContract {
 
     $bootstrappers = [
@@ -23,6 +26,9 @@ class Kernel extends KernelContract {
         require('@ostro/foundation/view/middleware/BindViewOnResponse'),
     ];
 
+    /**
+     * Create a new instance.
+     */
     constructor() {
         super()
         this.bootstrap()
@@ -30,12 +36,20 @@ class Kernel extends KernelContract {
 
     }
 
+    /**
+     * handle method.
+     * @returns {any}
+     */
     handle() {
         this.syncMiddlewareToRouter();
         this.PrepareRouter()
         return this.$router.handle()
     }
 
+    /**
+     * syncMiddlewareToRouter method.
+     * @returns {any}
+     */
     syncMiddlewareToRouter() {
         this.$router.defaultMiddlewares(this.$middlewarePriority.concat(this.$defaultMiddlewares))
         let allNamedMiddlewares = {
@@ -48,6 +62,10 @@ class Kernel extends KernelContract {
         }
 
     }
+    /**
+     * resolveNamedMiddleware method.
+     * @returns {any}
+     */
     resolveNamedMiddleware() {
         let middlewares = {}
         for (let key in this.$namedMiddlewares) {
@@ -55,6 +73,10 @@ class Kernel extends KernelContract {
         }
         return middlewares
     }
+    /**
+     * resolveMiddlewareGroups method.
+     * @returns {any}
+     */
     resolveMiddlewareGroups() {
         let middlewares = {}
         for (let key in this.$middlewareGroups) {
@@ -70,41 +92,79 @@ class Kernel extends KernelContract {
         }
         return middlewares
     }
+    /**
+     * resolveMiddleware method.
+     * @param {*} middleware
+     * @returns {any}
+     */
     resolveMiddleware(middleware) {
         return middleware
     }
 
+    /**
+     * PrepareRouter method.
+     * @returns {any}
+     */
     PrepareRouter() {
         HttpContext.prototype.$app = this.$app
         this.$router.httpContextHandler(HttpContext)
     }
 
+    /**
+     * bootstrap method.
+     * @returns {any}
+     */
     bootstrap() {
         if (!this.$app.hasBeenBootstrapped()) {
             this.$app.bootstrapWith(this.getBootstrappers());
         }
     }
 
+    /**
+     * getBootstrappers method.
+     * @returns {any}
+     */
     getBootstrappers() {
         return this.$bootstrappers;
     }
 
+    /**
+     * getMiddlewarePriority method.
+     * @returns {any}
+     */
     getMiddlewarePriority() {
         return this.$middlewarePriority;
     }
 
+    /**
+     * getMiddlewareGroups method.
+     * @returns {any}
+     */
     getMiddlewareGroups() {
         return this.$middlewareGroups;
     }
 
+    /**
+     * getRouteMiddleware method.
+     * @returns {any}
+     */
     getRouteMiddleware() {
         return this.$routeMiddleware;
     }
 
+    /**
+     * getApplication method.
+     * @returns {any}
+     */
     getApplication() {
         return this.$app;
     }
 
+    /**
+     * setApplication method.
+     * @param {*} $app
+     * @returns {any}
+     */
     setApplication($app) {
         this.$app = $app;
 

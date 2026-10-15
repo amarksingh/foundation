@@ -1,4 +1,7 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class ServerlessBootstrapCommand.
+ */
 class ServerlessBootstrapCommand extends Command {
 
     $signature = 'serverless:bootstrap';
@@ -9,14 +12,27 @@ class ServerlessBootstrapCommand extends Command {
         this.createOption('--force', 'The port to serve the application on')
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $file
+     */
     constructor($file) {
         super()
         this.$file = $file
     }
+    /**
+     * getAppConfigFile method.
+     * @returns {any}
+     */
     getAppConfigFile() {
         return this.$app.basePath('config/app.js')
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         const serverlessFile = this.$app.basePath("serverless.js");
         const force = this.option('force');
@@ -37,6 +53,11 @@ class ServerlessBootstrapCommand extends Command {
         }
         this.info('Serverless application bootstrapped successfully.');
     }
+    /**
+     * configureRootApp method.
+     * @async
+     * @returns {any}
+     */
     async configureRootApp() {
         const rootApp = this.$app.basePath("app.js");
         let content = await this.$file.get(rootApp);
@@ -66,11 +87,21 @@ class ServerlessBootstrapCommand extends Command {
         await this.$file.put(rootApp, content);
 
     }
+    /**
+     * generateServerlessFile method.
+     * @async
+     * @returns {any}
+     */
     async generateServerlessFile() {
         const fullPath = this.$app.basePath("serverless.js");
         await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.stub'));
 
     }
+    /**
+     * generateServerlessConfigFile method.
+     * @async
+     * @returns {any}
+     */
     async generateServerlessConfigFile() {
         const fullPath = this.$app.configPath("serverless.js");
         await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.config.stub'));

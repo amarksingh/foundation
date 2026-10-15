@@ -2,15 +2,28 @@ const fs = require('fs')
 const MixExceptions = require('@ostro/support/exceptions/mixException')
 const kManifest = Symbol('manifest')
 
+/**
+ * Class Mix.
+ */
 class Mix {
 
     $manifests =  {};
 
+    /**
+     * Create a new instance.
+     * @param {*} app
+     */
     constructor(app) {
         this.$app = app
 
     }
     
+    /**
+     * path method.
+     * @param {*} $path
+     * @param {*} $manifestDirectory
+     * @returns {any}
+     */
     path($path, $manifestDirectory = '') {
 
         if (!String.startsWith($path, '/')) {

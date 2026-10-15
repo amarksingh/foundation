@@ -12,6 +12,9 @@ const fs = require('fs')
 const kHandle = Symbol('handle')
 const kLogger = Symbol('logger')
 
+/**
+ * Class Handler.
+ */
 class Handler {
     $dontReport = [
         validationException,
@@ -22,19 +25,44 @@ class Handler {
 
     $dontFlash = [];
 
+    /**
+     * Create a new instance.
+     * @param {*} handler
+     */
     constructor(handler) {
         this[kHandle] = handler
         this[kLogger] = app('logger')
     }
 
+    /**
+     * handle method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     handle(request, response, $e = {}) {
         this.render(request, response, $e)
     }
 
+    /**
+     * terminate method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     terminate(request, response, $e = {}) {
         this.report($e)
     }
 
+    /**
+     * render method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     render(request, response, $e = {}) {
         if ($e instanceof PageNotFoundException) {
             this.pageNotFoundException(request, response, $e)
@@ -80,25 +108,58 @@ class Handler {
 
     }
 
+    /**
+     * unauthenticated method.
+     * @param {*} $request
+     * @param {*} $response
+     * @param {*} $exception
+     * @returns {any}
+     */
     unauthenticated($request, $response, $exception) {
         return $request.expectsJson() ?
             $response.json({ 'message': $exception.message }, 401) :
             $response.redirect().to($exception.redirectTo() || route('login'));
     }
 
+    /**
+     * redirect method.
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     redirect(response, $e) {
         response.with(...$e.getFlash()).withErrors(...$e.getErrors()).withInput($e.wantedInput()).redirect($e.getUrl());
     }
 
+    /**
+     * jsonException method.
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     jsonException(response, $e) {
 
     }
 
+    /**
+     * send method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     send(request, response, $e = {}) {
         this.report($e)
         response.send($e)
     }
 
+    /**
+     * convertValidationExceptionToResponse method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     convertValidationExceptionToResponse(request, response, $e) {
         if ($e.response) {
             return $e.response;
@@ -109,6 +170,13 @@ class Handler {
             this.invalid(request, response, $e);
     }
 
+    /**
+     * invalidJson method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $exception
+     * @returns {any}
+     */
     invalidJson(request, response, $exception) {
         return response.json({
             'message': $exception.getMessage(),
@@ -116,6 +184,13 @@ class Handler {
         }, $exception.status);
     }
 
+    /**
+     * invalid method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $exception
+     * @returns {any}
+     */
     invalid(request, response, $exception) {
 
         if (request.session instanceof Session) {
@@ -125,6 +200,13 @@ class Handler {
         response.redirect($exception.redirectTo || 'back')
     }
 
+    /**
+     * tokenMismatchException method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     tokenMismatchException(request, response, $e) {
         if (request.wantJson() || request.ajax()) {
             response.send({
@@ -140,6 +222,13 @@ class Handler {
             })
         }
     }
+    /**
+     * pageNotFoundException method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $e
+     * @returns {any}
+     */
     pageNotFoundException(request, response, $e) {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
@@ -147,6 +236,11 @@ class Handler {
             response.send(data, $e.statusCode)
         })
     }
+    /**
+     * report method.
+     * @param {*} $e
+     * @returns {any}
+     */
     report($e) {
         if (!this.$dontReport.find((clazz) => $e instanceof clazz)) {
             if (typeof this[kLogger].getConfig == 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
@@ -159,6 +253,11 @@ class Handler {
             }
         }
     }
+    /**
+     * renderForConsole method.
+     * @param {*} $e
+     * @returns {any}
+     */
     renderForConsole($e) {
         this[kLogger].channel('console').error($e)
     }

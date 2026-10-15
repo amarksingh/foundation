@@ -1,11 +1,23 @@
 const Repository = require('@ostro/config/repository')
 const fs = require('fs')
 const path = require('path')
+/**
+ * Class LoadConfiguration.
+ */
 class LoadConfiguration {
+    /**
+     * Create a new instance.
+     * @param {*} $app
+     */
     constructor($app) {
         this.$app = $app
     }
 
+    /**
+     * bootstrap method.
+     * @param {*} $app
+     * @returns {any}
+     */
     bootstrap($app) {
         let $items = [];
         let config = new Repository($items)
@@ -15,6 +27,12 @@ class LoadConfiguration {
 
     }
 
+    /**
+     * loadConfigurationFiles method.
+     * @param {*} $app
+     * @param {*} $repository
+     * @returns {any}
+     */
     loadConfigurationFiles($app, $repository) {
         let configPath = $app.configPath();
         let files = this.getConfigurationFiles(configPath);
@@ -28,6 +46,11 @@ class LoadConfiguration {
         }
     }
 
+    /**
+     * getConfigurationFiles method.
+     * @param {*} configPath
+     * @returns {any}
+     */
     getConfigurationFiles(configPath) {
         let files = [];
 
@@ -46,6 +69,11 @@ class LoadConfiguration {
         return files;
     }
 
+    /**
+     * setTimezone method.
+     * @param {*} tz
+     * @returns {any}
+     */
     setTimezone(tz) {
         process.env.TZ = tz
     }

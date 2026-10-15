@@ -2,7 +2,16 @@ const ViewException = require('./viewException')
 
 const ViewHelpers = require('./helpers')
 const { ProxyHandler } = require('@ostro/support/macro')
+/**
+ * Class View.
+ */
 class View {
+    /**
+     * Create a new instance.
+     * @param {*} app
+     * @param {*} http
+     * @param {*} next
+     */
     constructor(app, http, next) {
         let context = {};
         Object.assign(context, (app['locals'] || {}));

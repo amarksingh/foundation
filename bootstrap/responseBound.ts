@@ -2,8 +2,16 @@ const HttpResponse = require('@ostro/http/response')
 const CoreHttpResponse = require('@ostro/foundation/http/response')
 const ServerResponse = require('@ostro/server/response')
 
+/**
+ * Class ResponseBound.
+ */
 class ResponseBound {
 
+    /**
+     * bootstrap method.
+     * @param {*} $app
+     * @returns {any}
+     */
     bootstrap($app) {
 
         ServerResponse.prototype['app'] = $app

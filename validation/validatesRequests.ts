@@ -1,5 +1,16 @@
+/**
+ * Class ValidatesRequests.
+ */
 class ValidatesRequests {
 
+    /**
+     * validate method.
+     * @param {*} $request
+     * @param {*} $rules
+     * @param {*} $messages
+     * @param {*} $customAttributes
+     * @returns {any}
+     */
     validate($request, $rules, $messages = [], $customAttributes = []) {
         return this.getValidationFactory().validate(
             $request.all(), $rules, $messages, $customAttributes
@@ -15,6 +26,10 @@ class ValidatesRequests {
 
     }
 
+    /**
+     * getValidationFactory method.
+     * @returns {any}
+     */
     getValidationFactory() {
         return app('validation');
     }

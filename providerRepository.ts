@@ -1,10 +1,23 @@
+/**
+ * Class ProviderRepository.
+ */
 class ProviderRepository {
 
+    /**
+     * Create a new instance.
+     * @param {*} $app
+     * @param {*} $files
+     */
     constructor($app, $files) {
         this.$app = $app;
         this.$files = $files;
     }
 
+    /**
+     * load method.
+     * @param {*} $providers
+     * @returns {any}
+     */
     load($providers) {
 
         let $manifest = this.compileManifest($providers);
@@ -16,10 +29,19 @@ class ProviderRepository {
         this.$app.addDeferredServices($manifest['deferred']);
     }
 
+    /**
+     * loadManifest method.
+     * @returns {any}
+     */
     loadManifest() {
 
     }
 
+    /**
+     * compileManifest method.
+     * @param {*} $providers
+     * @returns {any}
+     */
     compileManifest($providers) {
 
         let $manifest = this.freshManifest($providers);
@@ -38,6 +60,11 @@ class ProviderRepository {
         return this.writeManifest($manifest);
     }
 
+    /**
+     * freshManifest method.
+     * @param {*} $providers
+     * @returns {any}
+     */
     freshManifest($providers) {
         return {
             'providers': $providers,
@@ -46,11 +73,21 @@ class ProviderRepository {
         };
     }
 
+    /**
+     * writeManifest method.
+     * @param {*} $manifest
+     * @returns {any}
+     */
     writeManifest($manifest) {
 
         return $manifest
     }
 
+    /**
+     * createProvider method.
+     * @param {*} $provider
+     * @returns {any}
+     */
     createProvider($provider) {
         return new $provider(this.$app);
     }

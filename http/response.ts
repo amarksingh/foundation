@@ -2,7 +2,16 @@ const Response = require('@ostro/http/response')
 const Model = require('@ostro/contracts/database/eloquent/model')
 const Collection = require('@ostro/contracts/collection/collect')
 const GenericUser = require('@ostro/contracts/auth/genericUser')
+/**
+ * Class HttpResponse.
+ */
 class HttpResponse extends Response {
+    /**
+     * send method.
+     * @param {*} body
+     * @param {*} status
+     * @returns {any}
+     */
     send(body, status = 200) {
         if (body instanceof Model) {
             body = body.serialize()
@@ -14,6 +23,12 @@ class HttpResponse extends Response {
         super.send(body, status)
     }
 
+    /**
+     * with method.
+     * @param {*} key
+     * @param {*} value
+     * @returns {any}
+     */
     with(key, value) {
         let obj = typeof key == 'string' ? {
             [key]: value
@@ -23,6 +38,12 @@ class HttpResponse extends Response {
         return this;
     }
 
+    /**
+     * withInput method.
+     * @param {*} key
+     * @param {*} value
+     * @returns {any}
+     */
     withInput(key, value) {
         key = typeof key == 'string' ? { key: value } : key;
         if (key) {
@@ -32,6 +53,11 @@ class HttpResponse extends Response {
         return this;
     }
 
+    /**
+     * withErrors method.
+     * @param {*} errors
+     * @returns {any}
+     */
     withErrors(errors = {}) {
         this.request.session.flash('__errors', errors)
         return this

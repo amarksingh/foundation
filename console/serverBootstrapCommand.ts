@@ -1,4 +1,7 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class ServerlessBootstrapCommand.
+ */
 class ServerlessBootstrapCommand extends Command {
 
     $signature = 'server:bootstrap';
@@ -9,14 +12,27 @@ class ServerlessBootstrapCommand extends Command {
         this.createOption('--force', 'The port to serve the application on')
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} $file
+     */
     constructor($file) {
         super()
         this.$file = $file
     }
+    /**
+     * getAppConfigFile method.
+     * @returns {any}
+     */
     getAppConfigFile() {
         return this.$app.basePath('config/app.js')
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         const serverlessFile = this.$app.basePath('serverless.js');
         if (await this.$file.exists(serverlessFile)) {
@@ -34,6 +50,11 @@ class ServerlessBootstrapCommand extends Command {
         }
         this.info('Serverless application bootstrapped successfully.');
     }
+    /**
+     * configureRootApp method.
+     * @async
+     * @returns {any}
+     */
     async configureRootApp() {
         const rootApp = this.$app.basePath("app.js");
         let content = await this.$file.get(rootApp);
@@ -64,6 +85,11 @@ class ServerlessBootstrapCommand extends Command {
 
         await this.$file.put(rootApp, content);
     }
+    /**
+     * removeServerlessFile method.
+     * @async
+     * @returns {any}
+     */
     async removeServerlessFile() {
         const fullPath = this.$app.basePath("serverless.js");
         await this.$file.delete(fullPath);

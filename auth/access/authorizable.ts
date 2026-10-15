@@ -1,3 +1,6 @@
+/**
+ * Class Authorizable.
+ */
 class Authorizable {
 
 }

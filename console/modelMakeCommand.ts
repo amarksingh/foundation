@@ -1,5 +1,8 @@
 const GeneratorCommand = require('@ostro/console/generatorCommand')
 
+/**
+ * Class ModelMakeCommand.
+ */
 class ModelMakeCommand extends GeneratorCommand {
 
     $signature = 'make:model';
@@ -25,6 +28,11 @@ class ModelMakeCommand extends GeneratorCommand {
         return __dirname
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
 
         if (await super.handle() === false && !this.option('force')) {
@@ -56,6 +64,10 @@ class ModelMakeCommand extends GeneratorCommand {
         }
     }
 
+    /**
+     * createFactory method.
+     * @returns {any}
+     */
     createFactory() {
         let $factory = this.argument('name');
         return this.callCommand('make:factory', {
@@ -64,6 +76,10 @@ class ModelMakeCommand extends GeneratorCommand {
         });
     }
 
+    /**
+     * createMigration method.
+     * @returns {any}
+     */
     createMigration() {
         let $table = this.getFileName(this.argument('name')).plural().camelCase().snakeCase();
 
@@ -74,6 +90,10 @@ class ModelMakeCommand extends GeneratorCommand {
         });
     }
 
+    /**
+     * createSeeder method.
+     * @returns {any}
+     */
     createSeeder() {
         let $seeder = this.argument('name');
 
@@ -82,6 +102,10 @@ class ModelMakeCommand extends GeneratorCommand {
         });
     }
 
+    /**
+     * createController method.
+     * @returns {any}
+     */
     createController() {
         let $controller = this.argument('name');
 
@@ -93,14 +117,28 @@ class ModelMakeCommand extends GeneratorCommand {
         }));
     }
 
+    /**
+     * getStub method.
+     * @returns {any}
+     */
     getStub() {
         return this.resolveStubPath('/stubs/model.stub');
     }
 
+    /**
+     * getDefaultNamespace method.
+     * @param {*} $rootNamespace
+     * @returns {any}
+     */
     getDefaultNamespace($rootNamespace) {
         return $rootNamespace.includes('.js') ? $rootNamespace : path.resolve($rootNamespace, app_path('models'));
     }
 
+    /**
+     * resolveStubPath method.
+     * @param {*} $stub
+     * @returns {any}
+     */
     resolveStubPath($stub) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))

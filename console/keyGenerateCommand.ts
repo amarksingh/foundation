@@ -1,5 +1,8 @@
 const Command = require('@ostro/console/command')
 const Crypto = require('crypto')
+/**
+ * Class KeyGenerateCommand.
+ */
 class KeyGenerateCommand extends Command {
 
     $signature = 'key:generate';
@@ -11,11 +14,20 @@ class KeyGenerateCommand extends Command {
         this.createOption('--force [command] ', 'Force the operation to run when in production'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} file
+     */
     constructor(file) {
         super()
         this.$file = file
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         let $key = this.generateRandomKey();
 
@@ -32,12 +44,22 @@ class KeyGenerateCommand extends Command {
         this.info('Application key set successfully.');
     }
 
+    /**
+     * generateRandomKey method.
+     * @returns {any}
+     */
     generateRandomKey() {
         let $cipher = this.$app['config']['app.cipher']
         let $length = $cipher == 'AES-128-CBC' ? 16 : ($cipher == 'AES-192-CBC' ? 24 : 32)
         return 'base64:' + Crypto.randomBytes($length).toString('base64');
     }
 
+    /**
+     * setKeyInEnvironmentFile method.
+     * @async
+     * @param {*} $key
+     * @returns {any}
+     */
     async setKeyInEnvironmentFile($key) {
         let $currentKey = this.$app['config']['app.key'];
 
@@ -50,12 +72,21 @@ class KeyGenerateCommand extends Command {
         return true;
     }
 
+    /**
+     * writeNewEnvironmentFileWith method.
+     * @param {*} $key
+     * @returns {any}
+     */
     writeNewEnvironmentFileWith($key) {
         return this.$file.get(this.$app.environmentFilePath()).then(res => {
             return this.$file.put(this.$app.environmentFilePath(), res.replace(this.keyReplacementPattern(), 'APP_KEY=' + $key))
         })
     }
 
+    /**
+     * keyReplacementPattern method.
+     * @returns {any}
+     */
     keyReplacementPattern() {
 
         return 'APP_KEY=' + this.$app['config']['app.key'];

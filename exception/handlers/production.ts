@@ -1,10 +1,24 @@
 const fs = require('fs')
 const path = require('path')
+/**
+ * Class Production.
+ */
 class Production {
 
+    /**
+     * register method.
+     * @returns {any}
+     */
     register() {
 
     }
+    /**
+     * render method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $exception
+     * @returns {any}
+     */
     render(request, response, $exception = {}) {
         if (request.wantJson() || request.ajax()) {
             response.send({

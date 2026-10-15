@@ -1,5 +1,8 @@
 const GeneratorCommand = require('@ostro/console/generatorCommand')
 
+/**
+ * Class ResourceMakeCommand.
+ */
 class ResourceMakeCommand extends GeneratorCommand {
 
     $signature = 'make:resource';
@@ -12,6 +15,11 @@ class ResourceMakeCommand extends GeneratorCommand {
         this.createOption('-c, --collection', 'Create a resource collection')
     ];
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         if (this.collection()) {
             this.$type = 'Resource collection';
@@ -20,17 +28,31 @@ class ResourceMakeCommand extends GeneratorCommand {
         await super.handle();
     }
 
+    /**
+     * getStub method.
+     * @returns {any}
+     */
     getStub() {
         return this.collection() ?
             this.resolveStubPath('/stubs/resource-collection.stub') :
             this.resolveStubPath('/stubs/resource.stub');
     }
 
+    /**
+     * collection method.
+     * @returns {any}
+     */
     collection() {
         return this.option('collection') ||
             String.endsWith(this.argument('name'), 'Collection');
     }
 
+    /**
+     * resolveStubPath method.
+     * @async
+     * @param {*} $stub
+     * @returns {any}
+     */
     async resolveStubPath($stub) {
         let $customPath = this.$app.basePath(trim($stub, path.sep))
         return await this.$file.exists($customPath) ?
@@ -38,6 +60,11 @@ class ResourceMakeCommand extends GeneratorCommand {
             __dirname + $stub;
     }
 
+    /**
+     * getDefaultNamespace method.
+     * @param {*} $rootNamespace
+     * @returns {any}
+     */
     getDefaultNamespace($rootNamespace) {
         return path.join($rootNamespace, 'app', 'http', 'resources');
     }

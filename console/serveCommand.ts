@@ -1,5 +1,8 @@
 const Command = require('@ostro/console/command')
 
+/**
+ * Class ServeCommand.
+ */
 class ServeCommand extends Command {
 
     $portOffset = 0;
@@ -15,12 +18,22 @@ class ServeCommand extends Command {
         this.createOption('--no-reload [no-reload] ', 'Do not reload the development server on .env file changes'),
     ];
 
+    /**
+     * Create a new instance.
+     * @param {*} server
+     * @param {*} file
+     */
     constructor(server, file) {
         super()
         this.$server = server
         this.$file = file
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         this.line(`<info>Starting Ostro development server:</info> http://${this.host()}:${this.port()}`);
 
@@ -31,24 +44,45 @@ class ServeCommand extends Command {
 
     }
 
+    /**
+     * serverStarterPath method.
+     * @returns {any}
+     */
     serverStarterPath() {
         return base_path('app.js')
     }
 
+    /**
+     * requireServerFile method.
+     * @param {*} $path
+     * @returns {any}
+     */
     requireServerFile($path) {
         return require($path)
     }
 
+    /**
+     * host method.
+     * @returns {any}
+     */
     host() {
         return this.input.getOption('host');
     }
 
+    /**
+     * port method.
+     * @returns {any}
+     */
     port() {
         let $port = this.input.getOption('port')
 
         return $port + this.$portOffset;
     }
 
+    /**
+     * canTryAnotherPort method.
+     * @returns {any}
+     */
     canTryAnotherPort() {
         return is_null(this.input.getOption('port')) && (this.input.getOption('tries') > this.$portOffset);
     }

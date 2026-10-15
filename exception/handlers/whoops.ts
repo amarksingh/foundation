@@ -1,12 +1,29 @@
 const Ouch = require('ouch');
 const kHandler = Symbol('handler')
+/**
+ * Class Whoops.
+ */
 class Whoops {
+    /**
+     * Create a new instance.
+     */
     constructor() {
         this[kHandler] = this.register()
     }
+    /**
+     * register method.
+     * @returns {any}
+     */
     register() {
         return (new Ouch).pushHandler(new Ouch.handlers.PrettyPageHandler('orange'))
     }
+    /**
+     * render method.
+     * @param {*} request
+     * @param {*} response
+     * @param {*} $exception
+     * @returns {any}
+     */
     render(request, response, $exception = {}) {
         if (!response.headersSent) {
             response.writeHead(($exception.statusCode || 500), {'Content-Type': 'text/html'});

@@ -1,4 +1,7 @@
 const Command = require('@ostro/console/command')
+/**
+ * Class StorageLinkCommand.
+ */
 class StorageLinkCommand extends Command {
 
     $signature = 'storage:link';
@@ -10,11 +13,20 @@ class StorageLinkCommand extends Command {
         this.createOption('--force', 'The port to serve the application on')
     ];
     
+    /**
+     * Create a new instance.
+     * @param {*} $file
+     */
     constructor($file) {
         super()
         this.$file = $file
     }
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
         let $relative = this.option('relative');
         let links = this.links()
@@ -41,12 +53,23 @@ class StorageLinkCommand extends Command {
         this.info('The links have been created.');
     }
 
+    /**
+     * links method.
+     * @returns {any}
+     */
     links() {
         return this.$app['config']['filesystems.links'] || {
             [public_path('storage')]: storage_path('app/public')
         };
     }
 
+    /**
+     * isRemovableSymlink method.
+     * @async
+     * @param {*} $link
+     * @param {*} $force
+     * @returns {any}
+     */
     async isRemovableSymlink($link, $force) {
         return (await isSymbolicLink($link)) && $force;
     }

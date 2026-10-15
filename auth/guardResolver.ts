@@ -1,3 +1,6 @@
+/**
+ * Class GuardResolver.
+ */
 class GuardResolver {
 
 }

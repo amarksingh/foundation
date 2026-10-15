@@ -1,16 +1,30 @@
 const Command = require('@ostro/console/command')
 const EventServiceProvider = require('@ostro/event/eventServiceProvider')
+/**
+ * Class EventGenerateCommand.
+ */
 class EventGenerateCommand extends Command {
 
     $signature = 'event:generate';
 
     $description = 'Generate the missing events and listeners based on registration';
 
+    /**
+     * handle method.
+     * @async
+     * @returns {any}
+     */
     async handle() {
 
         this.info('Events and listeners generated successfully!');
     }
 
+    /**
+     * makeEventAndListeners method.
+     * @param {*} $event
+     * @param {*} $listeners
+     * @returns {any}
+     */
     makeEventAndListeners($event, $listeners) {
         if (!$event.includes('\\')) {
             return;
@@ -21,6 +35,12 @@ class EventGenerateCommand extends Command {
         this.makeListeners($event, $listeners);
     }
 
+    /**
+     * makeListeners method.
+     * @param {*} $event
+     * @param {*} $listeners
+     * @returns {any}
+     */
     makeListeners($event, $listeners) {
         for (let $listener of $listeners) {
             $listener = $listener.replace(/@.+$/, '');

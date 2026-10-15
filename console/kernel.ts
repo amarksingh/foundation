@@ -3,6 +3,9 @@ const path = require('path')
 const KernelContract = require('@ostro/contracts/console/kernel')
 const Assistant = require('@ostro/console/application')
 
+/**
+ * Class Kernel.
+ */
 class Kernel extends KernelContract {
 
     $commandsLoaded = false;
@@ -17,6 +20,9 @@ class Kernel extends KernelContract {
 
     $commands =  {};
 
+    /**
+     * Create a new instance.
+     */
     constructor() {
         super()
 
@@ -24,6 +30,10 @@ class Kernel extends KernelContract {
 
     }
 
+    /**
+     * bootstrap method.
+     * @returns {any}
+     */
     bootstrap() {
         if (!this.$app.hasBeenBootstrapped()) {
             this.$app.bootstrapWith(this.getBootstrappers());
@@ -35,6 +45,13 @@ class Kernel extends KernelContract {
         }
     }
 
+    /**
+     * callCommand method.
+     * @param {*} $command
+     * @param {*} $parameters
+     * @param {*} $outputBuffer
+     * @returns {any}
+     */
     callCommand($command, $parameters = [], $outputBuffer = null) {
         
         this.bootstrap();
@@ -42,6 +59,10 @@ class Kernel extends KernelContract {
         return this.getAssistant().call($command, $parameters, $outputBuffer);
     }
 
+    /**
+     * getAssistant method.
+     * @returns {any}
+     */
     getAssistant() {
         if (!this.assistant) {
             return this.assistant = (new Assistant(this.$app, this.$app.version()))
@@ -51,14 +72,30 @@ class Kernel extends KernelContract {
         return this.assistant;
     }
 
+    /**
+     * getBootstrappers method.
+     * @returns {any}
+     */
     getBootstrappers() {
         return this.bootstrappers;
     }
 
+    /**
+     * schedule method.
+     * @param {*} $schedule
+     * @returns {any}
+     */
     schedule($schedule) {
 
     }
 
+    /**
+     * handle method.
+     * @async
+     * @param {*} $input
+     * @param {*} $output
+     * @returns {any}
+     */
     async handle($input, $output = null) {
         try {
             await this.getAssistant().run($input, $output);
@@ -72,6 +109,11 @@ class Kernel extends KernelContract {
         }
     }
 
+    /**
+     * load method.
+     * @param {*} $paths
+     * @returns {any}
+     */
     load($paths) {
         if (typeof $paths == 'string') {
             $paths = path.resolve($paths)
@@ -93,15 +135,29 @@ class Kernel extends KernelContract {
         }
     }
 
+    /**
+     * reportException method.
+     * @param {*} $e
+     * @returns {any}
+     */
     reportException($e) {
         this.$app['@ostro/contracts/exception/handler'].report($e);
 
     }
 
+    /**
+     * renderException method.
+     * @param {*} $e
+     * @returns {any}
+     */
     renderException($e) {
         this.$app['@ostro/contracts/exception/handler'].renderForConsole($e);
     }
 
+    /**
+     * commands method.
+     * @returns {any}
+     */
     commands() {
         this.load(__dirname + '/commands');
     }

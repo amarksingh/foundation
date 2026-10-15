@@ -1,5 +1,13 @@
+/**
+ * Class HandleSystemError.
+ */
 class HandleSystemError {
 
+    /**
+     * bootstrap method.
+     * @param {*} $app
+     * @returns {any}
+     */
     bootstrap($app) {
         let logger = $app['logger']
         process
