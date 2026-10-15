@@ -12,7 +12,7 @@ class ResponseBound {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
 
         ServerResponse.prototype['app'] = $app
 

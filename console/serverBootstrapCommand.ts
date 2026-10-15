@@ -16,7 +16,7 @@ class ServerlessBootstrapCommand extends Command {
      * Create a new instance.
      * @param {*} $file
      */
-    constructor($file) {
+    constructor($file: any) {
         super()
         this.$file = $file
     }

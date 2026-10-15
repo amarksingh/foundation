@@ -10,7 +10,7 @@ class BindView {
      * @param {*} next
      * @returns {any}
      */
-    handle(http, next) {
+    handle(http: any, next: Function) {
         http.response.view = new View(this.$app, http, next)
         next()
 

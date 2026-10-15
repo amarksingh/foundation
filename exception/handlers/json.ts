@@ -24,7 +24,7 @@ class Json {
      * @param {*} $exception
      * @returns {any}
      */
-    render(request, response, $exception = {}) {
+    render(request: any, response: any, $exception: Record<string, any> = {}) {
         this[kHandler].handleException($exception, null, null, function(exception) {
             let parsedObj = JSON.parse(exception).error || {}
             response.json({

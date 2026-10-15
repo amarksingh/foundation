@@ -26,7 +26,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $name
      * @returns {any}
      */
-    replaceClass($stub, $name) {
+    replaceClass($stub: any, $name: string) {
         $name = StringHelper.replaceAll($name, ':', ' ')
         $stub = super.replaceClass($stub, $name);
         let $command = this.option('command') || this.argument('name')
@@ -46,7 +46,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub) {
+    resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }
@@ -56,7 +56,7 @@ class FactoryMakeCommand extends GeneratorCommand {
      * @param {*} $rootNamespace
      * @returns {any}
      */
-    getDefaultNamespace($rootNamespace) {
+    getDefaultNamespace($rootNamespace: any) {
         return path.join($rootNamespace, 'app', 'console', 'commands');
     }
 

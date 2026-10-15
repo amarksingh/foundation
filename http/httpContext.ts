@@ -9,7 +9,7 @@ class FoundationHttpContext extends HttpContext {
      * @param {*} response
      * @param {*} next
      */
-    constructor(request, response, next) {
+    constructor(request: any, response: any, next: Function) {
         super(request, response, next)
     }
 

@@ -29,7 +29,7 @@ class Handler {
      * Create a new instance.
      * @param {*} handler
      */
-    constructor(handler) {
+    constructor(handler: Function) {
         this[kHandle] = handler
         this[kLogger] = app('logger')
     }
@@ -41,7 +41,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    handle(request, response, $e = {}) {
+    handle(request: any, response: any, $e: Record<string, any> = {}) {
         this.render(request, response, $e)
     }
 
@@ -52,7 +52,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    terminate(request, response, $e = {}) {
+    terminate(request: any, response: any, $e: Record<string, any> = {}) {
         this.report($e)
     }
 
@@ -63,7 +63,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    render(request, response, $e = {}) {
+    render(request: any, response: any, $e: Record<string, any> = {}) {
         if ($e instanceof PageNotFoundException) {
             this.pageNotFoundException(request, response, $e)
         } else if ($e instanceof validationException) {
@@ -115,7 +115,7 @@ class Handler {
      * @param {*} $exception
      * @returns {any}
      */
-    unauthenticated($request, $response, $exception) {
+    unauthenticated($request: any, $response: any, $exception: any) {
         return $request.expectsJson() ?
             $response.json({ 'message': $exception.message }, 401) :
             $response.redirect().to($exception.redirectTo() || route('login'));
@@ -127,7 +127,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    redirect(response, $e) {
+    redirect(response: any, $e: any) {
         response.with(...$e.getFlash()).withErrors(...$e.getErrors()).withInput($e.wantedInput()).redirect($e.getUrl());
     }
 
@@ -137,7 +137,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    jsonException(response, $e) {
+    jsonException(response: any, $e: any) {
 
     }
 
@@ -148,7 +148,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    send(request, response, $e = {}) {
+    send(request: any, response: any, $e: Record<string, any> = {}) {
         this.report($e)
         response.send($e)
     }
@@ -160,7 +160,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    convertValidationExceptionToResponse(request, response, $e) {
+    convertValidationExceptionToResponse(request: any, response: any, $e: any) {
         if ($e.response) {
             return $e.response;
         }
@@ -177,7 +177,7 @@ class Handler {
      * @param {*} $exception
      * @returns {any}
      */
-    invalidJson(request, response, $exception) {
+    invalidJson(request: any, response: any, $exception: any) {
         return response.json({
             'message': $exception.getMessage(),
             'errors': $exception.getErrors(),
@@ -191,7 +191,7 @@ class Handler {
      * @param {*} $exception
      * @returns {any}
      */
-    invalid(request, response, $exception) {
+    invalid(request: any, response: any, $exception: any) {
 
         if (request.session instanceof Session) {
             response.withInput(Object.except(request.input(), this.$dontFlash))
@@ -207,7 +207,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    tokenMismatchException(request, response, $e) {
+    tokenMismatchException(request: any, response: any, $e: any) {
         if (request.wantJson() || request.ajax()) {
             response.send({
                 name: $e.name || 'Token mismatch exception',
@@ -229,7 +229,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    pageNotFoundException(request, response, $e) {
+    pageNotFoundException(request: any, response: any, $e: any) {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
         }, function (error, data) {
@@ -241,7 +241,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    report($e) {
+    report($e: any) {
         if (!this.$dontReport.find((clazz) => $e instanceof clazz)) {
             if (typeof this[kLogger].getConfig == 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
                 if ($e && typeof $e == 'object') {
@@ -258,7 +258,7 @@ class Handler {
      * @param {*} $e
      * @returns {any}
      */
-    renderForConsole($e) {
+    renderForConsole($e: any) {
         this[kLogger].channel('console').error($e)
     }
 }

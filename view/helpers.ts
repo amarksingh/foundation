@@ -10,7 +10,7 @@ class Helpers {
      * @param {*} app
      * @param {*} http
      */
-    constructor(app, http) {
+    constructor(app: any, http: any) {
         Object.defineProperty(this, kHttp, {
             value: http,
             enumerable: false,
@@ -31,7 +31,7 @@ class Helpers {
      * @param {*} $name
      * @returns {any}
      */
-    secure_asset($name) {
+    secure_asset($name: string) {
         let domain = this[kApp].config.get('app.asset_url') || ('https://' + this[kHttp].request.get('host'))
         return new URL(path.join(...arguments), domain).href
     }
@@ -50,7 +50,7 @@ class Helpers {
      * @param {*} key
      * @returns {any}
      */
-    session(key) {
+    session(key: string) {
         return this[kHttp].request.session.get(key)
     }
 
@@ -68,7 +68,7 @@ class Helpers {
      * @param {*} defaultValue
      * @returns {any}
      */
-    old(key, defaultValue) {
+    old(key: string, defaultValue: any) {
         return this[kHttp].request.old(key, defaultValue)
     }
 
@@ -109,7 +109,7 @@ class Helpers {
      * @param {*} path
      * @returns {any}
      */
-    mix(path) {
+    mix(path: string) {
         return this[kApp].mix.path(path)
     }
 

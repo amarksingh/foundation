@@ -26,7 +26,7 @@ class ServeStatic {
      * @param {*} next
      * @returns {any}
      */
-    handle({ request, response }, next) {
+    handle({ request, response }: Record<string, any>, next: Function) {
         serveStatic(this.$publicPath, { ...this.$defaultOptions, ...this.$options })(request, response, next)
     }
 }

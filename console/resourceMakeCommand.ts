@@ -53,7 +53,7 @@ class ResourceMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    async resolveStubPath($stub) {
+    async resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, path.sep))
         return await this.$file.exists($customPath) ?
             $customPath :
@@ -65,7 +65,7 @@ class ResourceMakeCommand extends GeneratorCommand {
      * @param {*} $rootNamespace
      * @returns {any}
      */
-    getDefaultNamespace($rootNamespace) {
+    getDefaultNamespace($rootNamespace: any) {
         return path.join($rootNamespace, 'app', 'http', 'resources');
     }
 

@@ -12,7 +12,7 @@ class RequestBound {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
         ServerRequest.prototype['app'] = $app
         for (let a of Object.getOwnPropertyNames(HttpRequest.prototype)) {
             ServerRequest.prototype[a] = HttpRequest.prototype[a];

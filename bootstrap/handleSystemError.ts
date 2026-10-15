@@ -8,7 +8,7 @@ class HandleSystemError {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
         let logger = $app['logger']
         process
             .on('unhandledRejection', (reason, p) => {

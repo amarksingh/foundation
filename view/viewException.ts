@@ -7,7 +7,7 @@ class ViewException extends ViewExceptionContract {
      * Create a new instance.
      * @param {*} errors
      */
-    constructor(errors) {
+    constructor(errors: any) {
         super(errors);
         this.name = this.constructor.name;
         this.message = errors.message || errors;

@@ -24,7 +24,7 @@ class Whoops {
      * @param {*} $exception
      * @returns {any}
      */
-    render(request, response, $exception = {}) {
+    render(request: any, response: any, $exception: Record<string, any> = {}) {
         if (!response.headersSent) {
             response.writeHead(($exception.statusCode || 500), {'Content-Type': 'text/html'});
         }

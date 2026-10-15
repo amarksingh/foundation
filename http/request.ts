@@ -12,7 +12,7 @@ class HttpRequest extends Request {
      * @param {*} defaultValue
      * @returns {any}
      */
-    old(key, defaultValue = null) {
+    old(key: string, defaultValue: any = null) {
         return ObjectGet(this.session.get('__inputs'), key, defaultValue);
     }
 
@@ -22,7 +22,7 @@ class HttpRequest extends Request {
      * @param {*} defaultValue
      * @returns {any}
      */
-    error(key, defaultValue = null) {
+    error(key: string, defaultValue: any = null) {
         this[kErrors] = this[kErrors] || new ErrorBag((this.session ? this.session.get('__errors') : {}))
         if (key) {
             return this[kErrors].first(key)
@@ -67,7 +67,7 @@ class HttpRequest extends Request {
      * @param {*} route
      * @returns {any}
      */
-    routeIs(route) {
+    routeIs(route: string) {
         let currentRoute = app('router').currentRoute(this)
         if (!currentRoute) {
             return false

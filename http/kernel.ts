@@ -97,7 +97,7 @@ class Kernel extends KernelContract {
      * @param {*} middleware
      * @returns {any}
      */
-    resolveMiddleware(middleware) {
+    resolveMiddleware(middleware: any) {
         return middleware
     }
 
@@ -165,7 +165,7 @@ class Kernel extends KernelContract {
      * @param {*} $app
      * @returns {any}
      */
-    setApplication($app) {
+    setApplication($app: any) {
         this.$app = $app;
 
         return this;

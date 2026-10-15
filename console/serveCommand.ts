@@ -23,7 +23,7 @@ class ServeCommand extends Command {
      * @param {*} server
      * @param {*} file
      */
-    constructor(server, file) {
+    constructor(server: any, file: any) {
         super()
         this.$server = server
         this.$file = file
@@ -57,7 +57,7 @@ class ServeCommand extends Command {
      * @param {*} $path
      * @returns {any}
      */
-    requireServerFile($path) {
+    requireServerFile($path: string) {
         return require($path)
     }
 

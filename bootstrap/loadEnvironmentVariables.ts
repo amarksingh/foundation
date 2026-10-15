@@ -10,7 +10,7 @@ class LoadEnvironmentVariables {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
 
         Env.config({
             path: path.normalize(path.join($app.environmentPath(), $app.environmentFile()))

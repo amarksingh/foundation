@@ -52,7 +52,7 @@ class Kernel extends KernelContract {
      * @param {*} $outputBuffer
      * @returns {any}
      */
-    callCommand($command, $parameters = [], $outputBuffer = null) {
+    callCommand($command: any, $parameters: any[] = [], $outputBuffer: any = null) {
         
         this.bootstrap();
 
@@ -85,7 +85,7 @@ class Kernel extends KernelContract {
      * @param {*} $schedule
      * @returns {any}
      */
-    schedule($schedule) {
+    schedule($schedule: any) {
 
     }
 
@@ -96,7 +96,7 @@ class Kernel extends KernelContract {
      * @param {*} $output
      * @returns {any}
      */
-    async handle($input, $output = null) {
+    async handle($input: any, $output: any = null) {
         try {
             await this.getAssistant().run($input, $output);
         } catch ($e) {
@@ -114,7 +114,7 @@ class Kernel extends KernelContract {
      * @param {*} $paths
      * @returns {any}
      */
-    load($paths) {
+    load($paths: any) {
         if (typeof $paths == 'string') {
             $paths = path.resolve($paths)
             if (fs.existsSync($paths)) {
@@ -140,7 +140,7 @@ class Kernel extends KernelContract {
      * @param {*} $e
      * @returns {any}
      */
-    reportException($e) {
+    reportException($e: any) {
         this.$app['@ostro/contracts/exception/handler'].report($e);
 
     }
@@ -150,7 +150,7 @@ class Kernel extends KernelContract {
      * @param {*} $e
      * @returns {any}
      */
-    renderException($e) {
+    renderException($e: any) {
         this.$app['@ostro/contracts/exception/handler'].renderForConsole($e);
     }
 

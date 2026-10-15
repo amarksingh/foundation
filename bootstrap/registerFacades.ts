@@ -10,7 +10,7 @@ class RegisterFacades {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
         Facade.setFacadeApplication($app);
         let aliasLoader = new AliasLoader($app.make('config').get('app.aliases', []))
         aliasLoader.registerGlobal()

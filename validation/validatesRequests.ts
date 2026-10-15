@@ -11,7 +11,7 @@ class ValidatesRequests {
      * @param {*} $customAttributes
      * @returns {any}
      */
-    validate($request, $rules, $messages = [], $customAttributes = []) {
+    validate($request: any, $rules: any, $messages: any[] = [], $customAttributes: any[] = []) {
         return this.getValidationFactory().validate(
             $request.all(), $rules, $messages, $customAttributes
         )

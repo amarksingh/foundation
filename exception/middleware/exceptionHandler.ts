@@ -16,7 +16,7 @@ class ExceptionHandler {
      * @param {*} next
      * @returns {any}
      */
-    handle(error, { request, response },next) {
+    handle(error: any, { request, response }: Record<string, any>, next: Function) {
         this.$exceptionHandler.handler(((request.ajax() || request.wantJson()) ? 'json' : 'whoops')).handle(
             request,
             response,
@@ -31,7 +31,7 @@ class ExceptionHandler {
      * @param {*} next
      * @returns {any}
      */
-    terminate(error, {request,response} ,next){
+    terminate(error: any, {request,response}: Record<string, any>, next: Function) {
         this.$exceptionHandler.handler('json').terminate(
             request,
             response,

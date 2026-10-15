@@ -19,7 +19,7 @@ class Production {
      * @param {*} $exception
      * @returns {any}
      */
-    render(request, response, $exception = {}) {
+    render(request: any, response: any, $exception: Record<string, any> = {}) {
         if (request.wantJson() || request.ajax()) {
             response.send({
                 name: $exception.name || 'HttpException',

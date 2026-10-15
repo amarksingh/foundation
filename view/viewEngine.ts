@@ -12,7 +12,7 @@ class View {
      * @param {*} http
      * @param {*} next
      */
-    constructor(app, http, next) {
+    constructor(app: any, http: any, next: Function) {
         let context = {};
         Object.assign(context, (app['locals'] || {}));
         Object.assign(context, global)

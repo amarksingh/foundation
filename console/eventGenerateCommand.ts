@@ -25,7 +25,7 @@ class EventGenerateCommand extends Command {
      * @param {*} $listeners
      * @returns {any}
      */
-    makeEventAndListeners($event, $listeners) {
+    makeEventAndListeners($event: string, $listeners: any) {
         if (!$event.includes('\\')) {
             return;
         }
@@ -41,7 +41,7 @@ class EventGenerateCommand extends Command {
      * @param {*} $listeners
      * @returns {any}
      */
-    makeListeners($event, $listeners) {
+    makeListeners($event: string, $listeners: any) {
         for (let $listener of $listeners) {
             $listener = $listener.replace(/@.+$/, '');
 

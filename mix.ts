@@ -13,7 +13,7 @@ class Mix {
      * Create a new instance.
      * @param {*} app
      */
-    constructor(app) {
+    constructor(app: any) {
         this.$app = app
 
     }
@@ -24,7 +24,7 @@ class Mix {
      * @param {*} $manifestDirectory
      * @returns {any}
      */
-    path($path, $manifestDirectory = '') {
+    path($path: string, $manifestDirectory: string = '') {
 
         if (!String.startsWith($path, '/')) {
             $path = `/${$path}`;

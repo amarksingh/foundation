@@ -43,7 +43,7 @@ class AssistantServiceProvider extends ServiceProvider {
      * @param {*} $commands
      * @returns {any}
      */
-    registerCommands($commands = {}) {
+    registerCommands($commands: Record<string, any> = {}) {
         for (let $command of Object.keys($commands)) {
             if (typeof this[`register${$command}Command`] != 'function') {
                 throw new Error(`register${$command}Command not available.`)

@@ -12,7 +12,7 @@ class HttpResponse extends Response {
      * @param {*} status
      * @returns {any}
      */
-    send(body, status = 200) {
+    send(body: any, status: number = 200) {
         if (body instanceof Model) {
             body = body.serialize()
         } else if (body instanceof Collection && body.isArray()) {
@@ -29,7 +29,7 @@ class HttpResponse extends Response {
      * @param {*} value
      * @returns {any}
      */
-    with(key, value) {
+    with(key: string, value: any) {
         let obj = typeof key == 'string' ? {
             [key]: value
         } : key;
@@ -44,7 +44,7 @@ class HttpResponse extends Response {
      * @param {*} value
      * @returns {any}
      */
-    withInput(key, value) {
+    withInput(key: string, value: any) {
         key = typeof key == 'string' ? { key: value } : key;
         if (key) {
             key = key === true ? this.request.except('_token') : key
@@ -58,7 +58,7 @@ class HttpResponse extends Response {
      * @param {*} errors
      * @returns {any}
      */
-    withErrors(errors = {}) {
+    withErrors(errors: Record<string, any> = {}) {
         this.request.session.flash('__errors', errors)
         return this
     }

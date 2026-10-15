@@ -17,7 +17,7 @@ class StorageLinkCommand extends Command {
      * Create a new instance.
      * @param {*} $file
      */
-    constructor($file) {
+    constructor($file: any) {
         super()
         this.$file = $file
     }
@@ -70,7 +70,7 @@ class StorageLinkCommand extends Command {
      * @param {*} $force
      * @returns {any}
      */
-    async isRemovableSymlink($link, $force) {
+    async isRemovableSymlink($link: any, $force: boolean) {
         return (await isSymbolicLink($link)) && $force;
     }
 }

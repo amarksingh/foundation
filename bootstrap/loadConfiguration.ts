@@ -9,7 +9,7 @@ class LoadConfiguration {
      * Create a new instance.
      * @param {*} $app
      */
-    constructor($app) {
+    constructor($app: any) {
         this.$app = $app
     }
 
@@ -18,7 +18,7 @@ class LoadConfiguration {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
         let $items = [];
         let config = new Repository($items)
         $app.instance('config', config);
@@ -33,7 +33,7 @@ class LoadConfiguration {
      * @param {*} $repository
      * @returns {any}
      */
-    loadConfigurationFiles($app, $repository) {
+    loadConfigurationFiles($app: any, $repository: any) {
         let configPath = $app.configPath();
         let files = this.getConfigurationFiles(configPath);
 
@@ -51,7 +51,7 @@ class LoadConfiguration {
      * @param {*} configPath
      * @returns {any}
      */
-    getConfigurationFiles(configPath) {
+    getConfigurationFiles(configPath: any) {
         let files = [];
 
         let configFiles = fs.readdirSync(configPath)
@@ -74,7 +74,7 @@ class LoadConfiguration {
      * @param {*} tz
      * @returns {any}
      */
-    setTimezone(tz) {
+    setTimezone(tz: any) {
         process.env.TZ = tz
     }
 

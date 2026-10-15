@@ -15,7 +15,7 @@ class ExceptionManager extends Macroable {
      * Create a new instance.
      * @param {*} handler
      */
-    constructor(handler) {
+    constructor(handler: Function) {
         super()
         Object.defineProperties(this, {
             [kHandlerAdapter]: {
@@ -38,7 +38,7 @@ class ExceptionManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    handler(name = 'whoops') {
+    handler(name: string = 'whoops') {
         name = (this.getConfig('app.debug') == false) ? 'production' : name
 
         return this[kHandlers][name] = this.get(name);
@@ -49,7 +49,7 @@ class ExceptionManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    get(name) {
+    get(name: string) {
         return this[kHandlers][name] || this.resolve(name);
     }
 
@@ -58,7 +58,7 @@ class ExceptionManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    resolve(name) {
+    resolve(name: string) {
         let driverMethod = 'create' + (name.ucfirst()) + 'Handler';
         if ((this[kCustomHandlers][name])) {
             return this.callCustomHandler(name);
@@ -74,7 +74,7 @@ class ExceptionManager extends Macroable {
      * @param {*} name
      * @returns {any}
      */
-    callCustomHandler(name) {
+    callCustomHandler(name: string) {
         var driver = this[kCustomHandlers][name]();
         return this.adapt(driver);
     }
@@ -84,7 +84,7 @@ class ExceptionManager extends Macroable {
      * @param {*} $config
      * @returns {any}
      */
-    createWhoopsHandler($config) {
+    createWhoopsHandler($config: Record<string, any>) {
         return this.adapt(new(require('./handlers/whoops')));
     }
 
@@ -109,7 +109,7 @@ class ExceptionManager extends Macroable {
      * @param {*} handler
      * @returns {any}
      */
-    adapt(handler) {
+    adapt(handler: Function) {
         if (typeof this[kHandlerAdapter] != 'function') {
             throw new InvalidArgumentException('Invalid handler class on exception')
         }
@@ -121,7 +121,7 @@ class ExceptionManager extends Macroable {
      * @param {*} key
      * @returns {any}
      */
-    getConfig(key) {
+    getConfig(key: string) {
         return this.$app['config'][key]
     }
 
@@ -130,7 +130,7 @@ class ExceptionManager extends Macroable {
      * @param {*} handler
      * @returns {any}
      */
-    setHandlerAdapter(handler) {
+    setHandlerAdapter(handler: Function) {
         this[kHandlerAdapter] = handler
     }
 
@@ -140,7 +140,7 @@ class ExceptionManager extends Macroable {
      * @param {*} $callback
      * @returns {any}
      */
-    extend($driver, $callback) {
+    extend($driver: any, $callback: Function) {
         this[kCustomHandlers][$driver] = $callback.bind(this, this);
         return this;
     }
@@ -150,7 +150,7 @@ class ExceptionManager extends Macroable {
      * @param {*} $callback
      * @returns {any}
      */
-    extends($driver, $callback) {
+    extends($driver: any, $callback: Function) {
         return this.extend($driver, $callback);
     }
     /**
@@ -160,7 +160,7 @@ class ExceptionManager extends Macroable {
      * @param {*} args
      * @returns {any}
      */
-    __call(target, method, args) {
+    __call(target: Record<string, any>, method: string, args: any[]) {
         return target.handler()[method](...args)
     }
 }

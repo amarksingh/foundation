@@ -8,7 +8,7 @@ class ProviderRepository {
      * @param {*} $app
      * @param {*} $files
      */
-    constructor($app, $files) {
+    constructor($app: any, $files: any) {
         this.$app = $app;
         this.$files = $files;
     }
@@ -18,7 +18,7 @@ class ProviderRepository {
      * @param {*} $providers
      * @returns {any}
      */
-    load($providers) {
+    load($providers: any) {
 
         let $manifest = this.compileManifest($providers);
 
@@ -42,7 +42,7 @@ class ProviderRepository {
      * @param {*} $providers
      * @returns {any}
      */
-    compileManifest($providers) {
+    compileManifest($providers: any) {
 
         let $manifest = this.freshManifest($providers);
 
@@ -65,7 +65,7 @@ class ProviderRepository {
      * @param {*} $providers
      * @returns {any}
      */
-    freshManifest($providers) {
+    freshManifest($providers: any) {
         return {
             'providers': $providers,
             'eager': [],
@@ -78,7 +78,7 @@ class ProviderRepository {
      * @param {*} $manifest
      * @returns {any}
      */
-    writeManifest($manifest) {
+    writeManifest($manifest: any) {
 
         return $manifest
     }
@@ -88,7 +88,7 @@ class ProviderRepository {
      * @param {*} $provider
      * @returns {any}
      */
-    createProvider($provider) {
+    createProvider($provider: any) {
         return new $provider(this.$app);
     }
 }

@@ -130,7 +130,7 @@ class ModelMakeCommand extends GeneratorCommand {
      * @param {*} $rootNamespace
      * @returns {any}
      */
-    getDefaultNamespace($rootNamespace) {
+    getDefaultNamespace($rootNamespace: any) {
         return $rootNamespace.includes('.js') ? $rootNamespace : path.resolve($rootNamespace, app_path('models'));
     }
 
@@ -139,7 +139,7 @@ class ModelMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    resolveStubPath($stub) {
+    resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
     }

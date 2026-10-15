@@ -8,7 +8,7 @@ class RegisterProviders {
      * @param {*} $app
      * @returns {any}
      */
-    bootstrap($app) {
+    bootstrap($app: any) {
         $app.registerConfiguredProviders();
     }
 }

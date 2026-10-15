@@ -18,7 +18,7 @@ class KeyGenerateCommand extends Command {
      * Create a new instance.
      * @param {*} file
      */
-    constructor(file) {
+    constructor(file: any) {
         super()
         this.$file = file
     }
@@ -60,7 +60,7 @@ class KeyGenerateCommand extends Command {
      * @param {*} $key
      * @returns {any}
      */
-    async setKeyInEnvironmentFile($key) {
+    async setKeyInEnvironmentFile($key: string) {
         let $currentKey = this.$app['config']['app.key'];
 
         if ($currentKey.length !== 0 && (!await this.confirmToProceed())) {
@@ -77,7 +77,7 @@ class KeyGenerateCommand extends Command {
      * @param {*} $key
      * @returns {any}
      */
-    writeNewEnvironmentFileWith($key) {
+    writeNewEnvironmentFileWith($key: string) {
         return this.$file.get(this.$app.environmentFilePath()).then(res => {
             return this.$file.put(this.$app.environmentFilePath(), res.replace(this.keyReplacementPattern(), 'APP_KEY=' + $key))
         })

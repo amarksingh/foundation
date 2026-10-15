@@ -6,7 +6,7 @@ class LocaleUpdated {
      * Create a new instance.
      * @param {*} locale
      */
-    constructor(locale) {
+    constructor(locale: any) {
         this.locale = locale;
     }
 }

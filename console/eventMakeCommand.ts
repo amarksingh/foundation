@@ -16,7 +16,7 @@ class EventMakeCommand extends GeneratorCommand {
      * @param {*} $rawName
      * @returns {any}
      */
-    alreadyExists($rawName) {
+    alreadyExists($rawName: any) {
         return this.$file.exists(this.getPath(this.qualifyClass($rawName)));
     }
 
@@ -34,7 +34,7 @@ class EventMakeCommand extends GeneratorCommand {
      * @param {*} $stub
      * @returns {any}
      */
-    async resolveStubPath($stub) {
+    async resolveStubPath($stub: any) {
         let $customPath = this.$app.basePath(trim($stub, '/'))
         return await this.$file.exists($customPath) ?
             $customPath :
@@ -46,7 +46,7 @@ class EventMakeCommand extends GeneratorCommand {
      * @param {*} $rootNamespace
      * @returns {any}
      */
-    getDefaultNamespace($rootNamespace) {
+    getDefaultNamespace($rootNamespace: any) {
         return path.join($rootNamespace, 'app', 'events');
     }
 }

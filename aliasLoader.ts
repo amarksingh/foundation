@@ -8,7 +8,7 @@ class AliasLoader {
      * Create a new instance.
      * @param {*} aliases
      */
-    constructor(aliases = []) {
+    constructor(aliases: any[] = []) {
         this._aliases = aliases
     }
     /**
