@@ -22,7 +22,7 @@ describe('AliasLoader', () => {
 
     test('registers relative path alias', () => {
         const loader = new AliasLoader({
-            CustomRelative: './aliasLoader.js'
+            CustomRelative: './aliasLoader.ts'
         });
         loader.registerGlobal();
 
