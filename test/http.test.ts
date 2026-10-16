@@ -1,14 +1,15 @@
-require('@ostro/support/helpers');
-const HttpRequest = require('../http/request');
-const HttpResponse = require('../http/response');
-const HttpContext = require('../http/httpContext');
-const Kernel = require('../http/kernel');
-const ServeStatic = require('../http/middleware/serveStatic');
-const VerifyCsrfToken = require('../http/middleware/verifyCsrfToken');
-const TokenMismatchException = require('@ostro/http/exception/tokenMismatchException');
-const Model = require('@ostro/contracts/database/eloquent/model');
-const Collection = require('@ostro/contracts/collection/collect');
-const tokens = require('csrf')();
+import '@ostro/support/helpers';
+import HttpRequest from '../http/request';
+import HttpResponse from '../http/response';
+import HttpContext from '../http/httpContext';
+import Kernel from '../http/kernel';
+import ServeStatic from '../http/middleware/serveStatic';
+import VerifyCsrfToken from '../http/middleware/verifyCsrfToken';
+import TokenMismatchException from '@ostro/http/exception/tokenMismatchException';
+import Model from '@ostro/contracts/database/eloquent/model';
+import Collection from '@ostro/contracts/collection/collect';
+import csrf from 'csrf';
+const tokens = csrf();
 
 describe('HTTP layer tests', () => {
     test('HttpRequest old, error, csrfToken, flash methods, and routeIs', () => {

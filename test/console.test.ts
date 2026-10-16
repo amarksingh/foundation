@@ -1,17 +1,17 @@
-require('@ostro/support/helpers');
-const ConsoleKernel = require('../console/kernel');
-const ConsoleMakeCommand = require('../console/consoleMakeCommand');
-const EventMakeCommand = require('../console/eventMakeCommand');
-const EventGenerateCommand = require('../console/eventGenerateCommand');
-const KeyGenerateCommand = require('../console/keyGenerateCommand');
-const ModelMakeCommand = require('../console/modelMakeCommand');
-const ResourceMakeCommand = require('../console/resourceMakeCommand');
-const ServeCommand = require('../console/serveCommand');
-const ServerBootstrapCommand = require('../console/serverBootstrapCommand');
-const ServerlessBootstrapCommand = require('../console/serverlessBootstrapCommand');
-const StorageLinkCommand = require('../console/storageLinkCommand');
-const fs = require('fs');
-const path = require('path');
+import '@ostro/support/helpers';
+import ConsoleKernel = require('../console/kernel');
+import ConsoleMakeCommand = require('../console/consoleMakeCommand');
+import EventMakeCommand = require('../console/eventMakeCommand');
+import EventGenerateCommand = require('../console/eventGenerateCommand');
+import KeyGenerateCommand = require('../console/keyGenerateCommand');
+import ModelMakeCommand = require('../console/modelMakeCommand');
+import ResourceMakeCommand = require('../console/resourceMakeCommand');
+import ServeCommand = require('../console/serveCommand');
+import ServerBootstrapCommand = require('../console/serverBootstrapCommand');
+import ServerlessBootstrapCommand = require('../console/serverlessBootstrapCommand');
+import StorageLinkCommand = require('../console/storageLinkCommand');
+import fs = require('fs');
+import path = require('path');
 
 describe('Console Kernel and Commands', () => {
     let tmpDir;

@@ -4,4 +4,5 @@
 class Authorizable {
 
 }
-module.exports = Authorizable
+
+export = Authorizable;

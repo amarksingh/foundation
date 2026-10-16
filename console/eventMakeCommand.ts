@@ -1,54 +1,58 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
+import path from 'path';
+import GeneratorCommand = require('@ostro/console/generatorCommand');
+import { trim } from '@ostro/support/function';
 
 /**
  * Class EventMakeCommand.
  */
 class EventMakeCommand extends GeneratorCommand {
 
-    $signature = 'make:event';
+    public declare $app: any;
+    public declare $file: any;
 
-    $description = 'Create a new event class';
+    public $signature: string = 'make:event';
 
-    $type = 'Event';
+    public $description: string = 'Create a new event class';
+
+    public $type: string = 'Event';
 
     /**
      * alreadyExists method.
-     * @param {*} $rawName
-     * @returns {any}
+     * @param rawName - Raw name
+     * @returns Promise resolving to boolean
      */
-    alreadyExists($rawName: any) {
-        return this.$file.exists(this.getPath(this.qualifyClass($rawName)));
+    public alreadyExists(rawName: string): Promise<boolean> {
+        return this.$file.exists(this.getPath(this.qualifyClass(rawName)));
     }
 
     /**
      * getStub method.
-     * @returns {any}
+     * @returns Promise resolving to stub path
      */
-    getStub() {
+    public getStub(): Promise<string> {
         return this.resolveStubPath('/stubs/event.stub');
     }
 
     /**
      * resolveStubPath method.
-     * @async
-     * @param {*} $stub
-     * @returns {any}
+     * @param stub - The relative stub path
+     * @returns The resolved stub path
      */
-    async resolveStubPath($stub: any) {
-        let $customPath = this.$app.basePath(trim($stub, '/'))
-        return await this.$file.exists($customPath) ?
-            $customPath :
-            __dirname + $stub;
+    public async resolveStubPath(stub: string): Promise<string> {
+        let customPath: string = this.$app.basePath(trim(stub, '/'));
+        return (await this.$file.exists(customPath)) ?
+            customPath :
+            path.join(__dirname, stub);
     }
 
     /**
      * getDefaultNamespace method.
-     * @param {*} $rootNamespace
-     * @returns {any}
+     * @param rootNamespace - Root namespace
+     * @returns The default namespace path
      */
-    getDefaultNamespace($rootNamespace: any) {
-        return path.join($rootNamespace, 'app', 'events');
+    public getDefaultNamespace(rootNamespace: string): string {
+        return path.join(rootNamespace, 'app', 'events');
     }
 }
 
-module.exports = EventMakeCommand
+export = EventMakeCommand;

@@ -1,23 +1,27 @@
-const BootProviders = require('../bootstrap/bootProviders');
-const RegisterProviders = require('../bootstrap/registerProviders');
-const RegisterFacades = require('../bootstrap/registerFacades');
-const LoadEnvironmentVariables = require('../bootstrap/loadEnvironmentVariables');
-const HandleSystemError = require('../bootstrap/handleSystemError');
-const LoadConfiguration = require('../bootstrap/loadConfiguration');
-const fs = require('fs');
-const path = require('path');
-const Facade = require('@ostro/support/facades/facade');
+import BootProviders from '../bootstrap/bootProviders';
+import RegisterProviders from '../bootstrap/registerProviders';
+import RegisterFacades from '../bootstrap/registerFacades';
+import LoadEnvironmentVariables from '../bootstrap/loadEnvironmentVariables';
+import HandleSystemError from '../bootstrap/handleSystemError';
+import LoadConfiguration from '../bootstrap/loadConfiguration';
+import RequestBound from '../bootstrap/requestBound';
+import ResponseBound from '../bootstrap/responseBound';
+import ServerRequest from '@ostro/server/request';
+import ServerResponse from '@ostro/server/response';
+import fs from 'fs';
+import path from 'path';
+import Facade from '@ostro/support/facades/facade';
 
 describe('Bootstrap classes', () => {
     test('BootProviders calls app.boot()', () => {
-        const app = { boot: jest.fn() };
+        const app: any = { boot: jest.fn() };
         const bootstrapper = new BootProviders();
         bootstrapper.bootstrap(app);
         expect(app.boot).toHaveBeenCalledTimes(1);
     });
 
     test('RegisterProviders calls app.registerConfiguredProviders()', () => {
-        const app = { registerConfiguredProviders: jest.fn() };
+        const app: any = { registerConfiguredProviders: jest.fn() };
         const bootstrapper = new RegisterProviders();
         bootstrapper.bootstrap(app);
         expect(app.registerConfiguredProviders).toHaveBeenCalledTimes(1);
@@ -27,14 +31,14 @@ describe('Bootstrap classes', () => {
         const configMock = {
             get: jest.fn().mockReturnValue({ TestFacadeAlias: 'path' })
         };
-        const app = {
+        const app: any = {
             make: jest.fn().mockReturnValue(configMock)
         };
         const bootstrapper = new RegisterFacades();
         bootstrapper.bootstrap(app);
         expect(Facade.getFacadeApplication()).toBe(app);
-        expect(global.TestFacadeAlias).toBe(path);
-        delete global.TestFacadeAlias;
+        expect((global as any).TestFacadeAlias).toBe(path);
+        delete (global as any).TestFacadeAlias;
     });
 
     test('LoadEnvironmentVariables loads dotenv config', () => {
@@ -43,7 +47,7 @@ describe('Bootstrap classes', () => {
         const envFile = path.join(tmpDir, '.env.testing');
         fs.writeFileSync(envFile, 'FOO_TEST_VAR=bar_value\n');
 
-        const app = {
+        const app: any = {
             environmentPath: () => tmpDir,
             environmentFile: () => '.env.testing'
         };
@@ -56,7 +60,7 @@ describe('Bootstrap classes', () => {
     });
 
     test('HandleSystemError registers unhandledRejection and uncaughtException handlers', () => {
-        const errorsLogged = [];
+        const errorsLogged: string[] = [];
         const loggerMock = {
             ignore: false,
             getConfig: jest.fn((k) => loggerMock.ignore),
@@ -65,15 +69,15 @@ describe('Bootstrap classes', () => {
                 error: jest.fn((msg) => errorsLogged.push('channel:' + msg))
             }))
         };
-        const app = { logger: loggerMock };
+        const app: any = { logger: loggerMock };
         const bootstrapper = new HandleSystemError();
         bootstrapper.bootstrap(app);
 
         // Find listeners
         const unhandledRejectionListeners = process.listeners('unhandledRejection');
         const uncaughtExceptionListeners = process.listeners('uncaughtException');
-        const rejectionHandler = unhandledRejectionListeners[unhandledRejectionListeners.length - 1];
-        const exceptionHandler = uncaughtExceptionListeners[uncaughtExceptionListeners.length - 1];
+        const rejectionHandler: any = unhandledRejectionListeners[unhandledRejectionListeners.length - 1];
+        const exceptionHandler: any = uncaughtExceptionListeners[uncaughtExceptionListeners.length - 1];
 
         // Trigger rejection with Error
         rejectionHandler(new Error('test rejection err'));
@@ -127,7 +131,7 @@ describe('Bootstrap classes', () => {
         fs.mkdirSync(tmpConfigDir, { recursive: true });
 
         // Missing app config
-        const appNoAppConfig = {
+        const appNoAppConfig: any = {
             configPath: () => tmpConfigDir,
             instance: jest.fn()
         };
@@ -138,8 +142,8 @@ describe('Bootstrap classes', () => {
         fs.writeFileSync(path.join(tmpConfigDir, 'app.js'), 'module.exports = { timezone: "UTC", providers: [] };\n');
         fs.writeFileSync(path.join(tmpConfigDir, 'database.js'), 'module.exports = { default: "mysql" };\n');
 
-        let boundRepository = null;
-        const appWithConfig = {
+        let boundRepository: any = null;
+        const appWithConfig: any = {
             configPath: () => tmpConfigDir,
             instance: jest.fn((key, repo) => {
                 boundRepository = repo;
@@ -160,7 +164,7 @@ describe('Bootstrap classes', () => {
 
         // Test branch when dir has fileName on array/object
         const origReaddir = fs.readdirSync;
-        const mockFilesArr = ['app.js', 'other.js'];
+        const mockFilesArr: any = ['app.js', 'other.js'];
         mockFilesArr['app'] = { name: 'appConfigObj' };
         mockFilesArr['other'] = 'not-an-object';
         fs.readdirSync = jest.fn().mockReturnValue(mockFilesArr);
@@ -172,24 +176,20 @@ describe('Bootstrap classes', () => {
     });
 
     test('RequestBound binds app and copies prototype methods to ServerRequest', () => {
-        const RequestBound = require('../bootstrap/requestBound');
-        const ServerRequest = require('@ostro/server/request');
-        const app = { name: 'ostro_app' };
+        const app: any = { name: 'ostro_app' };
         const reqBound = new RequestBound();
         reqBound.bootstrap(app);
 
-        expect(ServerRequest.prototype.app).toBe(app);
-        expect(typeof ServerRequest.prototype.old).toBe('function');
+        expect((ServerRequest.prototype as any).app).toBe(app);
+        expect(typeof (ServerRequest.prototype as any).old).toBe('function');
     });
 
     test('ResponseBound binds app and copies prototype methods to ServerResponse', () => {
-        const ResponseBound = require('../bootstrap/responseBound');
-        const ServerResponse = require('@ostro/server/response');
-        const app = { name: 'ostro_app_res' };
+        const app: any = { name: 'ostro_app_res' };
         const resBound = new ResponseBound();
         resBound.bootstrap(app);
 
-        expect(ServerResponse.prototype.app).toBe(app);
-        expect(typeof ServerResponse.prototype.with).toBe('function');
+        expect((ServerResponse.prototype as any).app).toBe(app);
+        expect(typeof (ServerResponse.prototype as any).with).toBe('function');
     });
 });

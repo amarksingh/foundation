@@ -1,34 +1,40 @@
-const Ouch = require('ouch');
-const kHandler = Symbol('handler')
+import Ouch from 'ouch';
+
+const kHandler: unique symbol = Symbol('handler');
+
 /**
  * Class Whoops.
  */
 class Whoops {
+    private [kHandler]: any;
+
     /**
      * Create a new instance.
      */
     constructor() {
-        this[kHandler] = this.register()
+        this[kHandler] = this.register();
     }
+
     /**
      * register method.
-     * @returns {any}
+     * @returns Ouch instance
      */
-    register() {
-        return (new Ouch).pushHandler(new Ouch.handlers.PrettyPageHandler('orange'))
+    public register(): any {
+        return (new (Ouch as any)()).pushHandler(new (Ouch as any).handlers.PrettyPageHandler('orange'));
     }
+
     /**
      * render method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $exception
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $exception - Exception object
      */
-    render(request: any, response: any, $exception: Record<string, any> = {}) {
+    public render(request: any, response: any, $exception: Record<string, any> = {}): void {
         if (!response.headersSent) {
-            response.writeHead(($exception.statusCode || 500), {'Content-Type': 'text/html'});
+            response.writeHead(($exception.statusCode || 500), { 'Content-Type': 'text/html' });
         }
-        this[kHandler].handleException($exception, request, response)
+        this[kHandler].handleException($exception, request, response);
     }
 }
-module.exports = Whoops
+
+export = Whoops;

@@ -1,67 +1,54 @@
-const ServiceProvider = require('@ostro/router/routeServiceProvider')
+import ServiceProvider from '@ostro/router/routeServiceProvider';
+
 /**
  * Class RouteServiceProvider.
  */
 class RouteServiceProvider extends ServiceProvider {
 
-    $namespace = '';
+    public $namespace: string = '';
 
     /**
      * register method.
-     * @returns {any}
      */
-    register() {
-
+    public register(): void {
     }
 
     /**
      * boot method.
-     * @returns {any}
      */
-    boot() {
+    public boot(): void {
         //
     }
 
     /**
      * routes method.
-     * @returns {any}
      */
-    routes() {
-
+    public routes(): void {
     }
 
     /**
      * setRootControllerNamespace method.
-     * @returns {any}
      */
-    setRootControllerNamespace() {
-
+    public setRootControllerNamespace(): void {
     }
 
     /**
      * routesAreCached method.
-     * @returns {any}
      */
-    routesAreCached() {
-
+    public routesAreCached(): boolean | void {
     }
 
     /**
      * loadCachedRoutes method.
-     * @returns {any}
      */
-    loadCachedRoutes() {
-
+    public loadCachedRoutes(): void {
     }
 
     /**
      * loadRoutes method.
-     * @returns {any}
      */
-    loadRoutes() {
-
+    public loadRoutes(): void {
     }
-
 }
 
-module.exports = RouteServiceProvider
+export = RouteServiceProvider;

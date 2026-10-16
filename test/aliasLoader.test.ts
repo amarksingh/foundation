@@ -1,11 +1,11 @@
-const AliasLoader = require('../aliasLoader');
-const path = require('path');
+import AliasLoader from '../aliasLoader';
+import path from 'path';
 
 describe('AliasLoader', () => {
     afterEach(() => {
-        delete global.CustomAlias1;
-        delete global.CustomAlias2;
-        delete global.CustomRelative;
+        delete (global as any).CustomAlias1;
+        delete (global as any).CustomAlias2;
+        delete (global as any).CustomRelative;
     });
 
     test('registers aliases directly and by path', () => {
@@ -16,8 +16,8 @@ describe('AliasLoader', () => {
         });
         loader.registerGlobal();
 
-        expect(global.CustomAlias1).toBe(dummyObj);
-        expect(global.CustomAlias2).toBe(path);
+        expect((global as any).CustomAlias1).toBe(dummyObj);
+        expect((global as any).CustomAlias2).toBe(path);
     });
 
     test('registers relative path alias', () => {
@@ -26,7 +26,7 @@ describe('AliasLoader', () => {
         });
         loader.registerGlobal();
 
-        expect(global.CustomRelative).toBe(AliasLoader);
+        expect((global as any).CustomRelative).toBe(AliasLoader);
     });
 
     test('default empty constructor', () => {

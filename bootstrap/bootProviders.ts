@@ -5,12 +5,11 @@ class BootProviders {
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
+    public bootstrap($app: any): void {
         $app.boot();
     }
 }
 
-module.exports = BootProviders
+export = BootProviders;

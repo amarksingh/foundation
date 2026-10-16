@@ -1,14 +1,14 @@
-require('@ostro/support/helpers');
-const ValidatesRequests = require('../validation/validatesRequests');
-const Authorizable = require('../auth/access/authorizable');
-const GuardResolver = require('../auth/guardResolver');
-const User = require('../auth/user');
-const ConsoleSupportServiceProvider = require('../support/providers/consoleSupportServiceProvider');
-const RouteServiceProvider = require('../providers/routeServiceProvider');
-const FoundationServiceProvider = require('../providers/foundationServiceProvider');
-const Request = require('@ostro/http/request');
-const FileRequest = require('@ostro/http/file');
-const Facade = require('@ostro/support/facades/facade');
+import '@ostro/support/helpers';
+import ValidatesRequests from '../validation/validatesRequests';
+import Authorizable from '../auth/access/authorizable';
+import GuardResolver from '../auth/guardResolver';
+import User = require('../auth/user');
+import ConsoleSupportServiceProvider from '../support/providers/consoleSupportServiceProvider';
+import RouteServiceProvider from '../providers/routeServiceProvider';
+import FoundationServiceProvider from '../providers/foundationServiceProvider';
+import Request from '@ostro/http/request';
+import FileRequest from '@ostro/http/file';
+import Facade from '@ostro/support/facades/facade';
 
 describe('Auth, Validation, and Providers', () => {
     test("Authorizable, GuardResolver, and ConsoleSupportServiceProvider", () => {
@@ -18,7 +18,7 @@ describe('Auth, Validation, and Providers', () => {
         const guard = new GuardResolver();
         expect(guard).toBeInstanceOf(GuardResolver);
 
-        const appMock = { register: jest.fn() };
+        const appMock: any = { register: jest.fn() };
         const consoleProvider = new ConsoleSupportServiceProvider(appMock);
         expect(consoleProvider.$providers).toHaveLength(2);
     });
@@ -32,7 +32,7 @@ describe('Auth, Validation, and Providers', () => {
                 return Promise.resolve(data);
             })
         };
-        global.app = jest.fn((k) => {
+        (global as any).app = jest.fn((k) => {
             if (k === "validation") return mockValidator;
             return null;
         });
@@ -60,7 +60,7 @@ describe('Auth, Validation, and Providers', () => {
 
         const user = new User();
         user.getKeyName = () => "id";
-        user.getAttribute = (k) => 42;
+        user.getAttribute = (k: any) => 42;
         user.setApiToken = jest.fn();
         user.save = jest.fn().mockResolvedValue(true);
 
@@ -71,7 +71,7 @@ describe('Auth, Validation, and Providers', () => {
     });
 
     test('RouteServiceProvider lifecycle stubs', () => {
-        const appMock = {
+        const appMock: any = {
             singleton: jest.fn()
         };
         const provider = new RouteServiceProvider(appMock);
@@ -87,7 +87,7 @@ describe('Auth, Validation, and Providers', () => {
     });
 
     test('FoundationServiceProvider registers validation macro and filesystem hooks', () => {
-        const appMock = {
+        const appMock: any = {
             validation: {
                 validate: jest.fn((data, rules, msg) => ({ valid: true }))
             },
@@ -105,7 +105,7 @@ describe('Auth, Validation, and Providers', () => {
         provider.boot();
 
         // Check Request macro 'validate' was defined
-        const req = new Request({});
+        const req: any = new Request({});
         req.all = () => ({ username: 'user1' });
         const result = req.validate({ username: 'required' }, {});
         expect(result).toEqual({ valid: true });
@@ -115,7 +115,7 @@ describe('Auth, Validation, and Providers', () => {
 
 describe('FoundationServiceProvider 100% branch coverage', () => {
     test('macro validate default arguments', () => {
-        const appMock = {
+        const appMock: any = {
             validation: {
                 validate: jest.fn((data, rules, msg) => ({ valid: true, rules, msg }))
             },
@@ -124,7 +124,7 @@ describe('FoundationServiceProvider 100% branch coverage', () => {
         const provider = new FoundationServiceProvider(appMock);
         provider.register();
 
-        const req = new Request({});
+        const req: any = new Request({});
         req.all = () => ({});
         const res = req.validate();
         expect(res.rules).toEqual({});

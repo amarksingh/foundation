@@ -1,7 +1,7 @@
-const AggregateServiceProvider = require('@ostro/support/aggregateServiceProvider')
-const Http = require('@ostro/http/httpContext')
-const Request = require('@ostro/http/request')
-const FileRequest = require('@ostro/http/file')
+import AggregateServiceProvider from '@ostro/support/aggregateServiceProvider';
+import Http from '@ostro/http/httpContext';
+import Request from '@ostro/http/request';
+import FileRequest from '@ostro/http/file';
 
 /**
  * Class FoundationServiceProvider.
@@ -10,9 +10,8 @@ class FoundationServiceProvider extends AggregateServiceProvider {
 
     /**
      * register method.
-     * @returns {any}
      */
-    register() {
+    public override register(): void {
         super.register();
 
         this.registerRequestValidation();
@@ -20,35 +19,31 @@ class FoundationServiceProvider extends AggregateServiceProvider {
 
     /**
      * boot method.
-     * @returns {any}
      */
-    boot() {
-        super.boot()
-        this.requestFilesystem()
+    public override boot(): void {
+        super.boot();
+        this.requestFilesystem();
     }
 
     /**
      * registerRequestValidation method.
-     * @returns {any}
      */
-    registerRequestValidation() {
-        let $app = this.$app
+    public registerRequestValidation(): void {
+        const $app = this.$app;
 
-        Request.macro('validate', function($rules = {}, $message = {}) {
-            return $app['validation'].validate(this.all(), $rules, $message)
-        })
+        Request.macro('validate', function(this: any, $rules: any = {}, $message: any = {}) {
+            return $app['validation'].validate(this.all(), $rules, $message);
+        });
     }
 
     /**
      * requestFilesystem method.
-     * @returns {any}
      */
-    requestFilesystem() {
-        this.$app.whenHas('filesystem', function(filesystem) {
-            filesystem.registerToRequest(FileRequest)
-        })
+    public requestFilesystem(): void {
+        this.$app.whenHas('filesystem', function(filesystem: any) {
+            filesystem.registerToRequest(FileRequest);
+        });
     }
-
 }
 
-module.exports = FoundationServiceProvider
+export = FoundationServiceProvider;

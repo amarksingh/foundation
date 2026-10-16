@@ -1,4 +1,4 @@
-const Command = require('@ostro/console/command')
+import Command = require('@ostro/console/command');
 
 /**
  * Class ServeCommand.
@@ -89,4 +89,4 @@ class ServeCommand extends Command {
 
 }
 
-module.exports = ServeCommand
+export = ServeCommand;

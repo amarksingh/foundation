@@ -1,8 +1,8 @@
-require('@ostro/support/helpers');
-const Application = require('../application');
-const ServiceProvider = require('@ostro/support/serviceProvider');
-const fs = require('fs');
-const path = require('path');
+import '@ostro/support/helpers';
+import Application = require('../application');
+import ServiceProvider = require('@ostro/support/serviceProvider');
+import fs = require('fs');
+import path = require('path');
 
 describe('Application class', () => {
     let app;

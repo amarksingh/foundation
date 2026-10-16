@@ -1,12 +1,12 @@
-const Container = require('@ostro/container')
-const Filesystem = require('@ostro/filesystem/filesystem')
-const ProviderRepository = require('./providerRepository')
-const Env = require('@ostro/support/env')
-const path = require('path')
-const fs = require('fs')
-const Mix = require('./mix')
-const LocaleUpdated = require('./events/localeUpdated')
-const worker_threads = require('worker_threads');
+import Container = require('@ostro/container');
+import Filesystem = require('@ostro/filesystem/filesystem');
+import ProviderRepository = require('./providerRepository');
+import Env = require('@ostro/support/env');
+import path = require('path');
+import fs = require('fs');
+import Mix = require('./mix');
+import LocaleUpdated = require('./events/localeUpdated');
+import worker_threads = require('worker_threads');
 /**
  * Class Application.
  */

@@ -1,32 +1,37 @@
-const Ouch = require('ouch');
-const kHandler = Symbol('handler')
+import Ouch from 'ouch';
+
+const kHandler: unique symbol = Symbol('handler');
+
 /**
  * Class Json.
  */
 class Json {
+    private [kHandler]: any;
+
     /**
      * Create a new instance.
      */
     constructor() {
-        this[kHandler] = this.register()
+        this[kHandler] = this.register();
     }
+
     /**
      * register method.
-     * @returns {any}
+     * @returns Ouch handler instance
      */
-    register() {
-        return (new Ouch([new Ouch.handlers.JsonResponseHandler(false, true, false)]))
+    public register(): any {
+        return (new (Ouch as any)([new (Ouch as any).handlers.JsonResponseHandler(false, true, false)]));
     }
+
     /**
      * render method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $exception
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $exception - Exception object
      */
-    render(request: any, response: any, $exception: Record<string, any> = {}) {
-        this[kHandler].handleException($exception, null, null, function(exception) {
-            let parsedObj = JSON.parse(exception).error || {}
+    public render(request: any, response: any, $exception: Record<string, any> = {}): void {
+        this[kHandler].handleException($exception, null, null, function (exception: any) {
+            const parsedObj = JSON.parse(exception).error || {};
             response.json({
                 name: parsedObj.type,
                 message: parsedObj.message,
@@ -34,8 +39,9 @@ class Json {
                 file: parsedObj.file,
                 line: parsedObj.line,
                 trace: parsedObj.trace,
-            }, $exception.statusCode || 500)
+            }, $exception.statusCode || 500);
         });
     }
 }
-module.exports = Json
+
+export = Json;

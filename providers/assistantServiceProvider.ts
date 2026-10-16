@@ -1,10 +1,28 @@
-const ServiceProvider = require('@ostro/support/serviceProvider');
+import ServiceProvider from '@ostro/support/serviceProvider';
+import DatabaseQueryCommand from '@ostro/database/console/databaseQuery';
+import SeederMakeCommand from '@ostro/database/console/seeds/seederMakeCommand';
+import SeedCommand from '@ostro/database/console/seeds/seedCommand';
+import CacheClearCommand from '@ostro/cache/console/clearCommand';
+import CacheForgetCommand from '@ostro/cache/console/forgetCommand';
+import CacheTableCommand from '@ostro/cache/console/cacheTableCommand';
+import ConsoleMakeCommand from '../console/consoleMakeCommand';
+import ControllerMakeCommand from '@ostro/router/console/controllerMakeCommand';
+import FactoryMakeCommand from '@ostro/database/console/factories/factoryMakeCommand';
+import KeyGenerateCommand from '../console/keyGenerateCommand';
+import MiddlewareMakeCommand from '@ostro/router/console/middlewareMakeCommand';
+import ModelMakeCommand from '../console/modelMakeCommand';
+import ResourceMakeCommand from '../console/resourceMakeCommand';
+import SessionTableCommand from '@ostro/session/console/sessionTableCommand';
+import StorageLinkCommand from '../console/storageLinkCommand';
+import ServerlessBootstrapCommand from '../console/serverlessBootstrapCommand';
+import ServerBootstrapCommand from '../console/serverBootstrapCommand';
+import WipeCommand from '@ostro/database/console/wipeCommand';
 
 /**
  * Class AssistantServiceProvider.
  */
 class AssistantServiceProvider extends ServiceProvider {
-    $commands = {
+    public $commands: Record<string, string> = {
         'DbQuery': 'command.db.query',
         'KeyGenerate': 'command.key.generate',
         'Seed': 'command.seed',
@@ -14,7 +32,7 @@ class AssistantServiceProvider extends ServiceProvider {
         'DbWipe': 'command.db.wipe',
     };
 
-    $devCommands = {
+    public $devCommands: Record<string, string> = {
         'CacheTable': 'command.cache.table',
         'ConsoleMake': 'command.console.make',
         'ControllerMake': 'command.controller.make',
@@ -30,9 +48,8 @@ class AssistantServiceProvider extends ServiceProvider {
 
     /**
      * register method.
-     * @returns {any}
      */
-    register() {
+    public override register(): void {
         this.registerCommands(Object.assign(
             this.$commands, this.$devCommands
         ));
@@ -40,15 +57,14 @@ class AssistantServiceProvider extends ServiceProvider {
 
     /**
      * registerCommands method.
-     * @param {*} $commands
-     * @returns {any}
+     * @param $commands - Map of command names to binding names
      */
-    registerCommands($commands: Record<string, any> = {}) {
-        for (let $command of Object.keys($commands)) {
-            if (typeof this[`register${$command}Command`] != 'function') {
-                throw new Error(`register${$command}Command not available.`)
+    public registerCommands($commands: Record<string, any> = {}): void {
+        for (const $command of Object.keys($commands)) {
+            if (typeof (this as any)[`register${$command}Command`] !== 'function') {
+                throw new Error(`register${$command}Command not available.`);
             }
-            this[`register${$command}Command`]();
+            (this as any)[`register${$command}Command`]();
         }
 
         this.commands(Object.values($commands));
@@ -56,193 +72,175 @@ class AssistantServiceProvider extends ServiceProvider {
 
     /**
      * registerDbQueryCommand method.
-     * @returns {any}
      */
-    registerDbQueryCommand() {
-        this.$app.singleton('command.db.query', function ($app) {
-            let $table = $app['config']['database.table'];
-            return new (require('@ostro/database/console/databaseQuery'))($app['db'], $table);
+    public registerDbQueryCommand(): void {
+        this.$app.singleton('command.db.query', function ($app: any) {
+            const $table = $app['config']['database.table'];
+            return new DatabaseQueryCommand($app['db'], $table);
         });
     }
 
     /**
      * registerSeederMakeCommand method.
-     * @returns {any}
      */
-    registerSeederMakeCommand() {
-        this.$app.singleton('command.seeder.make', function ($app) {
-            return new (require('@ostro/database/console/seeds/seederMakeCommand'))($app['files']);
+    public registerSeederMakeCommand(): void {
+        this.$app.singleton('command.seeder.make', function ($app: any) {
+            return new SeederMakeCommand($app['files']);
         });
     }
 
     /**
      * registerSeedCommand method.
-     * @returns {any}
      */
-    registerSeedCommand() {
-        this.$app.singleton('command.seed', function ($app) {
-            return new (require('@ostro/database/console/seeds/seedCommand'))($app['db']);
+    public registerSeedCommand(): void {
+        this.$app.singleton('command.seed', function ($app: any) {
+            return new SeedCommand($app['db']);
         });
     }
 
     /**
      * registerCacheClearCommand method.
-     * @returns {any}
      */
-    registerCacheClearCommand() {
-        this.$app.singleton('command.cache.clear', function ($app) {
-            return new (require('@ostro/cache/console/clearCommand'))($app['cache'], $app['files']);
+    public registerCacheClearCommand(): void {
+        this.$app.singleton('command.cache.clear', function ($app: any) {
+            return new CacheClearCommand($app['cache'], $app['files']);
         });
     }
 
     /**
      * registerCacheForgetCommand method.
-     * @returns {any}
      */
-    registerCacheForgetCommand() {
-        this.$app.singleton('command.cache.forget', function ($app) {
-            return new (require('@ostro/cache/console/forgetCommand'))($app['cache']);
+    public registerCacheForgetCommand(): void {
+        this.$app.singleton('command.cache.forget', function ($app: any) {
+            return new CacheForgetCommand($app['cache']);
         });
     }
 
     /**
      * registerCacheTableCommand method.
-     * @returns {any}
      */
-    registerCacheTableCommand() {
-        this.$app.singleton('command.cache.table', function ($app) {
-            return new (require('@ostro/cache/console/cacheTableCommand'))($app['files']);
+    public registerCacheTableCommand(): void {
+        this.$app.singleton('command.cache.table', function ($app: any) {
+            return new CacheTableCommand($app['files']);
         });
     }
 
     /**
      * registerConsoleMakeCommand method.
-     * @returns {any}
      */
-    registerConsoleMakeCommand() {
-        this.$app.singleton('command.console.make', function ($app) {
-            return new (require('@ostro/foundation/console/consoleMakeCommand'))($app['files']);
+    public registerConsoleMakeCommand(): void {
+        this.$app.singleton('command.console.make', function ($app: any) {
+            return new ConsoleMakeCommand($app['files']);
         });
     }
 
     /**
      * registerControllerMakeCommand method.
-     * @returns {any}
      */
-    registerControllerMakeCommand() {
-        this.$app.singleton('command.controller.make', function ($app) {
-            return new (require('@ostro/router/console/controllerMakeCommand'))($app['files']);
+    public registerControllerMakeCommand(): void {
+        this.$app.singleton('command.controller.make', function ($app: any) {
+            return new ControllerMakeCommand($app['files']);
         });
     }
 
     /**
      * registerFactoryMakeCommand method.
-     * @returns {any}
      */
-    registerFactoryMakeCommand() {
-        this.$app.singleton('command.factory.make', function ($app) {
-            return new (require('@ostro/database/console/factories/factoryMakeCommand'))($app['files']);
+    public registerFactoryMakeCommand(): void {
+        this.$app.singleton('command.factory.make', function ($app: any) {
+            return new FactoryMakeCommand($app['files']);
         });
     }
 
     /**
      * registerKeyGenerateCommand method.
-     * @returns {any}
      */
-    registerKeyGenerateCommand() {
-        this.$app.singleton('command.key.generate', function ($app) {
-            return new (require('@ostro/foundation/console/keyGenerateCommand'))($app['files']);
+    public registerKeyGenerateCommand(): void {
+        this.$app.singleton('command.key.generate', function ($app: any) {
+            return new KeyGenerateCommand($app['files']);
         });
     }
 
     /**
      * registerMiddlewareMakeCommand method.
-     * @returns {any}
      */
-    registerMiddlewareMakeCommand() {
-        this.$app.singleton('command.middleware.make', function ($app) {
-            return new (require('@ostro/router/console/middlewareMakeCommand'))($app['files']);
+    public registerMiddlewareMakeCommand(): void {
+        this.$app.singleton('command.middleware.make', function ($app: any) {
+            return new MiddlewareMakeCommand($app['files']);
         });
     }
 
     /**
      * registerModelMakeCommand method.
-     * @returns {any}
      */
-    registerModelMakeCommand() {
-        this.$app.singleton('command.model.make', function ($app) {
-            return new (require('@ostro/foundation/console/modelMakeCommand'))($app['files']);
+    public registerModelMakeCommand(): void {
+        this.$app.singleton('command.model.make', function ($app: any) {
+            return new ModelMakeCommand($app['files']);
         });
     }
 
     /**
      * registerResourceMakeCommand method.
-     * @returns {any}
      */
-    registerResourceMakeCommand() {
-        this.$app.singleton('command.resource.make', function ($app) {
-            return new (require('@ostro/foundation/console/resourceMakeCommand'))($app['files']);
+    public registerResourceMakeCommand(): void {
+        this.$app.singleton('command.resource.make', function ($app: any) {
+            return new ResourceMakeCommand($app['files']);
         });
     }
 
     /**
      * registerSessionTableCommand method.
-     * @returns {any}
      */
-    registerSessionTableCommand() {
-        this.$app.singleton('command.session.table', function ($app) {
-            return new (require('@ostro/session/console/sessionTableCommand'))($app['files']);
+    public registerSessionTableCommand(): void {
+        this.$app.singleton('command.session.table', function ($app: any) {
+            return new SessionTableCommand($app['files']);
         });
     }
 
     /**
      * registerStorageLinkCommand method.
-     * @returns {any}
      */
-    registerStorageLinkCommand() {
-        this.$app.singleton('command.storage.link', function ($app) {
-            return new (require('@ostro/foundation/console/storageLinkCommand'))($app['files']);
+    public registerStorageLinkCommand(): void {
+        this.$app.singleton('command.storage.link', function ($app: any) {
+            return new StorageLinkCommand($app['files']);
         });
     }
 
     /**
      * registerServerlessBootstrapCommand method.
-     * @returns {any}
      */
-    registerServerlessBootstrapCommand() {
-        this.$app.singleton('command.serverless.bootstrap', function ($app) {
-            return new (require('@ostro/foundation/console/serverlessBootstrapCommand'))($app['files']);
+    public registerServerlessBootstrapCommand(): void {
+        this.$app.singleton('command.serverless.bootstrap', function ($app: any) {
+            return new ServerlessBootstrapCommand($app['files']);
         });
     }
 
     /**
      * registerServerBootstrapCommand method.
-     * @returns {any}
      */
-    registerServerBootstrapCommand() {
-        this.$app.singleton('command.server.bootstrap', function ($app) {
-            return new (require('@ostro/foundation/console/serverBootstrapCommand'))($app['files']);
+    public registerServerBootstrapCommand(): void {
+        this.$app.singleton('command.server.bootstrap', function ($app: any) {
+            return new ServerBootstrapCommand($app['files']);
         });
     }
 
     /**
      * registerDbWipeCommand method.
-     * @returns {any}
      */
-    registerDbWipeCommand() {
+    public registerDbWipeCommand(): void {
         this.$app.singleton('command.db.wipe', function () {
-            return new (require('@ostro/database/console/wipeCommand'));
+            return new WipeCommand();
         });
     }
 
     /**
      * provides method.
-     * @returns {any}
+     * @returns Array of command bindings provided
      */
-    provides() {
+    public override provides(): string[] {
         return Object.values(this.$commands);
     }
 
 }
 
-module.exports = AssistantServiceProvider
+export = AssistantServiceProvider;

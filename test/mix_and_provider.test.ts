@@ -1,9 +1,9 @@
-require('@ostro/support/helpers');
-const Mix = require('../mix');
-const ProviderRepository = require('../providerRepository');
-const MixException = require('@ostro/support/exceptions/mixException');
-const fs = require('fs');
-const path = require('path');
+import '@ostro/support/helpers';
+import Mix from '../mix';
+import ProviderRepository from '../providerRepository';
+import MixException from '@ostro/support/exceptions/mixException';
+import fs from 'fs';
+import path from 'path';
 
 describe('Mix and ProviderRepository', () => {
     test('Mix handles paths, manifests, and missing files', () => {
@@ -15,11 +15,11 @@ describe('Mix and ProviderRepository', () => {
             '/css/app.css': '/css/app.css?id=456'
         }));
 
-        global.public_path = (p) => path.join(tmpPublic, p);
+        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
 
-        const appMock = {
+        const appMock: any = {
             instance: jest.fn().mockReturnValue({
-                get: (k) => {
+                get: (k: string) => {
                     if (k === 'app.debug') return true;
                     if (k === 'app.mix_url') return 'https://cdn.example.com';
                     return null;
@@ -27,7 +27,7 @@ describe('Mix and ProviderRepository', () => {
             }),
             logger: { report: jest.fn() },
             config: {
-                get: (k) => (k === 'app.mix_url' ? 'https://cdn.example.com' : null)
+                get: (k: string) => (k === 'app.mix_url' ? 'https://cdn.example.com' : null)
             }
         };
 
@@ -39,23 +39,23 @@ describe('Mix and ProviderRepository', () => {
 
         // Missing manifest exception
         const nonExistentDir = path.join(__dirname, 'non_existent_dir');
-        global.public_path = (p) => path.join(nonExistentDir, p);
+        (global as any).public_path = (p: string) => path.join(nonExistentDir, p);
         expect(() => mix.path('/js/missing.js')).toThrow(MixException);
 
         // File exists but is directory -> throw
         const fakeFileDir = path.join(tmpPublic, 'dir-manifest');
         fs.mkdirSync(fakeFileDir, { recursive: true });
-        global.public_path = () => fakeFileDir;
+        (global as any).public_path = () => fakeFileDir;
         expect(() => mix.path('/js/app.js')).toThrow(MixException);
 
         // Missing file in manifest in debug mode -> throw
-        global.public_path = (p) => path.join(tmpPublic, p);
+        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
         const mix2 = new Mix(appMock);
         expect(() => mix2.path('/js/unlisted.js')).toThrow(MixException);
 
         // Missing file in manifest when debug=false -> report to logger and return path
         appMock.instance.mockReturnValue({
-            get: (k) => (k === 'app.debug' ? false : null)
+            get: (k: string) => (k === 'app.debug' ? false : null)
         });
         const result = mix2.path('/js/unlisted.js');
         expect(result).toBe('/js/unlisted.js');
@@ -67,7 +67,7 @@ describe('Mix and ProviderRepository', () => {
         fs.writeFileSync(path.join(subManifestDir, 'mix-manifest.json'), JSON.stringify({
             '/app.js': '/app.js?v=2'
         }));
-        global.public_path = (p) => path.join(tmpPublic, p);
+        (global as any).public_path = (p: string) => path.join(tmpPublic, p);
         expect(mix2.path('/app.js', 'build')).toBe('https://cdn.example.com/build/app.js?v=2');
         expect(mix2.path('/app.js', '/build')).toBe('https://cdn.example.com/build/app.js?v=2');
 
@@ -81,19 +81,21 @@ describe('Mix and ProviderRepository', () => {
 
     test('ProviderRepository loads eager and deferred providers', () => {
         class EagerProvider {
-            constructor(app) { this.app = app; }
+            public app: any;
+            constructor(app: any) { this.app = app; }
             isDeferred() { return false; }
         }
         class DeferredProvider {
-            constructor(app) { this.app = app; }
+            public app: any;
+            constructor(app: any) { this.app = app; }
             isDeferred() { return true; }
         }
 
-        const registered = [];
-        const deferredServices = [];
+        const registered: any[] = [];
+        const deferredServices: any[] = [];
         const appMock = {
-            register: (p) => registered.push(p),
-            addDeferredServices: (s) => deferredServices.push(...s)
+            register: (p: any) => registered.push(p),
+            addDeferredServices: (s: any[]) => deferredServices.push(...s)
         };
 
         const repo = new ProviderRepository(appMock, {});

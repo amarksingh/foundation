@@ -5,4 +5,4 @@ class GuardResolver {
 
 }
 
-module.exports = GuardResolver
+export = GuardResolver;

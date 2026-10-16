@@ -1,65 +1,70 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
-const StringHelper = require('@ostro/support/string')
+import path from 'path';
+import GeneratorCommand = require('@ostro/console/generatorCommand');
+import * as StringHelper from '@ostro/support/string';
+import { trim } from '@ostro/support/function';
 
 /**
  * Class FactoryMakeCommand.
  */
 class FactoryMakeCommand extends GeneratorCommand {
 
-    $signature = 'make:command';
+    public declare $app: any;
+    public declare $file: any;
 
-    $description =  'Create a new Assistant command';
+    public $signature: string = 'make:command';
 
-    $options = [
+    public $description: string = 'Create a new Assistant command';
+
+    public $options: any[] = [
         this.createOption('--command [command] ', 'The terminal command that should be assigned'),
     ];
 
-    $arguments =  [
+    public $arguments: any[] = [
         this.createArgument('[name]', 'The name of the command').required()
     ];
 
-    $type = 'Console command';
+    public $type: string = 'Console command';
 
     /**
      * replaceClass method.
-     * @param {*} $stub
-     * @param {*} $name
-     * @returns {any}
+     * @param stub - The stub content
+     * @param name - The command name
+     * @returns The updated stub content
      */
-    replaceClass($stub: any, $name: string) {
-        $name = StringHelper.replaceAll($name, ':', ' ')
-        $stub = super.replaceClass($stub, $name);
-        let $command = this.option('command') || this.argument('name')
-        return StringHelper.replaceAll($stub, ['dummy:command', '{{ command }}'], $command);
+    public replaceClass(stub: string, name: string): string {
+        name = StringHelper.replaceAll(name, ':', ' ');
+        stub = super.replaceClass(stub, name);
+        let command: string = this.option('command') || this.argument('name');
+        return StringHelper.replaceAll(stub, ['dummy:command', '{{ command }}'], command);
     }
 
     /**
      * getStub method.
-     * @returns {any}
+     * @returns Stub path
      */
-    getStub() {
+    public getStub(): Promise<string> {
         return this.resolveStubPath('/stubs/console.stub');
     }
 
     /**
      * resolveStubPath method.
-     * @param {*} $stub
-     * @returns {any}
+     * @param stub - The stub relative path
+     * @returns The resolved stub path
      */
-    resolveStubPath($stub: any) {
-        let $customPath = this.$app.basePath(trim($stub, '/'))
-        return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
+    public resolveStubPath(stub: string): Promise<string> {
+        let customPath: string = this.$app.basePath(trim(stub, '/'));
+        return this.$file.exists(customPath).then((exists: boolean) => (exists ? customPath : path.join(__dirname, stub)));
     }
 
     /**
      * getDefaultNamespace method.
-     * @param {*} $rootNamespace
-     * @returns {any}
+     * @param rootNamespace - The root namespace path
+     * @returns The default namespace path
      */
-    getDefaultNamespace($rootNamespace: any) {
-        return path.join($rootNamespace, 'app', 'console', 'commands');
+    public getDefaultNamespace(rootNamespace: string): string {
+        return path.join(rootNamespace, 'app', 'console', 'commands');
     }
 
 }
 
-module.exports = FactoryMakeCommand
+export = FactoryMakeCommand;

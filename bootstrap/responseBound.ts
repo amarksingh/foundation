@@ -1,6 +1,6 @@
-const HttpResponse = require('@ostro/http/response')
-const CoreHttpResponse = require('@ostro/foundation/http/response')
-const ServerResponse = require('@ostro/server/response')
+import HttpResponse from '@ostro/http/response';
+import CoreHttpResponse from '@ostro/foundation/http/response';
+import ServerResponse from '@ostro/server/response';
 
 /**
  * Class ResponseBound.
@@ -9,20 +9,18 @@ class ResponseBound {
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
+    public bootstrap($app: any): void {
+        ServerResponse.prototype['app'] = $app;
 
-        ServerResponse.prototype['app'] = $app
-
-        for (var a of Object.getOwnPropertyNames(HttpResponse.prototype)) {
-            ServerResponse.prototype[a] = HttpResponse.prototype[a];
+        for (const a of Object.getOwnPropertyNames(HttpResponse.prototype)) {
+            ServerResponse.prototype[a] = (HttpResponse.prototype as any)[a];
         }
-        for (var a of Object.getOwnPropertyNames(CoreHttpResponse.prototype)) {
-            ServerResponse.prototype[a] = CoreHttpResponse.prototype[a];
+        for (const a of Object.getOwnPropertyNames(CoreHttpResponse.prototype)) {
+            ServerResponse.prototype[a] = (CoreHttpResponse.prototype as any)[a];
         }
     }
 }
 
-module.exports = ResponseBound
+export = ResponseBound;

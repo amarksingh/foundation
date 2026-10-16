@@ -1,22 +1,30 @@
-require('@ostro/support/helpers')
-const {
-    Macroable
-} = require('@ostro/support/macro')
-const kApp = Symbol('app')
-const kHandlers = Symbol('handlers')
-const kCustomHandlers = Symbol('customHandlers')
-const kHandlerAdapter = Symbol('handlerAdapter')
-const InvalidArgumentException = require('@ostro/support/exceptions/invalidArgumentException')
+import '@ostro/support/helpers';
+import { Macroable } from '@ostro/support/macro';
+import InvalidArgumentException from '@ostro/support/exceptions/invalidArgumentException';
+import WhoopsHandler from './handlers/whoops';
+import ProductionHandler from './handlers/production';
+import JsonHandler from './handlers/json';
+
+const kApp: unique symbol = Symbol('app');
+const kHandlers: unique symbol = Symbol('handlers');
+const kCustomHandlers: unique symbol = Symbol('customHandlers');
+const kHandlerAdapter: unique symbol = Symbol('handlerAdapter');
+
 /**
  * Class ExceptionManager.
  */
 class ExceptionManager extends Macroable {
+    public $app: any;
+    public [kHandlerAdapter]: any;
+    public [kHandlers]: Record<string, any>;
+    public [kCustomHandlers]: Record<string, any>;
+
     /**
      * Create a new instance.
-     * @param {*} handler
+     * @param handler - Handler adapter constructor
      */
     constructor(handler: Function) {
-        super()
+        super();
         Object.defineProperties(this, {
             [kHandlerAdapter]: {
                 value: handler,
@@ -30,40 +38,40 @@ class ExceptionManager extends Macroable {
                 value: Object.create(null),
                 writable: true,
             },
-        })
+        });
     }
 
     /**
      * handler method.
-     * @param {*} name
-     * @returns {any}
+     * @param name - Handler name
+     * @returns Resolved handler
      */
-    handler(name: string = 'whoops') {
-        name = (this.getConfig('app.debug') == false) ? 'production' : name
+    public handler(name: string = 'whoops'): any {
+        name = (this.getConfig('app.debug') === false) ? 'production' : name;
 
         return this[kHandlers][name] = this.get(name);
     }
 
     /**
      * get method.
-     * @param {*} name
-     * @returns {any}
+     * @param name - Handler name
+     * @returns Handler instance
      */
-    get(name: string) {
+    public get(name: string): any {
         return this[kHandlers][name] || this.resolve(name);
     }
 
     /**
      * resolve method.
-     * @param {*} name
-     * @returns {any}
+     * @param name - Handler name
+     * @returns Resolved handler
      */
-    resolve(name: string) {
-        let driverMethod = 'create' + (name.ucfirst()) + 'Handler';
-        if ((this[kCustomHandlers][name])) {
+    public resolve(name: string): any {
+        const driverMethod = 'create' + (name.ucfirst()) + 'Handler';
+        if (this[kCustomHandlers][name]) {
             return this.callCustomHandler(name);
-        } else if (typeof ExceptionManager.prototype[driverMethod] == 'function') {
-            return this[driverMethod]();
+        } else if (typeof (ExceptionManager.prototype as any)[driverMethod] === 'function') {
+            return (this as any)[driverMethod]();
         } else {
             throw new Error(`Handler [{${name}}] do not supported.`);
         }
@@ -71,97 +79,99 @@ class ExceptionManager extends Macroable {
 
     /**
      * callCustomHandler method.
-     * @param {*} name
-     * @returns {any}
+     * @param name - Custom handler name
+     * @returns Adapted handler
      */
-    callCustomHandler(name: string) {
-        var driver = this[kCustomHandlers][name]();
+    public callCustomHandler(name: string): any {
+        const driver = this[kCustomHandlers][name]();
         return this.adapt(driver);
     }
 
     /**
      * createWhoopsHandler method.
-     * @param {*} $config
-     * @returns {any}
+     * @param $config - Config options
+     * @returns Whoops handler adapter
      */
-    createWhoopsHandler($config: Record<string, any>) {
-        return this.adapt(new(require('./handlers/whoops')));
+    public createWhoopsHandler($config?: Record<string, any>): any {
+        return this.adapt(new WhoopsHandler());
     }
 
     /**
      * createProductionHandler method.
-     * @returns {any}
+     * @returns Production handler adapter
      */
-    createProductionHandler() {
-        return this.adapt(new(require('./handlers/production')));
+    public createProductionHandler(): any {
+        return this.adapt(new ProductionHandler());
     }
 
     /**
      * createJsonHandler method.
-     * @returns {any}
+     * @returns Json handler adapter
      */
-    createJsonHandler() {
-        return this.adapt(new(require('./handlers/json')));
+    public createJsonHandler(): any {
+        return this.adapt(new JsonHandler());
     }
 
     /**
      * adapt method.
-     * @param {*} handler
-     * @returns {any}
+     * @param handler - Handler driver instance
+     * @returns Adapted handler
      */
-    adapt(handler: Function) {
-        if (typeof this[kHandlerAdapter] != 'function') {
-            throw new InvalidArgumentException('Invalid handler class on exception')
+    public adapt(handler: any): any {
+        if (typeof this[kHandlerAdapter] !== 'function') {
+            throw new InvalidArgumentException('Invalid handler class on exception');
         }
-        return new this[kHandlerAdapter](handler)
+        return new this[kHandlerAdapter](handler);
     }
 
     /**
      * getConfig method.
-     * @param {*} key
-     * @returns {any}
+     * @param key - Config key
+     * @returns Config value
      */
-    getConfig(key: string) {
-        return this.$app['config'][key]
+    public getConfig(key: string): any {
+        return this.$app['config'][key];
     }
 
     /**
      * setHandlerAdapter method.
-     * @param {*} handler
-     * @returns {any}
+     * @param handler - Handler adapter constructor
      */
-    setHandlerAdapter(handler: Function) {
-        this[kHandlerAdapter] = handler
+    public setHandlerAdapter(handler: Function): void {
+        this[kHandlerAdapter] = handler;
     }
 
     /**
      * extend method.
-     * @param {*} $driver
-     * @param {*} $callback
-     * @returns {any}
+     * @param $driver - Driver name
+     * @param $callback - Creator callback
+     * @returns this
      */
-    extend($driver: any, $callback: Function) {
+    public extend($driver: string, $callback: Function): this {
         this[kCustomHandlers][$driver] = $callback.bind(this, this);
         return this;
     }
+
     /**
      * extends method.
-     * @param {*} $driver
-     * @param {*} $callback
-     * @returns {any}
+     * @param $driver - Driver name
+     * @param $callback - Creator callback
+     * @returns this
      */
-    extends($driver: any, $callback: Function) {
+    public extends($driver: string, $callback: Function): this {
         return this.extend($driver, $callback);
     }
+
     /**
      * __call method.
-     * @param {*} target
-     * @param {*} method
-     * @param {*} args
-     * @returns {any}
+     * @param target - Target object
+     * @param method - Method name
+     * @param args - Arguments array
+     * @returns Delegated call result
      */
-    __call(target: Record<string, any>, method: string, args: any[]) {
-        return target.handler()[method](...args)
+    public __call(target: Record<string, any>, method: string, args: any[]): any {
+        return target.handler()[method](...args);
     }
 }
-module.exports = ExceptionManager
+
+export = ExceptionManager;

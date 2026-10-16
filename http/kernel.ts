@@ -1,12 +1,19 @@
-const KernelContract = require('@ostro/contracts/http/kernel')
-const HttpContext = require('./httpContext')
-const kCachedMiddleware = Symbol('cachedMiddleware')
+import KernelContract from '@ostro/contracts/http/kernel';
+import HttpContext from './httpContext';
+import ExceptionHandlerMiddleware from '../exception/middleware/exceptionHandler';
+import BindViewOnResponse from '../view/middleware/BindViewOnResponse';
+
+const kCachedMiddleware: unique symbol = Symbol('cachedMiddleware');
+
 /**
  * Class Kernel.
  */
 class Kernel extends KernelContract {
+    public declare $app: any;
+    public $router: any;
+    public $routeMiddleware: any;
 
-    $bootstrappers = [
+    public $bootstrappers: string[] = [
         '@ostro/foundation/bootstrap/loadEnvironmentVariables',
         '@ostro/foundation/bootstrap/loadConfiguration',
         '@ostro/foundation/bootstrap/registerFacades',
@@ -15,106 +22,102 @@ class Kernel extends KernelContract {
         '@ostro/foundation/bootstrap/handleSystemError',
     ];
 
-    $defaultMiddlewares = [];
+    public $defaultMiddlewares: any[] = [];
+    public $middlewareGroups: Record<string, any[]> = {};
+    public $namedMiddlewares: Record<string, any> = {};
 
-    $middlewareGroups = {};
-
-    $namedMiddlewares = {};
-
-    $middlewarePriority = [
-        require('@ostro/foundation/exception/middleware/exceptionHandler'),
-        require('@ostro/foundation/view/middleware/BindViewOnResponse'),
+    public $middlewarePriority: any[] = [
+        ExceptionHandlerMiddleware,
+        BindViewOnResponse,
     ];
 
     /**
      * Create a new instance.
      */
     constructor() {
-        super()
-        this.bootstrap()
-        this.$router = this.$app['router']
-
+        super();
+        this.bootstrap();
+        this.$router = this.$app['router'];
     }
 
     /**
      * handle method.
-     * @returns {any}
+     * @returns Handled router result
      */
-    handle() {
+    public override handle(): any {
         this.syncMiddlewareToRouter();
-        this.PrepareRouter()
-        return this.$router.handle()
+        this.PrepareRouter();
+        return this.$router.handle();
     }
 
     /**
      * syncMiddlewareToRouter method.
-     * @returns {any}
      */
-    syncMiddlewareToRouter() {
-        this.$router.defaultMiddlewares(this.$middlewarePriority.concat(this.$defaultMiddlewares))
-        let allNamedMiddlewares = {
+    public syncMiddlewareToRouter(): void {
+        this.$router.defaultMiddlewares(this.$middlewarePriority.concat(this.$defaultMiddlewares));
+        const allNamedMiddlewares: Record<string, any> = {
             ...this.resolveNamedMiddleware(),
             ...this.resolveMiddlewareGroups()
-        }
-        for (let key in allNamedMiddlewares) {
-            let middlewares = Array.isArray(allNamedMiddlewares[key]) ? allNamedMiddlewares[key] : [allNamedMiddlewares[key]]
+        };
+        for (const key in allNamedMiddlewares) {
+            const middlewares = Array.isArray(allNamedMiddlewares[key]) ? allNamedMiddlewares[key] : [allNamedMiddlewares[key]];
             this.$router.namedMiddleware(key, middlewares);
         }
-
     }
+
     /**
      * resolveNamedMiddleware method.
-     * @returns {any}
+     * @returns Map of resolved named middlewares
      */
-    resolveNamedMiddleware() {
-        let middlewares = {}
-        for (let key in this.$namedMiddlewares) {
-            middlewares[key] = this.resolveMiddleware(this.$namedMiddlewares[key])
+    public resolveNamedMiddleware(): Record<string, any> {
+        const middlewares: Record<string, any> = {};
+        for (const key in this.$namedMiddlewares) {
+            middlewares[key] = this.resolveMiddleware(this.$namedMiddlewares[key]);
         }
-        return middlewares
+        return middlewares;
     }
+
     /**
      * resolveMiddlewareGroups method.
-     * @returns {any}
+     * @returns Map of resolved middleware groups
      */
-    resolveMiddlewareGroups() {
-        let middlewares = {}
-        for (let key in this.$middlewareGroups) {
-            middlewares[key] = this.$middlewareGroups[key].map((middleware) => {
-                if (typeof middleware == 'string') {
+    public resolveMiddlewareGroups(): Record<string, any> {
+        const middlewares: Record<string, any> = {};
+        for (const key in this.$middlewareGroups) {
+            middlewares[key] = this.$middlewareGroups[key].map((middleware: any) => {
+                if (typeof middleware === 'string') {
                     if (!this.$namedMiddlewares[middleware]) {
-                        throw new Error(`${middleware} was not available on namedMiddlewares`)
+                        throw new Error(`${middleware} was not available on namedMiddlewares`);
                     }
-                    middleware = this.$namedMiddlewares[middleware]
+                    middleware = this.$namedMiddlewares[middleware];
                 }
-                return this.resolveMiddleware(middleware)
-            })
+                return this.resolveMiddleware(middleware);
+            });
         }
-        return middlewares
+        return middlewares;
     }
+
     /**
      * resolveMiddleware method.
-     * @param {*} middleware
-     * @returns {any}
+     * @param middleware - Middleware to resolve
+     * @returns Resolved middleware
      */
-    resolveMiddleware(middleware: any) {
-        return middleware
+    public resolveMiddleware(middleware: any): any {
+        return middleware;
     }
 
     /**
      * PrepareRouter method.
-     * @returns {any}
      */
-    PrepareRouter() {
-        HttpContext.prototype.$app = this.$app
-        this.$router.httpContextHandler(HttpContext)
+    public PrepareRouter(): void {
+        (HttpContext.prototype as any).$app = this.$app;
+        this.$router.httpContextHandler(HttpContext);
     }
 
     /**
      * bootstrap method.
-     * @returns {any}
      */
-    bootstrap() {
+    public override bootstrap(): void {
         if (!this.$app.hasBeenBootstrapped()) {
             this.$app.bootstrapWith(this.getBootstrappers());
         }
@@ -122,54 +125,53 @@ class Kernel extends KernelContract {
 
     /**
      * getBootstrappers method.
-     * @returns {any}
+     * @returns Array of bootstrapper class paths
      */
-    getBootstrappers() {
+    public getBootstrappers(): string[] {
         return this.$bootstrappers;
     }
 
     /**
      * getMiddlewarePriority method.
-     * @returns {any}
+     * @returns Array of priority middlewares
      */
-    getMiddlewarePriority() {
+    public getMiddlewarePriority(): any[] {
         return this.$middlewarePriority;
     }
 
     /**
      * getMiddlewareGroups method.
-     * @returns {any}
+     * @returns Map of middleware groups
      */
-    getMiddlewareGroups() {
+    public getMiddlewareGroups(): Record<string, any[]> {
         return this.$middlewareGroups;
     }
 
     /**
      * getRouteMiddleware method.
-     * @returns {any}
+     * @returns Route middleware map
      */
-    getRouteMiddleware() {
+    public getRouteMiddleware(): any {
         return this.$routeMiddleware;
     }
 
     /**
      * getApplication method.
-     * @returns {any}
+     * @returns Application instance
      */
-    getApplication() {
+    public override getApplication(): any {
         return this.$app;
     }
 
     /**
      * setApplication method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
+     * @returns this
      */
-    setApplication($app: any) {
+    public setApplication($app: any): this {
         this.$app = $app;
-
         return this;
     }
 }
 
-module.exports = Kernel
+export = Kernel;

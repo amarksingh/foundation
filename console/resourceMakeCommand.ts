@@ -1,26 +1,30 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
+import path from 'path';
+import GeneratorCommand = require('@ostro/console/generatorCommand');
+import { trim } from '@ostro/support/function';
 
 /**
  * Class ResourceMakeCommand.
  */
 class ResourceMakeCommand extends GeneratorCommand {
 
-    $signature = 'make:resource';
+    public declare $app: any;
+    public declare $file: any;
 
-    $description = 'Create a new resource';
+    public $signature: string = 'make:resource';
 
-    $type = 'Resource';
+    public $description: string = 'Create a new resource';
 
-    $options = [
-        this.createOption('-c, --collection', 'Create a resource collection')
+    public $type: string = 'Resource';
+
+    public $options: any[] = [
+        this.createOption('-c, --collection', 'Create a resource collection'),
     ];
 
     /**
      * handle method.
-     * @async
-     * @returns {any}
+     * @returns Promise resolving when done
      */
-    async handle() {
+    public async handle(): Promise<void> {
         if (this.collection()) {
             this.$type = 'Resource collection';
         }
@@ -30,9 +34,9 @@ class ResourceMakeCommand extends GeneratorCommand {
 
     /**
      * getStub method.
-     * @returns {any}
+     * @returns Stub path
      */
-    getStub() {
+    public getStub(): Promise<string> {
         return this.collection() ?
             this.resolveStubPath('/stubs/resource-collection.stub') :
             this.resolveStubPath('/stubs/resource.stub');
@@ -40,34 +44,34 @@ class ResourceMakeCommand extends GeneratorCommand {
 
     /**
      * collection method.
-     * @returns {any}
+     * @returns Whether this is a resource collection
      */
-    collection() {
-        return this.option('collection') ||
-            String.endsWith(this.argument('name'), 'Collection');
+    public collection(): boolean {
+        return Boolean(this.option('collection') ||
+            (String as any).endsWith(this.argument('name'), 'Collection'));
     }
 
     /**
      * resolveStubPath method.
-     * @async
-     * @param {*} $stub
-     * @returns {any}
+     * @param stub - Relative stub path
+     * @returns Resolved stub path
      */
-    async resolveStubPath($stub: any) {
-        let $customPath = this.$app.basePath(trim($stub, path.sep))
-        return await this.$file.exists($customPath) ?
-            $customPath :
-            __dirname + $stub;
+    public async resolveStubPath(stub: string): Promise<string> {
+        let customPath: string = this.$app.basePath(trim(stub, path.sep));
+        return (await this.$file.exists(customPath)) ?
+            customPath :
+            path.join(__dirname, stub);
     }
 
     /**
      * getDefaultNamespace method.
-     * @param {*} $rootNamespace
-     * @returns {any}
+     * @param rootNamespace - Root namespace
+     * @returns The default namespace path
      */
-    getDefaultNamespace($rootNamespace: any) {
-        return path.join($rootNamespace, 'app', 'http', 'resources');
+    public getDefaultNamespace(rootNamespace: string): string {
+        return path.join(rootNamespace, 'app', 'http', 'resources');
     }
 
 }
-module.exports = ResourceMakeCommand
+
+export = ResourceMakeCommand;

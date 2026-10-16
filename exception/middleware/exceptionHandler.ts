@@ -2,42 +2,43 @@
  * Class ExceptionHandler.
  */
 class ExceptionHandler {
+    public declare $app: any;
+    public $exceptionHandler: any;
+
     /**
      * Create a new instance.
      */
     constructor() {
-        this.$exceptionHandler = this.$app.make('@ostro/contracts/exception/handler')
+        this.$exceptionHandler = this.$app.make('@ostro/contracts/exception/handler');
     }
+
     /**
      * handle method.
-     * @param {*} error
-     * @param {*} { request
-     * @param {*} response }
-     * @param {*} next
-     * @returns {any}
+     * @param error - Error instance
+     * @param context - Request and response context
+     * @param next - Next middleware callback
      */
-    handle(error: any, { request, response }: Record<string, any>, next: Function) {
+    public handle(error: any, { request, response }: Record<string, any>, next?: Function): void {
         this.$exceptionHandler.handler(((request.ajax() || request.wantJson()) ? 'json' : 'whoops')).handle(
             request,
             response,
             error
-        )
+        );
     }
+
     /**
      * terminate method.
-     * @param {*} error
-     * @param {*} {request
-     * @param {*} response}
-     * @param {*} next
-     * @returns {any}
+     * @param error - Error instance
+     * @param context - Request and response context
+     * @param next - Next middleware callback
      */
-    terminate(error: any, {request,response}: Record<string, any>, next: Function) {
+    public terminate(error: any, { request, response }: Record<string, any>, next?: Function): void {
         this.$exceptionHandler.handler('json').terminate(
             request,
             response,
             error
-        )
+        );
     }
 }
 
-module.exports = ExceptionHandler
+export = ExceptionHandler;

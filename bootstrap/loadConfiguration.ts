@@ -1,68 +1,68 @@
-const Repository = require('@ostro/config/repository')
-const fs = require('fs')
-const path = require('path')
+import Repository from '@ostro/config/repository';
+import fs from 'fs';
+import path from 'path';
+
 /**
  * Class LoadConfiguration.
  */
 class LoadConfiguration {
+    public $app: any;
+
     /**
      * Create a new instance.
-     * @param {*} $app
+     * @param $app - Application instance
      */
     constructor($app: any) {
-        this.$app = $app
+        this.$app = $app;
     }
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
-        let $items = [];
-        let config = new Repository($items)
+    public bootstrap($app: any): void {
+        const $items: any[] = [];
+        const config = new Repository($items);
         $app.instance('config', config);
         this.loadConfigurationFiles($app, config);
-        this.setTimezone(config['app']['timezone'])
-
+        this.setTimezone(config['app']['timezone']);
     }
 
     /**
      * loadConfigurationFiles method.
-     * @param {*} $app
-     * @param {*} $repository
-     * @returns {any}
+     * @param $app - Application instance
+     * @param $repository - Config repository instance
      */
-    loadConfigurationFiles($app: any, $repository: any) {
-        let configPath = $app.configPath();
-        let files = this.getConfigurationFiles(configPath);
+    public loadConfigurationFiles($app: any, $repository: any): void {
+        const configPath: string = $app.configPath();
+        const files: string[] = this.getConfigurationFiles(configPath);
 
         if (files.indexOf('app') < 0) {
             throw new Error('Unable to load the "app" configuration file.');
         }
 
-        for (let key of files) {
+        for (const key of files) {
             $repository.set(key, require(path.normalize(path.join(configPath, key))));
         }
     }
 
     /**
      * getConfigurationFiles method.
-     * @param {*} configPath
-     * @returns {any}
+     * @param configPath - Configuration path
+     * @returns Array of configuration file names
      */
-    getConfigurationFiles(configPath: any) {
-        let files = [];
+    public getConfigurationFiles(configPath: string): string[] {
+        const files: string[] = [];
 
-        let configFiles = fs.readdirSync(configPath)
-        for (let dir of configFiles) {
-            let fileName = dir.substr(0, dir.indexOf('.'))
-            if (configFiles[fileName]) {
-                if (typeof configFiles[fileName] == 'object') {
-                    files.push(configFiles[fileName])
+        const configFiles = fs.readdirSync(configPath);
+        for (const dir of configFiles) {
+            const fileName = dir.substr(0, dir.indexOf('.'));
+            if ((configFiles as any)[fileName]) {
+                if (typeof (configFiles as any)[fileName] === 'object') {
+                    files.push((configFiles as any)[fileName]);
                 }
             } else {
-                files.push(fileName)
+                files.push(fileName);
             }
         }
 
@@ -71,12 +71,11 @@ class LoadConfiguration {
 
     /**
      * setTimezone method.
-     * @param {*} tz
-     * @returns {any}
+     * @param tz - Timezone string
      */
-    setTimezone(tz: any) {
-        process.env.TZ = tz
+    public setTimezone(tz: string): void {
+        process.env.TZ = tz;
     }
-
 }
-module.exports = LoadConfiguration
+
+export = LoadConfiguration;

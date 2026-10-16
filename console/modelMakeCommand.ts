@@ -1,15 +1,23 @@
-const GeneratorCommand = require('@ostro/console/generatorCommand')
+import path from 'path';
+import GeneratorCommand = require('@ostro/console/generatorCommand');
+import { trim } from '@ostro/support/function';
+
+// Framework global registered by OstroJS at boot time
+declare function app_path(path?: string): string;
 
 /**
  * Class ModelMakeCommand.
  */
 class ModelMakeCommand extends GeneratorCommand {
 
-    $signature = 'make:model';
+    public declare $app: any;
+    public declare $file: any;
 
-    $description = 'Create a new Eloquent model class';
+    public $signature: string = 'make:model';
 
-    $options = [
+    public $description: string = 'Create a new Eloquent model class';
+
+    public $options: any[] = [
         this.createOption('-a, --all', 'Generate a migration, seeder, factory, and resource controller for the model'),
         this.createOption('-c, --controller', 'Create a new controller for the model'),
         this.createOption('-f, --factory', 'Create a new factory for the model'),
@@ -19,21 +27,19 @@ class ModelMakeCommand extends GeneratorCommand {
         this.createOption('-p, --pivot', 'Indicates if the generated model should be a custom intermediate table model'),
         this.createOption('-r, --resource', 'Indicates if the generated controller should be a resource controller'),
         this.createOption('--api', 'Indicates if the generated controller should be an API controller'),
-
     ];
 
-    $type = 'Model';
+    public $type: string = 'Model';
 
-    get $dirname() {
-        return __dirname
+    public get $dirname(): string {
+        return __dirname;
     }
 
     /**
      * handle method.
-     * @async
-     * @returns {any}
+     * @returns Promise resolving to boolean or void
      */
-    async handle() {
+    public async handle(): Promise<boolean | void> {
 
         if (await super.handle() === false && !this.option('force')) {
             return false;
@@ -66,83 +72,84 @@ class ModelMakeCommand extends GeneratorCommand {
 
     /**
      * createFactory method.
-     * @returns {any}
+     * @returns Command execution result
      */
-    createFactory() {
-        let $factory = this.argument('name');
+    public createFactory(): any {
+        let factory: string = this.argument('name');
         return this.callCommand('make:factory', {
-            'name': `${$factory}Factory`,
+            'name': `${factory}Factory`,
             '--model': this.qualifyClass(this.getNameInput()),
         });
     }
 
     /**
      * createMigration method.
-     * @returns {any}
+     * @returns Command execution result
      */
-    createMigration() {
-        let $table = this.getFileName(this.argument('name')).plural().camelCase().snakeCase();
+    public createMigration(): any {
+        let table: any = (this.getFileName(this.argument('name')) as any).plural().camelCase().snakeCase();
 
         return this.callCommand('make:migration', {
-            'name': `create_${$table}_table`,
-            '--create': $table,
+            'name': `create_${table}_table`,
+            '--create': table,
             '--relativepath': this.getNamespace(this.argument('name')),
         });
     }
 
     /**
      * createSeeder method.
-     * @returns {any}
+     * @returns Command execution result
      */
-    createSeeder() {
-        let $seeder = this.argument('name');
+    public createSeeder(): any {
+        let seeder: string = this.argument('name');
 
         return this.callCommand('make:seeder', {
-            'name': `${$seeder}Seeder`,
+            'name': `${seeder}Seeder`,
         });
     }
 
     /**
      * createController method.
-     * @returns {any}
+     * @returns Command execution result
      */
-    createController() {
-        let $controller = this.argument('name');
+    public createController(): any {
+        let controller: string = this.argument('name');
 
-        let $modelName = this.qualifyClass(this.getNameInput());
+        let modelName: string = this.qualifyClass(this.getNameInput());
 
         return this.callCommand('make:controller', Object.filter({
-            'name': `${$controller}Controller`,
-            '--model': this.option('resource') ? $modelName : null,
+            'name': `${controller}Controller`,
+            '--model': this.option('resource') ? modelName : null,
         }));
     }
 
     /**
      * getStub method.
-     * @returns {any}
+     * @returns Promise resolving to stub path
      */
-    getStub() {
+    public getStub(): Promise<string> {
         return this.resolveStubPath('/stubs/model.stub');
     }
 
     /**
      * getDefaultNamespace method.
-     * @param {*} $rootNamespace
-     * @returns {any}
+     * @param rootNamespace - Root namespace
+     * @returns The default namespace path
      */
-    getDefaultNamespace($rootNamespace: any) {
-        return $rootNamespace.includes('.js') ? $rootNamespace : path.resolve($rootNamespace, app_path('models'));
+    public getDefaultNamespace(rootNamespace: string): string {
+        return rootNamespace.includes('.js') ? rootNamespace : path.resolve(rootNamespace, app_path('models'));
     }
 
     /**
      * resolveStubPath method.
-     * @param {*} $stub
-     * @returns {any}
+     * @param stub - Relative stub path
+     * @returns The resolved stub path
      */
-    resolveStubPath($stub: any) {
-        let $customPath = this.$app.basePath(trim($stub, '/'))
-        return this.$file.exists($customPath).then($exists => ($exists ? $customPath : path.join(__dirname, $stub)))
+    public resolveStubPath(stub: string): Promise<string> {
+        let customPath: string = this.$app.basePath(trim(stub, '/'));
+        return this.$file.exists(customPath).then((exists: boolean) => (exists ? customPath : path.join(__dirname, stub)));
     }
 
 }
-module.exports = ModelMakeCommand
+
+export = ModelMakeCommand;

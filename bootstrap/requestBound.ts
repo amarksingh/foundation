@@ -1,6 +1,6 @@
-const HttpRequest = require('@ostro/http/request')
-const CoreHttpRequest = require('../http/request')
-const ServerRequest = require('@ostro/server/request')
+import HttpRequest from '@ostro/http/request';
+import CoreHttpRequest from '../http/request';
+import ServerRequest from '@ostro/server/request';
 
 /**
  * Class RequestBound.
@@ -9,19 +9,17 @@ class RequestBound {
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
-        ServerRequest.prototype['app'] = $app
-        for (let a of Object.getOwnPropertyNames(HttpRequest.prototype)) {
-            ServerRequest.prototype[a] = HttpRequest.prototype[a];
+    public bootstrap($app: any): void {
+        ServerRequest.prototype['app'] = $app;
+        for (const a of Object.getOwnPropertyNames(HttpRequest.prototype)) {
+            ServerRequest.prototype[a] = (HttpRequest.prototype as any)[a];
         }
-        for (let a of Object.getOwnPropertyNames(CoreHttpRequest.prototype)) {
-            ServerRequest.prototype[a] = CoreHttpRequest.prototype[a];
+        for (const a of Object.getOwnPropertyNames(CoreHttpRequest.prototype)) {
+            ServerRequest.prototype[a] = (CoreHttpRequest.prototype as any)[a];
         }
-
     }
 }
 
-module.exports = RequestBound
+export = RequestBound;

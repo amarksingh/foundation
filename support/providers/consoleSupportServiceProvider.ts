@@ -1,13 +1,16 @@
-const AggregateServiceProvider = require('@ostro/support/aggregateServiceProvider')
-const DeferrableProvider = require('@ostro/support/deferrableProvider')
+import AggregateServiceProvider from '@ostro/support/aggregateServiceProvider';
+import DeferrableProvider from '@ostro/support/deferrableProvider';
+import { implement } from '@ostro/support/function';
+
 /**
  * Class ConsoleSupportServiceProvider.
  */
-class ConsoleSupportServiceProvider extends implement(AggregateServiceProvider, DeferrableProvider) {
+class ConsoleSupportServiceProvider extends (implement(AggregateServiceProvider, DeferrableProvider) as any) {
 
-    $providers = [
+    public $providers: string[] = [
         '@ostro/foundation/providers/assistantServiceProvider',
         '@ostro/database/migrationServiceProvider'
     ];
 }
-module.exports = ConsoleSupportServiceProvider
+
+export = ConsoleSupportServiceProvider;

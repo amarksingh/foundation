@@ -1,5 +1,6 @@
-const Env = require('dotenv')
-const path = require('path')
+import Env from 'dotenv';
+import path from 'path';
+
 /**
  * Class LoadEnvironmentVariables.
  */
@@ -7,16 +8,13 @@ class LoadEnvironmentVariables {
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
-
+    public bootstrap($app: any): void {
         Env.config({
             path: path.normalize(path.join($app.environmentPath(), $app.environmentFile()))
-        })
-
+        });
     }
-
 }
-module.exports = LoadEnvironmentVariables
+
+export = LoadEnvironmentVariables;

@@ -1,96 +1,97 @@
-const Command = require('@ostro/console/command')
-const Crypto = require('crypto')
+import Crypto from 'crypto';
+import Command = require('@ostro/console/command');
+
 /**
  * Class KeyGenerateCommand.
  */
 class KeyGenerateCommand extends Command {
 
-    $signature = 'key:generate';
+    public declare $app: any;
+    public $file: any;
 
-    $description = 'Set the application key';
+    public $signature: string = 'key:generate';
 
-    $options = [
+    public $description: string = 'Set the application key';
+
+    public $options: any[] = [
         this.createOption('--show [command] ', 'Display the key instead of modifying files'),
         this.createOption('--force [command] ', 'Force the operation to run when in production'),
     ];
 
     /**
      * Create a new instance.
-     * @param {*} file
+     * @param file - File service instance
      */
     constructor(file: any) {
-        super()
-        this.$file = file
+        super();
+        this.$file = file;
     }
 
     /**
      * handle method.
-     * @async
-     * @returns {any}
+     * @returns Promise resolving when done
      */
-    async handle() {
-        let $key = this.generateRandomKey();
+    public async handle(): Promise<any> {
+        let key: string = this.generateRandomKey();
 
         if (this.option('show')) {
-            return this.line('<comment>' + $key + '</comment>');
+            return this.line('<comment>' + key + '</comment>');
         }
 
-        if (!await this.setKeyInEnvironmentFile($key)) {
+        if (!await this.setKeyInEnvironmentFile(key)) {
             return;
         }
 
-        this.$app['config']['app.key'] = $key;
+        this.$app['config']['app.key'] = key;
 
         this.info('Application key set successfully.');
     }
 
     /**
      * generateRandomKey method.
-     * @returns {any}
+     * @returns The generated base64 random key
      */
-    generateRandomKey() {
-        let $cipher = this.$app['config']['app.cipher']
-        let $length = $cipher == 'AES-128-CBC' ? 16 : ($cipher == 'AES-192-CBC' ? 24 : 32)
-        return 'base64:' + Crypto.randomBytes($length).toString('base64');
+    public generateRandomKey(): string {
+        let cipher: string = this.$app['config']['app.cipher'];
+        let length: number = cipher === 'AES-128-CBC' ? 16 : (cipher === 'AES-192-CBC' ? 24 : 32);
+        return 'base64:' + Crypto.randomBytes(length).toString('base64');
     }
 
     /**
      * setKeyInEnvironmentFile method.
-     * @async
-     * @param {*} $key
-     * @returns {any}
+     * @param key - The key string
+     * @returns Boolean indicating whether key was set
      */
-    async setKeyInEnvironmentFile($key: string) {
-        let $currentKey = this.$app['config']['app.key'];
+    public async setKeyInEnvironmentFile(key: string): Promise<boolean> {
+        let currentKey: string = this.$app['config']['app.key'];
 
-        if ($currentKey.length !== 0 && (!await this.confirmToProceed())) {
+        if (currentKey.length !== 0 && (!await this.confirmToProceed())) {
             return false;
         }
 
-        await this.writeNewEnvironmentFileWith($key);
+        await this.writeNewEnvironmentFileWith(key);
 
         return true;
     }
 
     /**
      * writeNewEnvironmentFileWith method.
-     * @param {*} $key
-     * @returns {any}
+     * @param key - The key string
+     * @returns Promise resolving when file updated
      */
-    writeNewEnvironmentFileWith($key: string) {
-        return this.$file.get(this.$app.environmentFilePath()).then(res => {
-            return this.$file.put(this.$app.environmentFilePath(), res.replace(this.keyReplacementPattern(), 'APP_KEY=' + $key))
-        })
+    public writeNewEnvironmentFileWith(key: string): Promise<any> {
+        return this.$file.get(this.$app.environmentFilePath()).then((res: string) => {
+            return this.$file.put(this.$app.environmentFilePath(), res.replace(this.keyReplacementPattern(), 'APP_KEY=' + key));
+        });
     }
 
     /**
      * keyReplacementPattern method.
-     * @returns {any}
+     * @returns The pattern string
      */
-    keyReplacementPattern() {
-
+    public keyReplacementPattern(): string {
         return 'APP_KEY=' + this.$app['config']['app.key'];
     }
 }
 
-module.exports = KeyGenerateCommand
+export = KeyGenerateCommand;

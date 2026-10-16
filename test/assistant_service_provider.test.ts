@@ -1,11 +1,11 @@
-require('@ostro/support/helpers');
-const AssistantServiceProvider = require('../providers/assistantServiceProvider');
+import '@ostro/support/helpers';
+import AssistantServiceProvider from '../providers/assistantServiceProvider';
 
 describe('AssistantServiceProvider', () => {
     test('registers all commands and provides', () => {
-        const singletons = {};
-        const appMock = {
-            singleton: (name, factory) => {
+        const singletons: Record<string, any> = {};
+        const appMock: any = {
+            singleton: (name: string, factory: any) => {
                 singletons[name] = factory;
             },
             config: {

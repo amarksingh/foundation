@@ -2,13 +2,15 @@
  * Class LocaleUpdated.
  */
 class LocaleUpdated {
+    public locale: string;
+
     /**
      * Create a new instance.
-     * @param {*} locale
+     * @param locale - Updated locale string
      */
-    constructor(locale: any) {
+    constructor(locale: string) {
         this.locale = locale;
     }
 }
 
-module.exports = LocaleUpdated;
+export = LocaleUpdated;

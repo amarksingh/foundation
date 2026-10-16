@@ -1,11 +1,14 @@
-const ViewExceptionContract = require('@ostro/contracts/view/viewException')
+import ViewExceptionContract from '@ostro/contracts/view/viewException';
+
 /**
  * Class ViewException.
  */
 class ViewException extends ViewExceptionContract {
+    public statusCode: number;
+
     /**
      * Create a new instance.
-     * @param {*} errors
+     * @param errors - Error object or message
      */
     constructor(errors: any) {
         super(errors);
@@ -15,4 +18,5 @@ class ViewException extends ViewExceptionContract {
         this.stack = errors.stack || (new Error()).stack;
     }
 }
-module.exports = ViewException
+
+export = ViewException;

@@ -1,4 +1,4 @@
-const Command = require('@ostro/console/command')
+import Command = require('@ostro/console/command');
 /**
  * Class StorageLinkCommand.
  */
@@ -75,4 +75,4 @@ class StorageLinkCommand extends Command {
     }
 }
 
-module.exports = StorageLinkCommand
+export = StorageLinkCommand;

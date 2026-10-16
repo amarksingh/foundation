@@ -1,13 +1,13 @@
-require('@ostro/support/helpers');
-const ViewException = require('../view/viewException');
-const ViewHelpers = require('../view/helpers');
-const BindView = require('../view/middleware/BindViewOnResponse');
-const ViewEngine = require('../view/viewEngine');
-const path = require('path');
+import '@ostro/support/helpers';
+import ViewException from '../view/viewException';
+import ViewHelpers from '../view/helpers';
+import BindView from '../view/middleware/BindViewOnResponse';
+import ViewEngine from '../view/viewEngine';
+import path from 'path';
 
 describe('View system', () => {
     test('ViewException creates proper error instance', () => {
-        const errObj = new Error('View render failed');
+        const errObj: any = new Error('View render failed');
         errObj.stack = 'Custom stack trace';
         const ve1 = new ViewException(errObj);
         expect(ve1.name).toBe('ViewException');
@@ -21,35 +21,35 @@ describe('View system', () => {
     });
 
     test('ViewHelpers methods and getters', () => {
-        const reqMock = {
+        const reqMock: any = {
             get: jest.fn(() => 'localhost:3000'),
             protocol: jest.fn(() => 'http'),
             session: {
-                get: jest.fn((k) => 'session_val_' + k)
+                get: jest.fn((k: string) => 'session_val_' + k)
             },
             auth: { user: { id: 1 } },
-            old: jest.fn((k, def) => 'old_' + k),
+            old: jest.fn((k: string, def: any) => 'old_' + k),
             error: jest.fn(() => ({ hasError: false })),
             path: jest.fn(() => '/users/1')
         };
-        const httpMock = {
+        const httpMock: any = {
             request: reqMock,
             csrfToken: jest.fn(() => 'test_csrf_token')
         };
-        const configMock = {
-            get: jest.fn((key, def) => {
+        const configMock: any = {
+            get: jest.fn((key: string, def: any) => {
                 if (key === 'app.asset_url') return null;
                 if (key === 'app.url') return 'http://localhost:3000';
                 return def;
             })
         };
-        const appMock = {
+        const appMock: any = {
             config: configMock,
             router: {
-                route: jest.fn((...args) => '/route/' + args.join('/'))
+                route: jest.fn((...args: any[]) => '/route/' + args.join('/'))
             },
             mix: {
-                path: jest.fn((p) => '/mix/' + p)
+                path: jest.fn((p: string) => '/mix/' + p)
             }
         };
 
@@ -96,11 +96,11 @@ describe('View system', () => {
     });
 
     test('BindView middleware and ViewEngine render and error handling', (done) => {
-        const appMock = {
+        const appMock: any = {
             locals: { siteName: 'Ostro' },
             view: {
                 engine: jest.fn(() => ({
-                    renderFile: (file, data, cb) => {
+                    renderFile: (file: string, data: any, cb: Function) => {
                         if (file === 'error.html') {
                             // Returns plain object that triggers ViewException
                             cb({ message: 'Render error' });
@@ -114,10 +114,10 @@ describe('View system', () => {
             }
         };
 
-        const resMock = {
+        const resMock: any = {
             send: jest.fn()
         };
-        const httpMock = {
+        const httpMock: any = {
             request: { get: () => 'localhost' },
             response: resMock,
             session: {}
@@ -144,7 +144,7 @@ describe('View system', () => {
 
             // Render error object (throws ViewException)
             const nextMock = jest.fn();
-            const viewWithError = new ViewEngine(appMock, httpMock, nextMock);
+            const viewWithError = new (ViewEngine as any)(appMock, httpMock, nextMock);
             viewWithError('error.html', {});
 
             setTimeout(() => {
@@ -152,7 +152,7 @@ describe('View system', () => {
 
                 // Render with promise exception
                 const nextMock2 = jest.fn();
-                const viewWithEx = new ViewEngine(appMock, httpMock, nextMock2);
+                const viewWithEx = new (ViewEngine as any)(appMock, httpMock, nextMock2);
                 viewWithEx('exception.html', {});
 
                 setTimeout(() => {
@@ -166,22 +166,22 @@ describe('View system', () => {
 
 describe("ViewEngine 100% branch coverage", () => {
     test("covers app without locals and default data/status in fn and render", (done) => {
-        const resMock = { send: jest.fn() };
-        const appNoLocals = {
+        const resMock: any = { send: jest.fn() };
+        const appNoLocals: any = {
             view: {
                 engine: jest.fn(() => ({
-                    renderFile: (file, data, cb) => {
+                    renderFile: (file: string, data: any, cb: Function) => {
                         cb("rendered content");
                     }
                 }))
             }
         };
-        const httpMock = {
+        const httpMock: any = {
             request: {},
             response: resMock,
             session: {}
         };
-        const view = new ViewEngine(appNoLocals, httpMock, jest.fn());
+        const view = new (ViewEngine as any)(appNoLocals, httpMock, jest.fn());
 
         view("default.html");
         view.render("direct.html");

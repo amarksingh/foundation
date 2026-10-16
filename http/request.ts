@@ -1,85 +1,93 @@
-const kErrors = Symbol('errors')
-const ErrorBag = require('@ostro/support/errorBag')
-const ObjectGet = require('lodash.get')
-const Request = require('@ostro/http/request')
+import ErrorBag from '@ostro/support/errorBag';
+import ObjectGet from 'lodash.get';
+import Request from '@ostro/http/request';
+
+// Framework global: app
+
+const kErrors: unique symbol = Symbol('errors');
+
 /**
  * Class HttpRequest.
  */
 class HttpRequest extends Request {
+    [kErrors]: any;
+
     /**
      * old method.
-     * @param {*} key
-     * @param {*} defaultValue
-     * @returns {any}
+     * @param key - Input key
+     * @param defaultValue - Default fallback value
+     * @returns Old input value
      */
-    old(key: string, defaultValue: any = null) {
+    public old(key: string, defaultValue: any = null): any {
         return ObjectGet(this.session.get('__inputs'), key, defaultValue);
     }
 
     /**
      * error method.
-     * @param {*} key
-     * @param {*} defaultValue
-     * @returns {any}
+     * @param key - Error key
+     * @param defaultValue - Default fallback value
+     * @returns Error bag or first error for key
      */
-    error(key: string, defaultValue: any = null) {
-        this[kErrors] = this[kErrors] || new ErrorBag((this.session ? this.session.get('__errors') : {}))
+    public error(key?: string, defaultValue: any = null): any {
+        this[kErrors] = this[kErrors] || new ErrorBag((this.session ? this.session.get('__errors') : {}));
         if (key) {
-            return this[kErrors].first(key)
+            return this[kErrors].first(key);
         }
-        return this[kErrors]
+        return this[kErrors];
     }
 
     /**
      * csrfToken method.
-     * @returns {any}
+     * @returns CSRF token string
      */
-    csrfToken() {
-        return this.session.token() || ''
+    public csrfToken(): string {
+        return this.session.token() || '';
     }
 
     /**
      * flash method.
-     * @returns {any}
+     * @param args - Arguments to flash
+     * @returns Flash result
      */
-    flash() {
-        return this.session.flash(...arguments)
+    public flash(...args: any[]): any {
+        return this.session.flash(...arguments);
     }
 
     /**
      * flashOnly method.
-     * @returns {any}
+     * @param args - Arguments to flashOnly
+     * @returns FlashOnly result
      */
-    flashOnly() {
-        return this.session.flashOnly(...arguments)
+    public flashOnly(...args: any[]): any {
+        return this.session.flashOnly(...arguments);
     }
 
     /**
      * flashExcept method.
-     * @returns {any}
+     * @param args - Arguments to flashExcept
+     * @returns FlashExcept result
      */
-    flashExcept() {
-        return this.session.flashExcept(...arguments)
+    public flashExcept(...args: any[]): any {
+        return this.session.flashExcept(...arguments);
     }
 
     /**
      * routeIs method.
-     * @param {*} route
-     * @returns {any}
+     * @param route - Route pattern to check
+     * @returns True if route matches
      */
-    routeIs(route: string) {
-        let currentRoute = app('router').currentRoute(this)
+    public routeIs(route: string): boolean {
+        const currentRoute = app('router').currentRoute(this);
         if (!currentRoute) {
-            return false
+            return false;
         } else if (!currentRoute.$name) {
-            return false
-        } else if (currentRoute.$name == route) {
-            return true
+            return false;
+        } else if (currentRoute.$name === route) {
+            return true;
         } else {
-            return Boolean(currentRoute.$name.match(new RegExp(route)))
-
+            return Boolean(currentRoute.$name.match(new RegExp(route)));
         }
     }
 }
 
-module.exports = HttpRequest
+export = HttpRequest;

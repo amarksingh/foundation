@@ -1,19 +1,20 @@
-const View = require('../viewEngine')
+import View from '../viewEngine';
+
 /**
  * Class BindView.
  */
 class BindView {
+    public $app: any;
 
     /**
      * handle method.
-     * @param {*} http
-     * @param {*} next
-     * @returns {any}
+     * @param http - Http context
+     * @param next - Next middleware callback
      */
-    handle(http: any, next: Function) {
-        http.response.view = new View(this.$app, http, next)
-        next()
-
+    public handle(http: any, next: Function): void {
+        http.response.view = new (View as any)(this.$app, http, next);
+        next();
     }
 }
-module.exports = BindView
+
+export = BindView;

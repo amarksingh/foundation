@@ -1,4 +1,4 @@
-const Command = require('@ostro/console/command')
+import Command = require('@ostro/console/command');
 /**
  * Class ServerlessBootstrapCommand.
  */
@@ -110,4 +110,4 @@ class ServerlessBootstrapCommand extends Command {
 
 }
 
-module.exports = ServerlessBootstrapCommand
+export = ServerlessBootstrapCommand;

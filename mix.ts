@@ -1,31 +1,33 @@
-const fs = require('fs')
-const MixExceptions = require('@ostro/support/exceptions/mixException')
-const kManifest = Symbol('manifest')
+import fs from 'fs';
+import MixExceptions from '@ostro/support/exceptions/mixException';
+import { isset } from '@ostro/support/function';
+
+// Framework global: public_path
+
+const kManifest: unique symbol = Symbol('manifest');
 
 /**
  * Class Mix.
  */
 class Mix {
-
-    $manifests =  {};
+    public $manifests: Record<string, any> = {};
+    public $app: any;
 
     /**
      * Create a new instance.
-     * @param {*} app
+     * @param app - Application instance
      */
     constructor(app: any) {
-        this.$app = app
-
+        this.$app = app;
     }
-    
+
     /**
      * path method.
-     * @param {*} $path
-     * @param {*} $manifestDirectory
-     * @returns {any}
+     * @param $path - Asset path
+     * @param $manifestDirectory - Manifest directory
+     * @returns Resolved asset path
      */
-    path($path: string, $manifestDirectory: string = '') {
-
+    public path($path: string, $manifestDirectory: string = ''): string {
         if (!String.startsWith($path, '/')) {
             $path = `/${$path}`;
         }
@@ -34,24 +36,24 @@ class Mix {
             $manifestDirectory = `/${$manifestDirectory}`;
         }
 
-        let $manifestPath = public_path($manifestDirectory + '/mix-manifest.json');
+        const $manifestPath: string = public_path($manifestDirectory + '/mix-manifest.json');
 
         if (!isset(this.$manifests[$manifestPath])) {
             try {
-                let stat = fs.lstatSync($manifestPath)
+                const stat = fs.lstatSync($manifestPath);
                 if (!stat.isFile()) {
                     throw new MixExceptions('The Mix manifest does not exist.');
                 }
 
-                this.$manifests[$manifestPath] = JSON.parse(fs.readFileSync($manifestPath), true);
+                this.$manifests[$manifestPath] = JSON.parse(fs.readFileSync($manifestPath) as any);
             } catch (e) {
                 throw new MixExceptions('The Mix manifest does not exist.');
             }
         }
 
-        let $manifest = this.$manifests[$manifestPath];
+        const $manifest = this.$manifests[$manifestPath];
         if (!isset($manifest[$path])) {
-            let $exception = new MixExceptions(`Unable to locate Mix file: ${$path}.`);
+            const $exception = new MixExceptions(`Unable to locate Mix file: ${$path}.`);
             if (!this.$app.instance('config').get('app.debug')) {
                 this.$app['logger'].report($exception);
                 return $path;
@@ -59,12 +61,10 @@ class Mix {
                 throw $exception;
             }
         }
-        let mixurl = this.$app['config'].get('app.mix_url')
-        mixurl = mixurl || ''
-        return mixurl + $manifestDirectory + $manifest[$path]
-
+        let mixurl: string = this.$app['config'].get('app.mix_url');
+        mixurl = mixurl || '';
+        return mixurl + $manifestDirectory + $manifest[$path];
     }
-
 }
 
-module.exports = Mix
+export = Mix;

@@ -1,67 +1,68 @@
-const Response = require('@ostro/http/response')
-const Model = require('@ostro/contracts/database/eloquent/model')
-const Collection = require('@ostro/contracts/collection/collect')
-const GenericUser = require('@ostro/contracts/auth/genericUser')
+import Response from '@ostro/http/response';
+import Model from '@ostro/contracts/database/eloquent/model';
+import Collection from '@ostro/contracts/collection/collect';
+import GenericUser from '@ostro/contracts/auth/genericUser';
+
 /**
  * Class HttpResponse.
  */
 class HttpResponse extends Response {
+
     /**
      * send method.
-     * @param {*} body
-     * @param {*} status
-     * @returns {any}
+     * @param body - Response body
+     * @param status - HTTP status code
      */
-    send(body: any, status: number = 200) {
+    public override send(body: any, status: number = 200): any {
         if (body instanceof Model) {
-            body = body.serialize()
+            body = body.serialize();
         } else if (body instanceof Collection && body.isArray()) {
-            body = body.toArray()
+            body = body.toArray();
         } else if (body instanceof Collection && body.isJson()) {
-            body = body.toJSON()
+            body = body.toJSON();
         }
-        super.send(body, status)
+        super.send(body, status);
     }
 
     /**
      * with method.
-     * @param {*} key
-     * @param {*} value
-     * @returns {any}
+     * @param key - Flash key or object
+     * @param value - Flash value
+     * @returns this
      */
-    with(key: string, value: any) {
-        let obj = typeof key == 'string' ? {
+    public with(key: string | Record<string, any>, value?: any): this {
+        let obj = typeof key === 'string' ? {
             [key]: value
         } : key;
-        obj = obj || {}
-        this.request.session.flash(obj)
+        obj = obj || {};
+        this.request.session.flash(obj);
         return this;
     }
 
     /**
      * withInput method.
-     * @param {*} key
-     * @param {*} value
-     * @returns {any}
+     * @param key - Input key, object, or boolean
+     * @param value - Input value
+     * @returns this
      */
-    withInput(key: string, value: any) {
-        key = typeof key == 'string' ? { key: value } : key;
-        if (key) {
-            key = key === true ? this.request.except('_token') : key
-            this.request.session.flash('__inputs', key)
+    public withInput(key?: string | Record<string, any> | boolean | null, value?: any): this {
+        let normalizedKey = typeof key === 'string' ? { key: value } : key;
+        if (normalizedKey) {
+            normalizedKey = normalizedKey === true ? this.request.except('_token') : normalizedKey;
+            this.request.session.flash('__inputs', normalizedKey);
         }
         return this;
     }
 
     /**
      * withErrors method.
-     * @param {*} errors
-     * @returns {any}
+     * @param errors - Errors bag or object
+     * @returns this
      */
-    withErrors(errors: Record<string, any> = {}) {
-        this.request.session.flash('__errors', errors)
-        return this
+    public withErrors(errors: Record<string, any> = {}): this {
+        this.request.session.flash('__errors', errors);
+        return this;
     }
-
 }
-module.exports = HttpResponse
+
+export = HttpResponse;

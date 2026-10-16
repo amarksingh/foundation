@@ -1,3 +1,5 @@
+// Framework global: app
+
 /**
  * Class ValidatesRequests.
  */
@@ -5,34 +7,41 @@ class ValidatesRequests {
 
     /**
      * validate method.
-     * @param {*} $request
-     * @param {*} $rules
-     * @param {*} $messages
-     * @param {*} $customAttributes
-     * @returns {any}
+     * @param $request - Request instance
+     * @param $rules - Validation rules
+     * @param $messages - Custom error messages
+     * @param $customAttributes - Custom attribute names
+     * @returns Validated data promise
      */
-    validate($request: any, $rules: any, $messages: any[] = [], $customAttributes: any[] = []) {
+    public validate($request: any, $rules: any, $messages: any[] = [], $customAttributes: any[] = []): Promise<any> {
         return this.getValidationFactory().validate(
             $request.all(), $rules, $messages, $customAttributes
-        )
+        );
     }
 
-    validateWithBag($errorBag, $request, $rules,
-        $messages = [], $customAttributes = []) {
-        return this.validate($request, $rules, $messages, $customAttributes).catch($e => {
+    /**
+     * validateWithBag method.
+     * @param $errorBag - Error bag name
+     * @param $request - Request instance
+     * @param $rules - Validation rules
+     * @param $messages - Custom error messages
+     * @param $customAttributes - Custom attribute names
+     * @returns Validated data promise
+     */
+    public validateWithBag($errorBag: string, $request: any, $rules: any, $messages: any[] = [], $customAttributes: any[] = []): Promise<any> {
+        return this.validate($request, $rules, $messages, $customAttributes).catch(($e: any) => {
             $e.errorBag = $errorBag;
-            return Promise.reject($e)
-        })
-
+            return Promise.reject($e);
+        });
     }
 
     /**
      * getValidationFactory method.
-     * @returns {any}
+     * @returns Validation factory instance
      */
-    getValidationFactory() {
+    public getValidationFactory(): any {
         return app('validation');
     }
 }
 
-module.exports = ValidatesRequests
+export = ValidatesRequests;

@@ -1,64 +1,59 @@
-const ViewException = require('./viewException')
+import ViewException from './viewException';
+import ViewHelpers from './helpers';
 
-const ViewHelpers = require('./helpers')
-const { ProxyHandler } = require('@ostro/support/macro')
 /**
  * Class View.
  */
 class View {
     /**
      * Create a new instance.
-     * @param {*} app
-     * @param {*} http
-     * @param {*} next
+     * @param app - Application instance
+     * @param http - Http context
+     * @param next - Next middleware callback
      */
     constructor(app: any, http: any, next: Function) {
-        let context = {};
+        const context: Record<string, any> = {};
         Object.assign(context, (app['locals'] || {}));
-        Object.assign(context, global)
+        Object.assign(context, global);
         context.request = http.request;
         context.session = http.session;
         context.helpers = new ViewHelpers(app, http);
-        const fn = function(file, data = {}, status = 200) {
 
-            fn.render(...arguments)
-            return http.response
-        }
-        fn.engine = function(engine) {
+        const fn: any = function (file: string, data: any = {}, status: number = 200) {
+            fn.render(...arguments);
+            return http.response;
+        };
+
+        fn.engine = function (engine: string) {
             Object.defineProperty(http.response, '__viewEngine', {
                 value: engine,
                 configurable: false,
                 writable: false,
                 enumerable: false
-            })
-            return this
+            });
+            return this;
+        };
 
-        }
+        fn.render = function (file: string, data: any = {}, status: number = 200) {
+            Object.assign(data, context);
 
-        fn.render = function(file, data = {}, status = 200) {
-            Object.assign(data, context)
-
-            app.view.engine(http.response.__viewEngine).renderFile(file, data, async (data) => {
+            app.view.engine(http.response.__viewEngine).renderFile(file, data, async (data: any) => {
                 Promise.resolve(data)
                     .then(res => {
-                        if (typeof res == 'object' && res instanceof Promise == false) {
-                            throw (new ViewException(res))
+                        if (typeof res === 'object' && (res instanceof Promise) === false) {
+                            throw (new ViewException(res));
                         }
-                        http.response.send(res, status)
-
-
-
+                        http.response.send(res, status);
                     })
                     .catch(e => {
-                        next(e)
-                    })
+                        next(e);
+                    });
+            });
+            return http.response;
+        };
 
-            })
-            return http.response
-
-        }
-        return fn
+        return fn;
     }
 }
 
-module.exports = View
+export = View;

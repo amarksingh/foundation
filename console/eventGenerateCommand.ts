@@ -1,53 +1,50 @@
-const Command = require('@ostro/console/command')
-const EventServiceProvider = require('@ostro/event/eventServiceProvider')
+import Command = require('@ostro/console/command');
+import EventServiceProvider from '@ostro/event/eventServiceProvider';
+
 /**
  * Class EventGenerateCommand.
  */
 class EventGenerateCommand extends Command {
 
-    $signature = 'event:generate';
+    public $signature: string = 'event:generate';
 
-    $description = 'Generate the missing events and listeners based on registration';
+    public $description: string = 'Generate the missing events and listeners based on registration';
 
     /**
      * handle method.
-     * @async
-     * @returns {any}
+     * @returns Promise resolving when done
      */
-    async handle() {
-
+    public async handle(): Promise<void> {
         this.info('Events and listeners generated successfully!');
     }
 
     /**
      * makeEventAndListeners method.
-     * @param {*} $event
-     * @param {*} $listeners
-     * @returns {any}
+     * @param event - The event class name
+     * @param listeners - Array of listener class names
      */
-    makeEventAndListeners($event: string, $listeners: any) {
-        if (!$event.includes('\\')) {
+    public makeEventAndListeners(event: string, listeners: any[]): void {
+        if (!event.includes('\\')) {
             return;
         }
 
-        this.callSilent('make:event', { 'name': $event });
+        this.callSilent('make:event', { 'name': event });
 
-        this.makeListeners($event, $listeners);
+        this.makeListeners(event, listeners);
     }
 
     /**
      * makeListeners method.
-     * @param {*} $event
-     * @param {*} $listeners
-     * @returns {any}
+     * @param event - The event class name
+     * @param listeners - Array of listener class names
      */
-    makeListeners($event: string, $listeners: any) {
-        for (let $listener of $listeners) {
-            $listener = $listener.replace(/@.+$/, '');
+    public makeListeners(event: string, listeners: any[]): void {
+        for (let listener of listeners) {
+            listener = listener.replace(/@.+$/, '');
 
-            this.callSilent('make:listener', Object.filter({ 'name': $listener, '--event': $event }));
+            this.callSilent('make:listener', Object.filter({ 'name': listener, '--event': event }));
         }
     }
 }
 
-module.exports = EventGenerateCommand
+export = EventGenerateCommand;

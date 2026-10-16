@@ -1,5 +1,6 @@
-const fs = require('fs')
-const path = require('path')
+import fs from 'fs';
+import path from 'path';
+
 /**
  * Class Production.
  */
@@ -7,30 +8,30 @@ class Production {
 
     /**
      * register method.
-     * @returns {any}
      */
-    register() {
+    public register(): void {
 
     }
+
     /**
      * render method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $exception
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $exception - Exception object
      */
-    render(request: any, response: any, $exception: Record<string, any> = {}) {
+    public render(request: any, response: any, $exception: Record<string, any> = {}): void {
         if (request.wantJson() || request.ajax()) {
             response.send({
                 name: $exception.name || 'HttpException',
                 errors: $exception.errors || {},
                 message: $exception.message || 'Whoops look like somthing wrong'
-            }, ($exception.statusCode || 500))
+            }, ($exception.statusCode || 500));
         } else {
-            return fs.readFile(path.join(__dirname, '../template/errors/500'), { encoding: 'utf8' }, function(error, data) {
-                response.send(data, 500)
-            })
+            return fs.readFile(path.join(__dirname, '../template/errors/500'), { encoding: 'utf8' }, function (error: any, data: any) {
+                response.send(data, 500);
+            }) as any;
         }
     }
 }
-module.exports = Production
+
+export = Production;

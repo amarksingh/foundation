@@ -1,66 +1,68 @@
-const HttpContext = require('@ostro/http/httpContext')
+import HttpContext from '@ostro/http/httpContext';
+
 /**
  * Class FoundationHttpContext.
  */
 class FoundationHttpContext extends HttpContext {
+    public declare $app: any;
+
     /**
      * Create a new instance.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} next
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param next - Next function
      */
     constructor(request: any, response: any, next: Function) {
-        super(request, response, next)
+        super(request, response, next);
     }
 
     /**
      * Get auth.
-     * @returns {any}
+     * @returns Auth object
      */
-    get auth() {
-        return this.request.auth
+    public get auth(): any {
+        return this.request.auth;
     }
 
     /**
      * Get view.
-     * @returns {any}
+     * @returns View function
      */
-    get view() {
-        return this.response.view
+    public get view(): any {
+        return this.response.view;
     }
 
     /**
      * Get session.
-     * @returns {any}
+     * @returns Session instance
      */
-    get session() {
-        return this.request.session
+    public get session(): any {
+        return this.request.session;
     }
 
     /**
      * Get params.
-     * @returns {any}
+     * @returns Route parameters
      */
-    get params() {
-        return this.request.params
+    public get params(): any {
+        return this.request.params;
     }
 
     /**
      * csrf_token method.
-     * @returns {any}
+     * @returns CSRF token string
      */
-    csrf_token() {
-        return this.session.token() || ''
+    public csrf_token(): string {
+        return this.session.token() || '';
     }
 
     /**
      * csrfToken method.
-     * @returns {any}
+     * @returns CSRF token string
      */
-    csrfToken() {
-        return this.csrf_token()
+    public csrfToken(): string {
+        return this.csrf_token();
     }
-
 }
 
-module.exports = FoundationHttpContext
+export = FoundationHttpContext;

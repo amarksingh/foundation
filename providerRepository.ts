@@ -1,12 +1,20 @@
+interface IProviderManifest {
+    providers: any[];
+    eager: any[];
+    deferred: any[];
+}
+
 /**
  * Class ProviderRepository.
  */
 class ProviderRepository {
+    public $app: any;
+    public $files: any;
 
     /**
      * Create a new instance.
-     * @param {*} $app
-     * @param {*} $files
+     * @param $app - Application instance
+     * @param $files - Filesystem instance
      */
     constructor($app: any, $files: any) {
         this.$app = $app;
@@ -15,14 +23,12 @@ class ProviderRepository {
 
     /**
      * load method.
-     * @param {*} $providers
-     * @returns {any}
+     * @param $providers - List of service providers
      */
-    load($providers: any) {
+    public load($providers: any[]): void {
+        const $manifest = this.compileManifest($providers);
 
-        let $manifest = this.compileManifest($providers);
-
-        for (let $provider of $manifest['eager']) {
+        for (const $provider of $manifest['eager']) {
             this.$app.register($provider);
         }
 
@@ -31,27 +37,23 @@ class ProviderRepository {
 
     /**
      * loadManifest method.
-     * @returns {any}
      */
-    loadManifest() {
-
+    public loadManifest(): void {
     }
 
     /**
      * compileManifest method.
-     * @param {*} $providers
-     * @returns {any}
+     * @param $providers - List of providers to compile
+     * @returns Compiled manifest
      */
-    compileManifest($providers: any) {
+    public compileManifest($providers: any[]): IProviderManifest {
+        const $manifest = this.freshManifest($providers);
 
-        let $manifest = this.freshManifest($providers);
-
-        for (let $provider of $providers) {
-
-            let $instance = this.createProvider($provider);
+        for (const $provider of $providers) {
+            const $instance = this.createProvider($provider);
 
             if ($instance.isDeferred()) {
-                $manifest['deferred'].push($provider)
+                $manifest['deferred'].push($provider);
             } else {
                 $manifest['eager'].push($provider);
             }
@@ -62,10 +64,10 @@ class ProviderRepository {
 
     /**
      * freshManifest method.
-     * @param {*} $providers
-     * @returns {any}
+     * @param $providers - List of providers
+     * @returns Fresh manifest structure
      */
-    freshManifest($providers: any) {
+    public freshManifest($providers: any[]): IProviderManifest {
         return {
             'providers': $providers,
             'eager': [],
@@ -75,22 +77,21 @@ class ProviderRepository {
 
     /**
      * writeManifest method.
-     * @param {*} $manifest
-     * @returns {any}
+     * @param $manifest - Manifest to write
+     * @returns Manifest
      */
-    writeManifest($manifest: any) {
-
-        return $manifest
+    public writeManifest($manifest: IProviderManifest): IProviderManifest {
+        return $manifest;
     }
 
     /**
      * createProvider method.
-     * @param {*} $provider
-     * @returns {any}
+     * @param $provider - Provider constructor
+     * @returns Provider instance
      */
-    createProvider($provider: any) {
+    public createProvider($provider: new ($app: any) => any): any {
         return new $provider(this.$app);
     }
 }
 
-module.exports = ProviderRepository
+export = ProviderRepository;

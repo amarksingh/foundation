@@ -1,121 +1,121 @@
-const PageNotFoundException = require('@ostro/contracts/http/pageNotFoundException')
-const validationException = require('@ostro/contracts/validation/validationException')
-const TokenMismatchException = require('@ostro/contracts/http/tokenMismatchException')
-const FileNotFoundException = require('@ostro/contracts/filesystem/fileNotFoundException')
-const FileUploadException = require('@ostro/contracts/filesystem/fileUploadException')
-const JsonException = require('@ostro/contracts/http/jsonException')
-const Redirect = require('@ostro/contracts/http/redirectResponse')
-const Session = require('@ostro/contracts/session/session')
-const AuthenticationException = require('@ostro/auth/authenticationException')
-const path = require('path')
-const fs = require('fs')
-const kHandle = Symbol('handle')
-const kLogger = Symbol('logger')
+import PageNotFoundException from '@ostro/contracts/http/pageNotFoundException';
+import validationException from '@ostro/contracts/validation/validationException';
+import TokenMismatchException from '@ostro/contracts/http/tokenMismatchException';
+import FileNotFoundException from '@ostro/contracts/filesystem/fileNotFoundException';
+import FileUploadException from '@ostro/contracts/filesystem/fileUploadException';
+import JsonException from '@ostro/contracts/http/jsonException';
+import Redirect from '@ostro/contracts/http/redirectResponse';
+import Session from '@ostro/contracts/session/session';
+import AuthenticationException from '@ostro/auth/authenticationException';
+import path from 'path';
+import fs from 'fs';
+
+// Framework globals: app, route
+
+const kHandle: unique symbol = Symbol('handle');
+const kLogger: unique symbol = Symbol('logger');
 
 /**
  * Class Handler.
  */
 class Handler {
-    $dontReport = [
+    public $dontReport: any[] = [
         validationException,
         JsonException,
         Redirect,
         TokenMismatchException
     ];
 
-    $dontFlash = [];
+    public $dontFlash: string[] = [];
+
+    public [kHandle]: any;
+    public [kLogger]: any;
 
     /**
      * Create a new instance.
-     * @param {*} handler
+     * @param handler - Exception handler instance
      */
-    constructor(handler: Function) {
-        this[kHandle] = handler
-        this[kLogger] = app('logger')
+    constructor(handler: Function | any) {
+        this[kHandle] = handler;
+        this[kLogger] = app('logger');
     }
 
     /**
      * handle method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Error object
      */
-    handle(request: any, response: any, $e: Record<string, any> = {}) {
-        this.render(request, response, $e)
+    public handle(request: any, response: any, $e: Record<string, any> = {}): void {
+        this.render(request, response, $e);
     }
 
     /**
      * terminate method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Error object
      */
-    terminate(request: any, response: any, $e: Record<string, any> = {}) {
-        this.report($e)
+    public terminate(request: any, response: any, $e: Record<string, any> = {}): void {
+        this.report($e);
     }
 
     /**
      * render method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Error object
      */
-    render(request: any, response: any, $e: Record<string, any> = {}) {
+    public render(request: any, response: any, $e: Record<string, any> = {}): void {
         if ($e instanceof PageNotFoundException) {
-            this.pageNotFoundException(request, response, $e)
+            this.pageNotFoundException(request, response, $e);
         } else if ($e instanceof validationException) {
             this.convertValidationExceptionToResponse(request, response, $e);
         } else if ($e instanceof TokenMismatchException) {
-            this.tokenMismatchException(request, response, $e)
+            this.tokenMismatchException(request, response, $e);
         } else if ($e instanceof AuthenticationException) {
             this.unauthenticated(request, response, $e);
         } else if ($e instanceof Redirect) {
-            this.redirect(response, $e)
+            this.redirect(response, $e);
         } else if ($e instanceof FileNotFoundException) {
             response.send({
                 name: $e.name,
                 message: $e.message
-            }, $e.statusCode)
+            }, $e.statusCode);
         } else if ($e instanceof FileUploadException) {
             response.send({
                 name: $e.name,
                 message: $e.message
-            }, $e.statusCode)
+            }, $e.statusCode);
         } else if ($e instanceof JsonException) {
             response.send({
                 name: $e.name,
                 message: $e.message,
                 errors: $e.errors
-            }, $e.statusCode)
-        } else if (typeof $e.message == 'object') {
+            }, $e.statusCode);
+        } else if (typeof $e.message === 'object') {
             this[kHandle].render(
                 request,
                 response,
                 $e
-            )
+            );
         } else {
             this[kHandle].render(
                 request,
                 response,
                 $e
-            )
+            );
         }
-        this.report($e)
-
-
+        this.report($e);
     }
 
     /**
      * unauthenticated method.
-     * @param {*} $request
-     * @param {*} $response
-     * @param {*} $exception
-     * @returns {any}
+     * @param $request - Request instance
+     * @param $response - Response instance
+     * @param $exception - Authentication exception
      */
-    unauthenticated($request: any, $response: any, $exception: any) {
+    public unauthenticated($request: any, $response: any, $exception: any): any {
         return $request.expectsJson() ?
             $response.json({ 'message': $exception.message }, 401) :
             $response.redirect().to($exception.redirectTo() || route('login'));
@@ -123,44 +123,40 @@ class Handler {
 
     /**
      * redirect method.
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param response - Response instance
+     * @param $e - Redirect exception
      */
-    redirect(response: any, $e: any) {
+    public redirect(response: any, $e: any): void {
         response.with(...$e.getFlash()).withErrors(...$e.getErrors()).withInput($e.wantedInput()).redirect($e.getUrl());
     }
 
     /**
      * jsonException method.
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param response - Response instance
+     * @param $e - Json exception
      */
-    jsonException(response: any, $e: any) {
+    public jsonException(response: any, $e: any): void {
 
     }
 
     /**
      * send method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Error object
      */
-    send(request: any, response: any, $e: Record<string, any> = {}) {
-        this.report($e)
-        response.send($e)
+    public send(request: any, response: any, $e: Record<string, any> = {}): void {
+        this.report($e);
+        response.send($e);
     }
 
     /**
      * convertValidationExceptionToResponse method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Validation exception
      */
-    convertValidationExceptionToResponse(request: any, response: any, $e: any) {
+    public convertValidationExceptionToResponse(request: any, response: any, $e: any): any {
         if ($e.response) {
             return $e.response;
         }
@@ -172,12 +168,11 @@ class Handler {
 
     /**
      * invalidJson method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $exception
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $exception - Validation exception
      */
-    invalidJson(request: any, response: any, $exception: any) {
+    public invalidJson(request: any, response: any, $exception: any): any {
         return response.json({
             'message': $exception.getMessage(),
             'errors': $exception.getErrors(),
@@ -186,80 +181,78 @@ class Handler {
 
     /**
      * invalid method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $exception
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $exception - Validation exception
      */
-    invalid(request: any, response: any, $exception: any) {
-
+    public invalid(request: any, response: any, $exception: any): void {
         if (request.session instanceof Session) {
-            response.withInput(Object.except(request.input(), this.$dontFlash))
-                .withErrors($exception.all())
+            response.withInput((Object as any).except(request.input(), this.$dontFlash))
+                .withErrors($exception.all());
         }
-        response.redirect($exception.redirectTo || 'back')
+        response.redirect($exception.redirectTo || 'back');
     }
 
     /**
      * tokenMismatchException method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Token mismatch exception
      */
-    tokenMismatchException(request: any, response: any, $e: any) {
+    public tokenMismatchException(request: any, response: any, $e: any): any {
         if (request.wantJson() || request.ajax()) {
             response.send({
                 name: $e.name || 'Token mismatch exception',
                 errors: $e.errors || {},
                 message: $e.message || 'Page Expired'
-            }, ($e.statusCode || 403))
+            }, ($e.statusCode || 403));
         } else {
             return fs.readFile(path.join(__dirname, 'template/errors/403'), {
                 encoding: 'utf8'
-            }, function (error, data) {
-                response.send(data, $e.statusCode)
-            })
+            }, function (error: any, data: any) {
+                response.send(data, $e.statusCode);
+            });
         }
     }
+
     /**
      * pageNotFoundException method.
-     * @param {*} request
-     * @param {*} response
-     * @param {*} $e
-     * @returns {any}
+     * @param request - Request instance
+     * @param response - Response instance
+     * @param $e - Page not found exception
      */
-    pageNotFoundException(request: any, response: any, $e: any) {
+    public pageNotFoundException(request: any, response: any, $e: any): any {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
-        }, function (error, data) {
-            response.send(data, $e.statusCode)
-        })
+        }, function (error: any, data: any) {
+            response.send(data, $e.statusCode);
+        });
     }
+
     /**
      * report method.
-     * @param {*} $e
-     * @returns {any}
+     * @param $e - Error object
      */
-    report($e: any) {
-        if (!this.$dontReport.find((clazz) => $e instanceof clazz)) {
-            if (typeof this[kLogger].getConfig == 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
-                if ($e && typeof $e == 'object') {
-                    if (typeof $e.stack == 'string') {
-                        $e.capture = $e.stack.split('\n    at ')
+    public report($e: any): void {
+        if (!this.$dontReport.find((clazz: any) => $e instanceof clazz)) {
+            if (typeof this[kLogger].getConfig === 'function' && !this[kLogger].getConfig('ignore_exceptions')) {
+                if ($e && typeof $e === 'object') {
+                    if (typeof $e.stack === 'string') {
+                        $e.capture = $e.stack.split('\n    at ');
                     }
                 }
-                this[kLogger].error($e)
+                this[kLogger].error($e);
             }
         }
     }
+
     /**
      * renderForConsole method.
-     * @param {*} $e
-     * @returns {any}
+     * @param $e - Error object
      */
-    renderForConsole($e: any) {
-        this[kLogger].channel('console').error($e)
+    public renderForConsole($e: any): void {
+        this[kLogger].channel('console').error($e);
     }
 }
-module.exports = Handler
+
+export = Handler;

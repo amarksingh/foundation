@@ -5,12 +5,11 @@ class RegisterProviders {
 
     /**
      * bootstrap method.
-     * @param {*} $app
-     * @returns {any}
+     * @param $app - Application instance
      */
-    bootstrap($app: any) {
+    public bootstrap($app: any): void {
         $app.registerConfiguredProviders();
     }
 }
 
-module.exports = RegisterProviders
+export = RegisterProviders;
