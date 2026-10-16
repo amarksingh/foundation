@@ -2,9 +2,11 @@
   "name": "@ostro/foundation",
   "version": "1.1.12",
   "description": "Foundation for OstroJS",
-  "main": "application.ts",
+  "main": "build/application.js",
   "scripts": {
-    "test": "npx c8 npx jest"
+    "test": "npx c8 npx jest",
+    "build": "rm -rf build && npx tsc -p tsconfig.build.json",
+    "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@ostro/auth": "^1.0.1",
@@ -41,5 +43,12 @@
   "bugs": {
     "url": "https://github.com/ostrojs/foundation/issues"
   },
-  "homepage": "https://github.com/ostrojs/foundation#readme"
+  "homepage": "https://github.com/ostrojs/foundation#readme",
+  "types": "build/application.d.ts",
+  "files": [
+    "build",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ]
 }

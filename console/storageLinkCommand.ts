@@ -1,17 +1,25 @@
+declare var base_path: any, is_null: any, isSymbolicLink: any, public_path: any, storage_path: any;
 import Command from '@ostro/console/command';
 /**
  * Class StorageLinkCommand.
  */
 class StorageLinkCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'storage:link';
+    get $signature(): string {
+        return 'storage:link';
+    }
 
-    $description = 'Create the symbolic links configured for the application';
+    get $description(): string {
+        return 'Create the symbolic links configured for the application';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--relative', 'The host address to serve the application on'),
         this.createOption('--force', 'The port to serve the application on')
     ];
+    }
     
     /**
      * Create a new instance.

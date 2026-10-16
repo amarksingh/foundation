@@ -3,14 +3,21 @@ import Command from '@ostro/console/command';
  * Class ServerlessBootstrapCommand.
  */
 class ServerlessBootstrapCommand extends Command {
+    [key: string]: any;
 
-    $signature = 'server:bootstrap';
+    get $signature(): string {
+        return 'server:bootstrap';
+    }
 
-    $description = 'Bootstrap the serverless application';
+    get $description(): string {
+        return 'Bootstrap the serverless application';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--force', 'The port to serve the application on')
     ];
+    }
 
     /**
      * Create a new instance.

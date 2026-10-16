@@ -1,7 +1,7 @@
 import csrf from 'csrf';
 import TokenMismatchException from '@ostro/http/exception/tokenMismatchException';
 
-const tokens = csrf();
+const tokens = typeof (csrf as any) === "function" ? (csrf as any)() : new (csrf as any)();
 
 /**
  * Class VerifyCsrfToken.

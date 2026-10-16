@@ -1,6 +1,6 @@
 import HttpResponse from '@ostro/http/response';
-import CoreHttpResponse from '@ostro/foundation/http/response';
-import ServerResponse from '@ostro/server/response';
+import CoreHttpResponse from '../http/response';
+const ServerResponse: any = require("@ostro/server/response");
 
 /**
  * Class ResponseBound.

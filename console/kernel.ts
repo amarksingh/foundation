@@ -7,6 +7,7 @@ import Assistant from '@ostro/console/application';
  * Class Kernel.
  */
 class Kernel extends KernelContract {
+    [key: string]: any;
 
     $commandsLoaded = false;
 
@@ -65,7 +66,7 @@ class Kernel extends KernelContract {
      */
     getAssistant() {
         if (!this.assistant) {
-            return this.assistant = (new Assistant(this.$app, this.$app.version()))
+            return this.assistant = (new (Assistant as any)(this.$app, this.$app.version()))
                 .resolveCommands(this.$commands);
         }
 
@@ -96,7 +97,7 @@ class Kernel extends KernelContract {
      * @param {*} $output
      * @returns {any}
      */
-    async handle($input: any, $output: any = null) {
+    override async handle($input: any, $output: any = null): Promise<any> {
         try {
             await this.getAssistant().run($input, $output);
         } catch ($e) {

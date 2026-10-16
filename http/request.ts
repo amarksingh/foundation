@@ -1,3 +1,4 @@
+declare var app: any;
 import ErrorBag from '@ostro/support/errorBag';
 import ObjectGet from 'lodash.get';
 import Request from '@ostro/http/request';

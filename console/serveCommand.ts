@@ -1,22 +1,30 @@
+declare var base_path: any, is_null: any, isSymbolicLink: any, public_path: any, storage_path: any;
 import Command from '@ostro/console/command';
 
 /**
  * Class ServeCommand.
  */
 class ServeCommand extends Command {
+    [key: string]: any;
 
     $portOffset = 0;
 
-    $signature = 'serve';
+    get $signature(): string {
+        return 'serve';
+    }
 
-    $description = 'Serve the application on the nodejs development server';
+    get $description(): string {
+        return 'Serve the application on the nodejs development server';
+    }
 
-    $options = [
+    get $options(): any[] {
+        return [
         this.createOption('--host <host> ', 'The host address to serve the application on').default('127.1.0.0', 'localhost ip'),
         this.createOption('--port [port] ', 'The port to serve the application on').default(8000, 'Recomanded port'),
         this.createOption('--tries [tries] ', 'The max number of ports to attempt to serve from'),
         this.createOption('--no-reload [no-reload] ', 'Do not reload the development server on .env file changes'),
     ];
+    }
 
     /**
      * Create a new instance.

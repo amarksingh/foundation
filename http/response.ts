@@ -15,11 +15,11 @@ class HttpResponse extends Response {
      */
     public override send(body: any, status: number = 200): any {
         if (body instanceof Model) {
-            body = body.serialize();
-        } else if (body instanceof Collection && body.isArray()) {
-            body = body.toArray();
-        } else if (body instanceof Collection && body.isJson()) {
-            body = body.toJSON();
+            body = (body as any).serialize();
+        } else if (body instanceof Collection && (body as any).isArray()) {
+            body = (body as any).toArray();
+        } else if (body instanceof Collection && (body as any).isJson()) {
+            body = (body as any).toJSON();
         }
         super.send(body, status);
     }

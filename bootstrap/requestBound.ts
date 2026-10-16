@@ -1,6 +1,6 @@
 import HttpRequest from '@ostro/http/request';
 import CoreHttpRequest from '../http/request';
-import ServerRequest from '@ostro/server/request';
+const ServerRequest: any = require("@ostro/server/request");
 
 /**
  * Class RequestBound.

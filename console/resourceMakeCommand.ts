@@ -6,25 +6,32 @@ import { trim } from '@ostro/support/function';
  * Class ResourceMakeCommand.
  */
 class ResourceMakeCommand extends GeneratorCommand {
+    [key: string]: any;
 
     public declare $app: any;
     public declare $file: any;
 
-    public $signature: string = 'make:resource';
+    get $signature(): string {
+        return 'make:resource';
+    }
 
-    public $description: string = 'Create a new resource';
+    get $description(): string {
+        return 'Create a new resource';
+    }
 
     public $type: string = 'Resource';
 
-    public $options: any[] = [
+    get $options(): any[] {
+        return [
         this.createOption('-c, --collection', 'Create a resource collection'),
     ];
+    }
 
     /**
      * handle method.
      * @returns Promise resolving when done
      */
-    public async handle(): Promise<void> {
+    public override async handle(): Promise<any> {
         if (this.collection()) {
             this.$type = 'Resource collection';
         }

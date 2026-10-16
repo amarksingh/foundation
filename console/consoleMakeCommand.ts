@@ -7,21 +7,30 @@ import { trim } from '@ostro/support/function';
  * Class FactoryMakeCommand.
  */
 class FactoryMakeCommand extends GeneratorCommand {
+    [key: string]: any;
 
     public declare $app: any;
     public declare $file: any;
 
-    public $signature: string = 'make:command';
+    get $signature(): string {
+        return 'make:command';
+    }
 
-    public $description: string = 'Create a new Assistant command';
+    get $description(): string {
+        return 'Create a new Assistant command';
+    }
 
-    public $options: any[] = [
+    get $options(): any[] {
+        return [
         this.createOption('--command [command] ', 'The terminal command that should be assigned'),
     ];
+    }
 
-    public $arguments: any[] = [
+    get $arguments(): any[] {
+        return [
         this.createArgument('[name]', 'The name of the command').required()
     ];
+    }
 
     public $type: string = 'Console command';
 

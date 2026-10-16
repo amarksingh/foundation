@@ -67,7 +67,7 @@ class ExceptionManager extends Macroable {
      * @returns Resolved handler
      */
     public resolve(name: string): any {
-        const driverMethod = 'create' + (name.ucfirst()) + 'Handler';
+        const driverMethod = 'create' + ((name as any).ucfirst()) + 'Handler';
         if (this[kCustomHandlers][name]) {
             return this.callCustomHandler(name);
         } else if (typeof (ExceptionManager.prototype as any)[driverMethod] === 'function') {

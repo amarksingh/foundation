@@ -76,7 +76,7 @@ class AssistantServiceProvider extends ServiceProvider {
     public registerDbQueryCommand(): void {
         this.$app.singleton('command.db.query', function ($app: any) {
             const $table = $app['config']['database.table'];
-            return new DatabaseQueryCommand($app['db'], $table);
+            return new (DatabaseQueryCommand as any)($app['db'], $table);
         });
     }
 

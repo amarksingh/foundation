@@ -1,3 +1,4 @@
+declare var app: any;
 // Framework global: app
 
 /**

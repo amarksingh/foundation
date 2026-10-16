@@ -120,7 +120,7 @@ class Application extends Container {
      */
     registerConfiguredProviders() {
         let $providers = this.config['app.providers'];
-        (new ProviderRepository(this, new Filesystem, this.getCachedServicesPath()))
+        (new (ProviderRepository as any)(this, new Filesystem, this.getCachedServicesPath()))
             .load($providers);
 
     }
@@ -215,7 +215,7 @@ class Application extends Container {
      * @returns {any}
      */
     boot() {
-        let app = this.instance('config').get('app')
+        let app = ((this as any).instance("config") as any).get("app")
         process.env.TZ = app.timezone
         process.env.NODE_ENV = app.env
         this._bootingCallbacks.forEach(callback => callback(this));

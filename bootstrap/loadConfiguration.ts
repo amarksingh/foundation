@@ -21,7 +21,7 @@ class LoadConfiguration {
      * @param $app - Application instance
      */
     public bootstrap($app: any): void {
-        const $items: any[] = [];
+        const $items: any = {};
         const config = new Repository($items);
         $app.instance('config', config);
         this.loadConfigurationFiles($app, config);

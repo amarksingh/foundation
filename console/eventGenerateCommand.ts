@@ -1,14 +1,19 @@
 import Command from '@ostro/console/command';
-import EventServiceProvider from '@ostro/event/eventServiceProvider';
+const EventServiceProvider: any = null;
 
 /**
  * Class EventGenerateCommand.
  */
 class EventGenerateCommand extends Command {
+    [key: string]: any;
 
-    public $signature: string = 'event:generate';
+    get $signature(): string {
+        return 'event:generate';
+    }
 
-    public $description: string = 'Generate the missing events and listeners based on registration';
+    get $description(): string {
+        return 'Generate the missing events and listeners based on registration';
+    }
 
     /**
      * handle method.

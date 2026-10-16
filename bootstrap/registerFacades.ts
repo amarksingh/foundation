@@ -1,5 +1,5 @@
 import Facade from '@ostro/support/facades/facade';
-import AliasLoader from '@ostro/foundation/aliasLoader';
+import AliasLoader from '../aliasLoader';
 
 /**
  * Class RegisterFacades.

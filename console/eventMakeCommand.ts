@@ -6,13 +6,18 @@ import { trim } from '@ostro/support/function';
  * Class EventMakeCommand.
  */
 class EventMakeCommand extends GeneratorCommand {
+    [key: string]: any;
 
     public declare $app: any;
     public declare $file: any;
 
-    public $signature: string = 'make:event';
+    get $signature(): string {
+        return 'make:event';
+    }
 
-    public $description: string = 'Create a new event class';
+    get $description(): string {
+        return 'Create a new event class';
+    }
 
     public $type: string = 'Event';
 

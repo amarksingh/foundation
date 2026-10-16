@@ -1,3 +1,4 @@
+declare var app: any, route: any;
 import PageNotFoundException from '@ostro/contracts/http/pageNotFoundException';
 import validationException from '@ostro/contracts/validation/validationException';
 import TokenMismatchException from '@ostro/contracts/http/tokenMismatchException';
@@ -79,21 +80,21 @@ class Handler {
             this.redirect(response, $e);
         } else if ($e instanceof FileNotFoundException) {
             response.send({
-                name: $e.name,
-                message: $e.message
-            }, $e.statusCode);
+                name: ($e as any).name,
+                message: ($e as any).message
+            }, ($e as any).statusCode);
         } else if ($e instanceof FileUploadException) {
             response.send({
-                name: $e.name,
-                message: $e.message
-            }, $e.statusCode);
+                name: ($e as any).name,
+                message: ($e as any).message
+            }, ($e as any).statusCode);
         } else if ($e instanceof JsonException) {
             response.send({
-                name: $e.name,
-                message: $e.message,
-                errors: $e.errors
-            }, $e.statusCode);
-        } else if (typeof $e.message === 'object') {
+                name: ($e as any).name,
+                message: ($e as any).message,
+                errors: ($e as any).errors
+            }, ($e as any).statusCode);
+        } else if (typeof ($e as any).message === 'object') {
             this[kHandle].render(
                 request,
                 response,
@@ -202,15 +203,15 @@ class Handler {
     public tokenMismatchException(request: any, response: any, $e: any): any {
         if (request.wantJson() || request.ajax()) {
             response.send({
-                name: $e.name || 'Token mismatch exception',
-                errors: $e.errors || {},
-                message: $e.message || 'Page Expired'
-            }, ($e.statusCode || 403));
+                name: ($e as any).name || 'Token mismatch exception',
+                errors: ($e as any).errors || {},
+                message: ($e as any).message || 'Page Expired'
+            }, (($e as any).statusCode || 403));
         } else {
             return fs.readFile(path.join(__dirname, 'template/errors/403'), {
                 encoding: 'utf8'
             }, function (error: any, data: any) {
-                response.send(data, $e.statusCode);
+                response.send(data, ($e as any).statusCode);
             });
         }
     }
@@ -225,7 +226,7 @@ class Handler {
         return fs.readFile(path.join(__dirname, 'template/errors/404'), {
             encoding: 'utf8'
         }, function (error: any, data: any) {
-            response.send(data, $e.statusCode);
+            response.send(data, ($e as any).statusCode);
         });
     }
 

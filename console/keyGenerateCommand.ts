@@ -5,18 +5,25 @@ import Command from '@ostro/console/command';
  * Class KeyGenerateCommand.
  */
 class KeyGenerateCommand extends Command {
+    [key: string]: any;
 
     public declare $app: any;
     public $file: any;
 
-    public $signature: string = 'key:generate';
+    get $signature(): string {
+        return 'key:generate';
+    }
 
-    public $description: string = 'Set the application key';
+    get $description(): string {
+        return 'Set the application key';
+    }
 
-    public $options: any[] = [
+    get $options(): any[] {
+        return [
         this.createOption('--show [command] ', 'Display the key instead of modifying files'),
         this.createOption('--force [command] ', 'Force the operation to run when in production'),
     ];
+    }
 
     /**
      * Create a new instance.

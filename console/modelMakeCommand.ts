@@ -9,15 +9,21 @@ declare function app_path(path?: string): string;
  * Class ModelMakeCommand.
  */
 class ModelMakeCommand extends GeneratorCommand {
+    [key: string]: any;
 
     public declare $app: any;
     public declare $file: any;
 
-    public $signature: string = 'make:model';
+    get $signature(): string {
+        return 'make:model';
+    }
 
-    public $description: string = 'Create a new Eloquent model class';
+    get $description(): string {
+        return 'Create a new Eloquent model class';
+    }
 
-    public $options: any[] = [
+    get $options(): any[] {
+        return [
         this.createOption('-a, --all', 'Generate a migration, seeder, factory, and resource controller for the model'),
         this.createOption('-c, --controller', 'Create a new controller for the model'),
         this.createOption('-f, --factory', 'Create a new factory for the model'),
@@ -28,10 +34,11 @@ class ModelMakeCommand extends GeneratorCommand {
         this.createOption('-r, --resource', 'Indicates if the generated controller should be a resource controller'),
         this.createOption('--api', 'Indicates if the generated controller should be an API controller'),
     ];
+    }
 
     public $type: string = 'Model';
 
-    public get $dirname(): string {
+    public override get $dirname(): string {
         return __dirname;
     }
 
@@ -39,7 +46,7 @@ class ModelMakeCommand extends GeneratorCommand {
      * handle method.
      * @returns Promise resolving to boolean or void
      */
-    public async handle(): Promise<boolean | void> {
+    async handle(): Promise<any> {
 
         if (await super.handle() === false && !this.option('force')) {
             return false;
