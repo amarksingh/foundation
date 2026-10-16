@@ -1,5 +1,5 @@
 import path from 'path';
-import GeneratorCommand = require('@ostro/console/generatorCommand');
+import GeneratorCommand from '@ostro/console/generatorCommand';
 import { trim } from '@ostro/support/function';
 
 /**
@@ -55,4 +55,4 @@ class EventMakeCommand extends GeneratorCommand {
     }
 }
 
-export = EventMakeCommand;
+export default EventMakeCommand;

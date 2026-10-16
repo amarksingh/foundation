@@ -22,4 +22,4 @@ class RequestBound {
     }
 }
 
-export = RequestBound;
+export default RequestBound;

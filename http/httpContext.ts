@@ -65,4 +65,4 @@ class FoundationHttpContext extends HttpContext {
     }
 }
 
-export = FoundationHttpContext;
+export default FoundationHttpContext;

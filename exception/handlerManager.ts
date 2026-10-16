@@ -174,4 +174,4 @@ class ExceptionManager extends Macroable {
     }
 }
 
-export = ExceptionManager;
+export default ExceptionManager;

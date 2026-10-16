@@ -90,4 +90,4 @@ class HttpRequest extends Request {
     }
 }
 
-export = HttpRequest;
+export default HttpRequest;

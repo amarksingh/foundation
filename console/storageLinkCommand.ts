@@ -1,4 +1,4 @@
-import Command = require('@ostro/console/command');
+import Command from '@ostro/console/command';
 /**
  * Class StorageLinkCommand.
  */
@@ -75,4 +75,4 @@ class StorageLinkCommand extends Command {
     }
 }
 
-export = StorageLinkCommand;
+export default StorageLinkCommand;

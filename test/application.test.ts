@@ -1,6 +1,6 @@
 import '@ostro/support/helpers';
-import Application = require('../application');
-import ServiceProvider = require('@ostro/support/serviceProvider');
+import Application from '../application';
+import ServiceProvider from '@ostro/support/serviceProvider';
 import fs = require('fs');
 import path = require('path');
 
@@ -250,7 +250,8 @@ describe('Application class', () => {
     test('register provider as file string', () => {
         const dummyProviderFile = path.join(testBasePath, 'dummyProvider.js');
         fs.writeFileSync(dummyProviderFile, `
-            const ServiceProvider = require('@ostro/support/serviceProvider');
+            const _SP = require('@ostro/support/serviceProvider');
+            const ServiceProvider = _SP.default || _SP;
             module.exports = class FileProvider extends ServiceProvider {};
         `);
 
@@ -295,7 +296,8 @@ describe('Application class', () => {
         // Provider registered with './' relative path and without boot method
         const relProviderFile = path.join(testBasePath, 'relProvider.js');
         fs.writeFileSync(relProviderFile, `
-            const ServiceProvider = require('@ostro/support/serviceProvider');
+            const _SP = require('@ostro/support/serviceProvider');
+            const ServiceProvider = _SP.default || _SP;
             module.exports = class RelProvider extends ServiceProvider {
                 register() {}
             };

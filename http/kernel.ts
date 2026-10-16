@@ -174,4 +174,4 @@ class Kernel extends KernelContract {
     }
 }
 
-export = Kernel;
+export default Kernel;

@@ -41,4 +41,4 @@ class ExceptionHandler {
     }
 }
 
-export = ExceptionHandler;
+export default ExceptionHandler;

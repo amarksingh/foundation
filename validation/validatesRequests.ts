@@ -44,4 +44,4 @@ class ValidatesRequests {
     }
 }
 
-export = ValidatesRequests;
+export default ValidatesRequests;

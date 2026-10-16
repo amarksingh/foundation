@@ -23,4 +23,4 @@ class ResponseBound {
     }
 }
 
-export = ResponseBound;
+export default ResponseBound;

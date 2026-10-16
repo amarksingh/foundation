@@ -46,4 +46,4 @@ class FoundationServiceProvider extends AggregateServiceProvider {
     }
 }
 
-export = FoundationServiceProvider;
+export default FoundationServiceProvider;

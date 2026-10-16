@@ -12,4 +12,4 @@ class BootProviders {
     }
 }
 
-export = BootProviders;
+export default BootProviders;

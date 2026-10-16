@@ -5,4 +5,4 @@ class Authorizable {
 
 }
 
-export = Authorizable;
+export default Authorizable;

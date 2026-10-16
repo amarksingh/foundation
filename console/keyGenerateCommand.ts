@@ -1,5 +1,5 @@
 import Crypto from 'crypto';
-import Command = require('@ostro/console/command');
+import Command from '@ostro/console/command';
 
 /**
  * Class KeyGenerateCommand.
@@ -94,4 +94,4 @@ class KeyGenerateCommand extends Command {
     }
 }
 
-export = KeyGenerateCommand;
+export default KeyGenerateCommand;

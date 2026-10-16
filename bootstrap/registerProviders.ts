@@ -12,4 +12,4 @@ class RegisterProviders {
     }
 }
 
-export = RegisterProviders;
+export default RegisterProviders;

@@ -100,4 +100,4 @@ class VerifyCsrfToken {
     }
 }
 
-export = VerifyCsrfToken;
+export default VerifyCsrfToken;

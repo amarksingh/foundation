@@ -2,7 +2,7 @@ import '@ostro/support/helpers';
 import ValidatesRequests from '../validation/validatesRequests';
 import Authorizable from '../auth/access/authorizable';
 import GuardResolver from '../auth/guardResolver';
-import User = require('../auth/user');
+import User from '../auth/user';
 import ConsoleSupportServiceProvider from '../support/providers/consoleSupportServiceProvider';
 import RouteServiceProvider from '../providers/routeServiceProvider';
 import FoundationServiceProvider from '../providers/foundationServiceProvider';

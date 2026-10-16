@@ -37,4 +37,4 @@ class HandleSystemError {
     }
 }
 
-export = HandleSystemError;
+export default HandleSystemError;

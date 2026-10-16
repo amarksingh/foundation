@@ -1,4 +1,4 @@
-import Command = require('@ostro/console/command');
+import Command from '@ostro/console/command';
 import EventServiceProvider from '@ostro/event/eventServiceProvider';
 
 /**
@@ -47,4 +47,4 @@ class EventGenerateCommand extends Command {
     }
 }
 
-export = EventGenerateCommand;
+export default EventGenerateCommand;

@@ -1,6 +1,6 @@
-import Authenticatable = require('@ostro/auth/authenticatable');
-import Model = require('@ostro/database/eloquent/model');
-import Crypt = require('@ostro/support/facades/crypt');
+import Authenticatable from '@ostro/auth/authenticatable';
+import Model from '@ostro/database/eloquent/model';
+import Crypt from '@ostro/support/facades/crypt';
 import { implement } from '@ostro/support/function';
 
 /**
@@ -20,4 +20,4 @@ class User extends (implement(Model, Authenticatable) as any) {
     }
 }
 
-export = User;
+export default User;

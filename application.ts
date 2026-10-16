@@ -1,12 +1,12 @@
-import Container = require('@ostro/container');
-import Filesystem = require('@ostro/filesystem/filesystem');
-import ProviderRepository = require('./providerRepository');
-import Env = require('@ostro/support/env');
-import path = require('path');
-import fs = require('fs');
-import Mix = require('./mix');
-import LocaleUpdated = require('./events/localeUpdated');
-import worker_threads = require('worker_threads');
+import Container from '@ostro/container';
+import Filesystem from '@ostro/filesystem/filesystem';
+import ProviderRepository from './providerRepository';
+import Env from '@ostro/support/env';
+import path from 'path';
+import fs from 'fs';
+import Mix from './mix';
+import LocaleUpdated from './events/localeUpdated';
+import worker_threads from 'worker_threads';
 /**
  * Class Application.
  */
@@ -234,7 +234,8 @@ class Application extends Container {
      */
     register($provider: any, $force: boolean = false) {
         if (typeof $provider == 'string') {
-            $provider = require(path.normalize($provider.startsWith('./') ? path.resolve($provider) : $provider))
+            const mod = require(path.normalize($provider.startsWith('./') ? path.resolve($provider) : $provider));
+            $provider = mod.default || mod;
         }
         let $registered = this.getProvider($provider)
         if ($registered && !$force) {
@@ -291,7 +292,7 @@ class Application extends Container {
      * @returns {any}
      */
     resolveProvider($provider: any) {
-
+        $provider = $provider.default || $provider;
         return new $provider(this);
     }
 

@@ -36,4 +36,4 @@ class ServeStatic {
     }
 }
 
-export = ServeStatic;
+export default ServeStatic;

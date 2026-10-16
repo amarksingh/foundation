@@ -255,4 +255,4 @@ class Handler {
     }
 }
 
-export = Handler;
+export default Handler;

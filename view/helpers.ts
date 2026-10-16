@@ -126,4 +126,4 @@ class Helpers {
     }
 }
 
-export = Helpers;
+export default Helpers;

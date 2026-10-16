@@ -67,4 +67,4 @@ class Mix {
     }
 }
 
-export = Mix;
+export default Mix;

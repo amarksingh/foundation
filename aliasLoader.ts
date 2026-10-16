@@ -20,11 +20,12 @@ class AliasLoader {
     public registerGlobal(): void {
         const aliases = this._aliases as Record<string, any>;
         for (const aliasKey in aliases) {
-            (global as any)[aliasKey] = typeof aliases[aliasKey] === 'string'
+            const target = typeof aliases[aliasKey] === 'string'
                 ? require(aliases[aliasKey].startsWith('./') ? path.resolve(aliases[aliasKey]) : aliases[aliasKey])
                 : aliases[aliasKey];
+            (global as any)[aliasKey] = (target && target.default) ? target.default : target;
         }
     }
 }
 
-export = AliasLoader;
+export default AliasLoader;

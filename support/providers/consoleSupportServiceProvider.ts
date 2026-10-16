@@ -13,4 +13,4 @@ class ConsoleSupportServiceProvider extends (implement(AggregateServiceProvider,
     ];
 }
 
-export = ConsoleSupportServiceProvider;
+export default ConsoleSupportServiceProvider;

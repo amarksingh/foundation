@@ -1,15 +1,15 @@
 import '@ostro/support/helpers';
-import ConsoleKernel = require('../console/kernel');
-import ConsoleMakeCommand = require('../console/consoleMakeCommand');
-import EventMakeCommand = require('../console/eventMakeCommand');
-import EventGenerateCommand = require('../console/eventGenerateCommand');
-import KeyGenerateCommand = require('../console/keyGenerateCommand');
-import ModelMakeCommand = require('../console/modelMakeCommand');
-import ResourceMakeCommand = require('../console/resourceMakeCommand');
-import ServeCommand = require('../console/serveCommand');
-import ServerBootstrapCommand = require('../console/serverBootstrapCommand');
-import ServerlessBootstrapCommand = require('../console/serverlessBootstrapCommand');
-import StorageLinkCommand = require('../console/storageLinkCommand');
+import ConsoleKernel from '../console/kernel';
+import ConsoleMakeCommand from '../console/consoleMakeCommand';
+import EventMakeCommand from '../console/eventMakeCommand';
+import EventGenerateCommand from '../console/eventGenerateCommand';
+import KeyGenerateCommand from '../console/keyGenerateCommand';
+import ModelMakeCommand from '../console/modelMakeCommand';
+import ResourceMakeCommand from '../console/resourceMakeCommand';
+import ServeCommand from '../console/serveCommand';
+import ServerBootstrapCommand from '../console/serverBootstrapCommand';
+import ServerlessBootstrapCommand from '../console/serverlessBootstrapCommand';
+import StorageLinkCommand from '../console/storageLinkCommand';
 import fs = require('fs');
 import path = require('path');
 
@@ -39,7 +39,8 @@ describe('Console Kernel and Commands', () => {
                 'filesystems.links': null
             },
             make: jest.fn((cmd) => {
-                const Command = require('@ostro/console/command');
+                const _Cmd = require('@ostro/console/command');
+                const Command = _Cmd.default || _Cmd;
                 class MockConsoleCmd extends Command {
                     $signature = 'mock:test';
                     $description = 'Mock test command';
@@ -131,7 +132,8 @@ describe('Console Kernel and Commands', () => {
         newKernel.commands();
 
         // Test callback inside load() for function
-        const AssistantClass = require('@ostro/console');
+        const _AssistantClass = require('@ostro/console');
+        const AssistantClass = _AssistantClass.default || _AssistantClass;
         const bootstrappers = AssistantClass.$bootstrappers || [];
         const lastBootstrapper = bootstrappers[bootstrappers.length - 1];
         if (lastBootstrapper) {

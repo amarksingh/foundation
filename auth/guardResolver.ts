@@ -5,4 +5,4 @@ class GuardResolver {
 
 }
 
-export = GuardResolver;
+export default GuardResolver;

@@ -1,5 +1,5 @@
 import path from 'path';
-import GeneratorCommand = require('@ostro/console/generatorCommand');
+import GeneratorCommand from '@ostro/console/generatorCommand';
 import * as StringHelper from '@ostro/support/string';
 import { trim } from '@ostro/support/function';
 
@@ -67,4 +67,4 @@ class FactoryMakeCommand extends GeneratorCommand {
 
 }
 
-export = FactoryMakeCommand;
+export default FactoryMakeCommand;

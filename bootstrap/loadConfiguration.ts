@@ -78,4 +78,4 @@ class LoadConfiguration {
     }
 }
 
-export = LoadConfiguration;
+export default LoadConfiguration;

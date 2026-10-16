@@ -13,4 +13,4 @@ class LocaleUpdated {
     }
 }
 
-export = LocaleUpdated;
+export default LocaleUpdated;

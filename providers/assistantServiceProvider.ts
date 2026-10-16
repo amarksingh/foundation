@@ -243,4 +243,4 @@ class AssistantServiceProvider extends ServiceProvider {
 
 }
 
-export = AssistantServiceProvider;
+export default AssistantServiceProvider;

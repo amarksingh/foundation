@@ -44,4 +44,4 @@ class Json {
     }
 }
 
-export = Json;
+export default Json;

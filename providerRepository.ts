@@ -94,4 +94,4 @@ class ProviderRepository {
     }
 }
 
-export = ProviderRepository;
+export default ProviderRepository;

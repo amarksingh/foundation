@@ -65,4 +65,4 @@ class HttpResponse extends Response {
     }
 }
 
-export = HttpResponse;
+export default HttpResponse;

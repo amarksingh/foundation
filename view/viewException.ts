@@ -19,4 +19,4 @@ class ViewException extends ViewExceptionContract {
     }
 }
 
-export = ViewException;
+export default ViewException;

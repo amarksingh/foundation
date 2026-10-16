@@ -1,7 +1,7 @@
-import fs = require('fs-extra');
-import path = require('path');
-import KernelContract = require('@ostro/contracts/console/kernel');
-import Assistant = require('@ostro/console/application');
+import fs from 'fs-extra';
+import path from 'path';
+import KernelContract from '@ostro/contracts/console/kernel';
+import Assistant from '@ostro/console/application';
 
 /**
  * Class Kernel.
@@ -164,4 +164,4 @@ class Kernel extends KernelContract {
 
 }
 
-export = Kernel;
+export default Kernel;

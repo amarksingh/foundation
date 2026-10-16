@@ -34,4 +34,4 @@ class Production {
     }
 }
 
-export = Production;
+export default Production;

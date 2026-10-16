@@ -17,4 +17,4 @@ class BindView {
     }
 }
 
-export = BindView;
+export default BindView;

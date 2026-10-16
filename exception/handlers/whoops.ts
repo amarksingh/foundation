@@ -37,4 +37,4 @@ class Whoops {
     }
 }
 
-export = Whoops;
+export default Whoops;

@@ -17,4 +17,4 @@ class RegisterFacades {
     }
 }
 
-export = RegisterFacades;
+export default RegisterFacades;

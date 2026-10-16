@@ -17,4 +17,4 @@ class LoadEnvironmentVariables {
     }
 }
 
-export = LoadEnvironmentVariables;
+export default LoadEnvironmentVariables;
