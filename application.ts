@@ -716,4 +716,4 @@ class Application extends Container {
 
 }
 
-module.exports = Application
+export default Application;

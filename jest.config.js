@@ -37,6 +37,8 @@ module.exports = {
         "^@ostro/session$": "<rootDir>/../session",
         "^@ostro/logger/(.*)$": "<rootDir>/../logger/$1",
         "^@ostro/logger$": "<rootDir>/../logger/logManager",
+        "^@ostro/http/(.*)$": "<rootDir>/../http/$1",
+        "^@ostro/http$": "<rootDir>/../http",
         "^@ostro/event/eventServiceProvider$": "<rootDir>/test/mocks/eventServiceProvider.js",
         "^@ostro/server/request$": "<rootDir>/test/mocks/serverRequest.js",
         "^@ostro/server/response$": "<rootDir>/test/mocks/serverResponse.js"
