@@ -1,5 +1,5 @@
 import '@ostro/support/helpers';
-import Application from '../application';
+import Application from '../src/application';
 import ServiceProvider from '@ostro/support/serviceProvider';
 import fs = require('fs');
 import path = require('path');

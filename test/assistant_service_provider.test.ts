@@ -1,5 +1,5 @@
 import '@ostro/support/helpers';
-import AssistantServiceProvider from '../providers/assistantServiceProvider';
+import AssistantServiceProvider from '../src/providers/assistantServiceProvider';
 
 describe('AssistantServiceProvider', () => {
     test('registers all commands and provides', () => {

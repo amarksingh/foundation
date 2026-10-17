@@ -1,11 +1,11 @@
 import '@ostro/support/helpers';
 (process as any).mainModule = (process as any).mainModule || { filename: __filename };
-import Handler from '../exception/handler';
-import ExceptionManager from '../exception/handlerManager';
-import ExceptionMiddleware from '../exception/middleware/exceptionHandler';
-import JsonHandler from '../exception/handlers/json';
-import WhoopsHandler from '../exception/handlers/whoops';
-import ProductionHandler from '../exception/handlers/production';
+import Handler from '../src/exception/handler';
+import ExceptionManager from '../src/exception/handlerManager';
+import ExceptionMiddleware from '../src/exception/middleware/exceptionHandler';
+import JsonHandler from '../src/exception/handlers/json';
+import WhoopsHandler from '../src/exception/handlers/whoops';
+import ProductionHandler from '../src/exception/handlers/production';
 import PageNotFoundException from '@ostro/contracts/http/pageNotFoundException';
 import ValidationException from '@ostro/contracts/validation/validationException';
 import TokenMismatchException from '@ostro/contracts/http/tokenMismatchException';

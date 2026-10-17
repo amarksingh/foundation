@@ -1,10 +1,10 @@
 import '@ostro/support/helpers';
-import HttpRequest from '../http/request';
-import HttpResponse from '../http/response';
-import HttpContext from '../http/httpContext';
-import Kernel from '../http/kernel';
-import ServeStatic from '../http/middleware/serveStatic';
-import VerifyCsrfToken from '../http/middleware/verifyCsrfToken';
+import HttpRequest from '../src/http/request';
+import HttpResponse from '../src/http/response';
+import HttpContext from '../src/http/httpContext';
+import Kernel from '../src/http/kernel';
+import ServeStatic from '../src/http/middleware/serveStatic';
+import VerifyCsrfToken from '../src/http/middleware/verifyCsrfToken';
 import TokenMismatchException from '@ostro/http/exception/tokenMismatchException';
 import Model from '@ostro/contracts/database/eloquent/model';
 import Collection from '@ostro/contracts/collection/collect';

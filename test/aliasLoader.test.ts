@@ -1,4 +1,4 @@
-import AliasLoader from '../aliasLoader';
+import AliasLoader from '../src/aliasLoader';
 import path from 'path';
 
 describe('AliasLoader', () => {
@@ -22,7 +22,7 @@ describe('AliasLoader', () => {
 
     test('registers relative path alias', () => {
         const loader = new AliasLoader({
-            CustomRelative: './aliasLoader.ts'
+            CustomRelative: './src/aliasLoader.ts'
         });
         loader.registerGlobal();
 
@@ -31,7 +31,7 @@ describe('AliasLoader', () => {
 
     test('registers root tilde path alias (~/)', () => {
         const loader = new AliasLoader({
-            CustomTilde: '~/aliasLoader.ts'
+            CustomTilde: '~/src/aliasLoader.ts'
         });
         loader.registerGlobal();
 

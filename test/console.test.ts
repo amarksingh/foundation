@@ -1,15 +1,15 @@
 import '@ostro/support/helpers';
-import ConsoleKernel from '../console/kernel';
-import ConsoleMakeCommand from '../console/consoleMakeCommand';
-import EventMakeCommand from '../console/eventMakeCommand';
-import EventGenerateCommand from '../console/eventGenerateCommand';
-import KeyGenerateCommand from '../console/keyGenerateCommand';
-import ModelMakeCommand from '../console/modelMakeCommand';
-import ResourceMakeCommand from '../console/resourceMakeCommand';
-import ServeCommand from '../console/serveCommand';
-import ServerBootstrapCommand from '../console/serverBootstrapCommand';
-import ServerlessBootstrapCommand from '../console/serverlessBootstrapCommand';
-import StorageLinkCommand from '../console/storageLinkCommand';
+import ConsoleKernel from '../src/console/kernel';
+import ConsoleMakeCommand from '../src/console/consoleMakeCommand';
+import EventMakeCommand from '../src/console/eventMakeCommand';
+import EventGenerateCommand from '../src/console/eventGenerateCommand';
+import KeyGenerateCommand from '../src/console/keyGenerateCommand';
+import ModelMakeCommand from '../src/console/modelMakeCommand';
+import ResourceMakeCommand from '../src/console/resourceMakeCommand';
+import ServeCommand from '../src/console/serveCommand';
+import ServerBootstrapCommand from '../src/console/serverBootstrapCommand';
+import ServerlessBootstrapCommand from '../src/console/serverlessBootstrapCommand';
+import StorageLinkCommand from '../src/console/storageLinkCommand';
 import fs = require('fs');
 import path = require('path');
 
@@ -278,7 +278,7 @@ describe('Console Kernel and Commands', () => {
 
         // Check $dirname
         const dirnameGetter = Object.getOwnPropertyDescriptor(ModelMakeCommand.prototype, '$dirname').get;
-        expect(dirnameGetter()).toBe(path.join(__dirname, '../console'));
+        expect(dirnameGetter()).toBe(path.join(__dirname, '../src/console'));
         expect(cmd.$dirname).toBeDefined();
 
         const options = {

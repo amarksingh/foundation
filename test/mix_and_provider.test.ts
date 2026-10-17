@@ -1,6 +1,6 @@
 import '@ostro/support/helpers';
-import Mix from '../mix';
-import ProviderRepository from '../providerRepository';
+import Mix from '../src/mix';
+import ProviderRepository from '../src/providerRepository';
 import MixException from '@ostro/support/exceptions/mixException';
 import fs from 'fs';
 import path from 'path';

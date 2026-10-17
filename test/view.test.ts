@@ -1,8 +1,8 @@
 import '@ostro/support/helpers';
-import ViewException from '../view/viewException';
-import ViewHelpers from '../view/helpers';
-import BindView from '../view/middleware/BindViewOnResponse';
-import ViewEngine from '../view/viewEngine';
+import ViewException from '../src/view/viewException';
+import ViewHelpers from '../src/view/helpers';
+import BindView from '../src/view/middleware/BindViewOnResponse';
+import ViewEngine from '../src/view/viewEngine';
 import path from 'path';
 
 describe('View system', () => {

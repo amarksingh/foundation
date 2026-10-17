@@ -15,7 +15,7 @@
   },
   "scripts": {
     "test": "npx c8 npx jest",
-    "build": "rm -rf build && npx tsc -p tsconfig.build.json && node -e 'const fs=require(\"fs\"); if(fs.existsSync(\"exception/template\"))fs.cpSync(\"exception/template\",\"build/exception/template\",{recursive:true});'",
+    "build": "rm -rf build && npx tsc -p tsconfig.build.json && node -e \"const fs=require(\\\"fs\\\"); if(fs.existsSync(\\\"src/exception/template\\\"))fs.cpSync(\\\"src/exception/template\\\",\\\"build/exception/template\\\",{recursive:true});\"",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
