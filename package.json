@@ -3,6 +3,16 @@
   "version": "2.0.0-alpha.1",
   "description": "Foundation for OstroJS",
   "main": "build/application.js",
+  "exports": {
+    ".": {
+      "types": "./build/application.d.ts",
+      "default": "./build/application.js"
+    },
+    "./*": {
+      "types": "./build/*.d.ts",
+      "default": "./build/*.js"
+    }
+  },
   "scripts": {
     "test": "npx c8 npx jest",
     "build": "rm -rf build && npx tsc -p tsconfig.build.json",
