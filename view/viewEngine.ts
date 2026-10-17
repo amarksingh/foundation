@@ -37,18 +37,27 @@ class View {
         fn.render = function (file: string, data: any = {}, status: number = 200) {
             Object.assign(data, context);
 
-            app.view.engine(http.response.__viewEngine).renderFile(file, data, async (data: any) => {
-                Promise.resolve(data)
-                    .then(res => {
-                        if (typeof res === 'object' && (res instanceof Promise) === false) {
-                            throw (new ViewException(res));
-                        }
-                        http.response.send(res, status);
-                    })
-                    .catch(e => {
-                        next(e);
-                    });
+            const renderPromise = new Promise((resolve, reject) => {
+                app.view.engine(http.response.__viewEngine).renderFile(file, data, (err: any, content?: any) => {
+                    const result = content !== undefined ? content : err;
+                    if (content === undefined && err && typeof err === 'object' && !(err instanceof Promise) && (err instanceof Error || err?.message)) {
+                        const viewErr = new ViewException(err);
+                        next(viewErr);
+                        return reject(viewErr);
+                    }
+                    Promise.resolve(result)
+                        .then(res => {
+                            const sendResult = http.response.send(res, status);
+                            resolve(sendResult);
+                        })
+                        .catch(e => {
+                            next(e);
+                            reject(e);
+                        });
+                });
             });
+            renderPromise.catch(() => {});
+            http.response.__viewPromise = renderPromise;
             return http.response;
         };
 

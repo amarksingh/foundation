@@ -29,6 +29,16 @@ describe('AliasLoader', () => {
         expect((global as any).CustomRelative).toBe(AliasLoader);
     });
 
+    test('registers root tilde path alias (~/)', () => {
+        const loader = new AliasLoader({
+            CustomTilde: '~/aliasLoader.ts'
+        });
+        loader.registerGlobal();
+
+        expect((global as any).CustomTilde).toBe(AliasLoader);
+        delete (global as any).CustomTilde;
+    });
+
     test('default empty constructor', () => {
         const loader = new AliasLoader();
         expect(loader._aliases).toEqual([]);

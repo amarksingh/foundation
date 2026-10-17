@@ -38,7 +38,8 @@ class Handler {
      */
     constructor(handler: Function | any) {
         this[kHandle] = handler;
-        this[kLogger] = app('logger');
+        const appFn: any = typeof app === 'function' ? app : (typeof (global as any).app === 'function' ? (global as any).app : null);
+        this[kLogger] = appFn ? appFn('logger') : null;
     }
 
     /**

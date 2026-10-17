@@ -22,7 +22,13 @@ class AliasLoader {
         for (const aliasKey in aliases) {
             let target = aliases[aliasKey];
             if (typeof target === 'string') {
-                const mod = require(target.startsWith('./') ? path.resolve(target) : target);
+                let targetPath = target;
+                if (targetPath.startsWith('~/')) {
+                    targetPath = path.resolve(process.cwd(), targetPath.slice(2));
+                } else if (targetPath.startsWith('./')) {
+                    targetPath = path.resolve(targetPath);
+                }
+                const mod = require(targetPath);
                 target = (mod && mod.__esModule && mod.default) ? mod.default : mod;
             }
             (global as any)[aliasKey] = target;

@@ -15,27 +15,31 @@
   },
   "scripts": {
     "test": "npx c8 npx jest",
-    "build": "rm -rf build && npx tsc -p tsconfig.build.json",
+    "build": "rm -rf build && npx tsc -p tsconfig.build.json && node -e 'const fs=require(\"fs\"); if(fs.existsSync(\"exception/template\"))fs.cpSync(\"exception/template\",\"build/exception/template\",{recursive:true});'",
     "prepublishOnly": "npm run build"
   },
   "dependencies": {
     "@ostro/auth": "^2.0.0-alpha.1",
+    "@ostro/cache": "^2.0.0-alpha.1",
     "@ostro/config": "^2.0.0-alpha.1",
     "@ostro/console": "^2.0.0-alpha.1",
     "@ostro/container": "^2.0.0-alpha.1",
     "@ostro/contracts": "^2.0.0-alpha.1",
+    "@ostro/database": "^2.0.0-alpha.1",
     "@ostro/filesystem": "^2.0.0-alpha.1",
     "@ostro/http": "^2.0.0-alpha.1",
     "@ostro/logger": "^2.0.0-alpha.1",
+    "@ostro/router": "^2.0.0-alpha.1",
     "@ostro/server": "^2.0.0-alpha.1",
+    "@ostro/session": "^2.0.0-alpha.1",
     "@ostro/support": "^2.0.0-alpha.1",
     "csrf": "3.1.0",
     "dotenv": "10.0.0",
-    "fs-extra": "^10.0.0",
+    "fs-extra": "^11.4.1",
     "lodash.get": "^4.4.2",
     "ouch": "^2.0.0",
     "path-to-regexp": "^8.4.2",
-    "serve-static": "1.14.1"
+    "serve-static": "^1.16.2"
   },
   "engines": {
     "node": ">=12.0.0"

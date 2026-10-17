@@ -4,7 +4,7 @@ import View from '../viewEngine';
  * Class BindView.
  */
 class BindView {
-    public $app: any;
+    public declare $app: any;
 
     /**
      * handle method.

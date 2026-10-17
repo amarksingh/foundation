@@ -188,7 +188,23 @@ describe("ViewEngine 100% branch coverage", () => {
 
         setTimeout(() => {
             expect(resMock.send).toHaveBeenCalledWith("rendered content", 200);
-            done();
+
+            // Test 2-argument callback (err, content)
+            const appWithErrContent: any = {
+                view: {
+                    engine: jest.fn(() => ({
+                        renderFile: (file: string, data: any, cb: Function) => {
+                            cb(null, "content from adapter");
+                        }
+                    }))
+                }
+            };
+            const view2 = new (ViewEngine as any)(appWithErrContent, httpMock, jest.fn());
+            view2("adapter.html");
+            setTimeout(() => {
+                expect(resMock.send).toHaveBeenCalledWith("content from adapter", 200);
+                done();
+            }, 20);
         }, 20);
     });
 });

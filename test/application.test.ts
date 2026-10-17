@@ -288,6 +288,7 @@ describe('Application class', () => {
         app.setBasePath('/worker/base');
         expect(globalThis.APP_BASE_PATH).toBe(path.resolve('/worker/base'));
         Object.defineProperty(workerThreads, 'isMainThread', { value: origMain, configurable: true });
+        app.setBasePath(testBasePath);
 
         // Constructor with null basePath
         const nullApp = new Application();
@@ -308,6 +309,10 @@ describe('Application class', () => {
         expect(relP).toBeDefined();
         relP.boot = 'not-a-function';
         app.bootProvider(relP);
+
+        // Provider registered with '~/' relative path
+        const tildeP = app.register('~/relProvider.js', true);
+        expect(tildeP).toBeDefined();
         process.chdir(origCwd);
     });
 });

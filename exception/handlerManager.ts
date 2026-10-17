@@ -14,7 +14,7 @@ const kHandlerAdapter: unique symbol = Symbol('handlerAdapter');
  * Class ExceptionManager.
  */
 class ExceptionManager extends Macroable {
-    public $app: any;
+    public declare $app: any;
     public [kHandlerAdapter]: any;
     public [kHandlers]: Record<string, any>;
     public [kCustomHandlers]: Record<string, any>;

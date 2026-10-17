@@ -1,7 +1,8 @@
-import csrf from 'csrf';
+import * as csrfModule from 'csrf';
 import TokenMismatchException from '@ostro/http/exception/tokenMismatchException';
 
-const tokens = typeof (csrf as any) === "function" ? (csrf as any)() : new (csrf as any)();
+const csrfConstructor: any = (csrfModule as any).default || csrfModule;
+const tokens = typeof csrfConstructor === "function" ? new csrfConstructor() : csrfConstructor;
 
 /**
  * Class VerifyCsrfToken.

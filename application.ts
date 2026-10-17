@@ -234,8 +234,14 @@ class Application extends Container {
      */
     public register($provider: any, $force: boolean = false) {
         if (typeof $provider == 'string') {
-            const mod = require(path.normalize($provider.startsWith('./') ? path.resolve($provider) : $provider));
-            $provider = mod.default || mod;
+            let providerPath = $provider;
+            if (providerPath.startsWith('~/')) {
+                providerPath = path.resolve(this.basePath(), providerPath.slice(2));
+            } else if (providerPath.startsWith('./')) {
+                providerPath = path.resolve(providerPath);
+            }
+            const mod = require(path.normalize(providerPath));
+            $provider = (mod && Object.prototype.hasOwnProperty.call(mod, 'default')) ? mod.default : mod;
         }
         let $registered = this.getProvider($provider)
         if ($registered && !$force) {
@@ -292,7 +298,9 @@ class Application extends Container {
      * @returns {any}
      */
     public resolveProvider($provider: any) {
-        $provider = $provider.default || $provider;
+        if ($provider && Object.prototype.hasOwnProperty.call($provider, 'default')) {
+            $provider = $provider.default;
+        }
         return new $provider(this);
     }
 
