@@ -20,10 +20,12 @@ class AliasLoader {
     public registerGlobal(): void {
         const aliases = this._aliases as Record<string, any>;
         for (const aliasKey in aliases) {
-            const target = typeof aliases[aliasKey] === 'string'
-                ? require(aliases[aliasKey].startsWith('./') ? path.resolve(aliases[aliasKey]) : aliases[aliasKey])
-                : aliases[aliasKey];
-            (global as any)[aliasKey] = (target && target.default) ? target.default : target;
+            let target = aliases[aliasKey];
+            if (typeof target === 'string') {
+                const mod = require(target.startsWith('./') ? path.resolve(target) : target);
+                target = (mod && mod.__esModule && mod.default) ? mod.default : mod;
+            }
+            (global as any)[aliasKey] = target;
         }
     }
 }
