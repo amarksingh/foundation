@@ -10,7 +10,8 @@ class RouteServiceProvider extends ServiceProvider {
     /**
      * register method.
      */
-    public register(): void {
+    public override register(): void {
+        super.register();
     }
 
     /**
