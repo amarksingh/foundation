@@ -35,7 +35,7 @@ class Kernel extends KernelContract {
      * bootstrap method.
      * @returns {any}
      */
-    bootstrap() {
+    public bootstrap() {
         if (!this.$app.hasBeenBootstrapped()) {
             this.$app.bootstrapWith(this.getBootstrappers());
         }
@@ -53,7 +53,7 @@ class Kernel extends KernelContract {
      * @param {*} $outputBuffer
      * @returns {any}
      */
-    callCommand($command: any, $parameters: any[] = [], $outputBuffer: any = null) {
+    public callCommand($command: any, $parameters: any[] = [], $outputBuffer: any = null) {
         
         this.bootstrap();
 
@@ -64,7 +64,7 @@ class Kernel extends KernelContract {
      * getAssistant method.
      * @returns {any}
      */
-    getAssistant() {
+    public getAssistant() {
         if (!this.assistant) {
             return this.assistant = (new (Assistant as any)(this.$app, this.$app.version()))
                 .resolveCommands(this.$commands);
@@ -77,7 +77,7 @@ class Kernel extends KernelContract {
      * getBootstrappers method.
      * @returns {any}
      */
-    getBootstrappers() {
+    public getBootstrappers() {
         return this.bootstrappers;
     }
 
@@ -86,7 +86,7 @@ class Kernel extends KernelContract {
      * @param {*} $schedule
      * @returns {any}
      */
-    schedule($schedule: any) {
+    public schedule($schedule: any) {
 
     }
 
@@ -115,7 +115,7 @@ class Kernel extends KernelContract {
      * @param {*} $paths
      * @returns {any}
      */
-    load($paths: any) {
+    public load($paths: any) {
         if (typeof $paths == 'string') {
             $paths = path.resolve($paths)
             if (fs.existsSync($paths)) {
@@ -141,7 +141,7 @@ class Kernel extends KernelContract {
      * @param {*} $e
      * @returns {any}
      */
-    reportException($e: any) {
+    public reportException($e: any) {
         this.$app['@ostro/contracts/exception/handler'].report($e);
 
     }
@@ -151,7 +151,7 @@ class Kernel extends KernelContract {
      * @param {*} $e
      * @returns {any}
      */
-    renderException($e: any) {
+    public renderException($e: any) {
         this.$app['@ostro/contracts/exception/handler'].renderForConsole($e);
     }
 
@@ -159,7 +159,7 @@ class Kernel extends KernelContract {
      * commands method.
      * @returns {any}
      */
-    commands() {
+    public commands() {
         this.load(__dirname + '/commands');
     }
 

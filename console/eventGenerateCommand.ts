@@ -7,11 +7,11 @@ const EventServiceProvider: any = null;
 class EventGenerateCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'event:generate';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Generate the missing events and listeners based on registration';
     }
 

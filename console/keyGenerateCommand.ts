@@ -10,15 +10,15 @@ class KeyGenerateCommand extends Command {
     public declare $app: any;
     public $file: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'key:generate';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Set the application key';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--show [command] ', 'Display the key instead of modifying files'),
         this.createOption('--force [command] ', 'Force the operation to run when in production'),

@@ -5,15 +5,15 @@ import Command from '@ostro/console/command';
 class ServerlessBootstrapCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'serverless:bootstrap';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Bootstrap the serverless application';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--force', 'The port to serve the application on')
     ];
@@ -31,7 +31,7 @@ class ServerlessBootstrapCommand extends Command {
      * getAppConfigFile method.
      * @returns {any}
      */
-    getAppConfigFile() {
+    public getAppConfigFile() {
         return this.$app.basePath('config/app.js')
     }
 
@@ -40,7 +40,7 @@ class ServerlessBootstrapCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         const serverlessFile = this.$app.basePath("serverless.js");
         const force = this.option('force');
         const exists = await this.$file.exists(serverlessFile);
@@ -65,7 +65,7 @@ class ServerlessBootstrapCommand extends Command {
      * @async
      * @returns {any}
      */
-    async configureRootApp() {
+    public async configureRootApp() {
         const rootApp = this.$app.basePath("app.js");
         let content = await this.$file.get(rootApp);
         // Add server.type('serverless') before server.start() if not present
@@ -99,7 +99,7 @@ class ServerlessBootstrapCommand extends Command {
      * @async
      * @returns {any}
      */
-    async generateServerlessFile() {
+    public async generateServerlessFile() {
         const fullPath = this.$app.basePath("serverless.js");
         await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.stub'));
 
@@ -109,7 +109,7 @@ class ServerlessBootstrapCommand extends Command {
      * @async
      * @returns {any}
      */
-    async generateServerlessConfigFile() {
+    public async generateServerlessConfigFile() {
         const fullPath = this.$app.configPath("serverless.js");
         await this.$file.put(fullPath, await this.$file.get(__dirname + '/stubs/serverless.config.stub'));
 

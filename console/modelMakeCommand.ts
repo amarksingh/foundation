@@ -14,15 +14,15 @@ class ModelMakeCommand extends GeneratorCommand {
     public declare $app: any;
     public declare $file: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:model';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new Eloquent model class';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('-a, --all', 'Generate a migration, seeder, factory, and resource controller for the model'),
         this.createOption('-c, --controller', 'Create a new controller for the model'),
@@ -46,7 +46,7 @@ class ModelMakeCommand extends GeneratorCommand {
      * handle method.
      * @returns Promise resolving to boolean or void
      */
-    async handle(): Promise<any> {
+    public async handle(): Promise<any> {
 
         if (await super.handle() === false && !this.option('force')) {
             return false;

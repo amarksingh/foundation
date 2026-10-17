@@ -16,7 +16,7 @@ class Application extends Container {
      * Get VERSION.
      * @returns {any}
      */
-    get VERSION() {
+    public get VERSION() {
         return '1.1.5';
     }
 
@@ -37,7 +37,7 @@ class Application extends Container {
      * @param {*} callback
      * @returns {any}
      */
-    booting(callback: Function) {
+    public booting(callback: Function) {
         this._bootingCallbacks.push(callback);
     }
 
@@ -76,7 +76,7 @@ class Application extends Container {
      * version method.
      * @returns {any}
      */
-    version() {
+    public version() {
         return this.VERSION;
     }
 
@@ -84,7 +84,7 @@ class Application extends Container {
      * registerBaseBindings method.
      * @returns {any}
      */
-    registerBaseBindings() {
+    public registerBaseBindings() {
         this.instance('app', this);
         this.singleton('mix', function (app) {
             return new Mix(app)
@@ -97,7 +97,7 @@ class Application extends Container {
      * @param {*} $bootstrappers
      * @returns {any}
      */
-    bootstrapWith($bootstrappers: any) {
+    public bootstrapWith($bootstrappers: any) {
         this._hasBeenBootstrapped = true;
 
         for (let $bootstrapper of $bootstrappers) {
@@ -109,7 +109,7 @@ class Application extends Container {
      * registerBaseServiceProviders method.
      * @returns {any}
      */
-    registerBaseServiceProviders() {
+    public registerBaseServiceProviders() {
         this.register('@ostro/logger/logServiceProvider');
 
     }
@@ -118,7 +118,7 @@ class Application extends Container {
      * registerConfiguredProviders method.
      * @returns {any}
      */
-    registerConfiguredProviders() {
+    public registerConfiguredProviders() {
         let $providers = this.config['app.providers'];
         (new (ProviderRepository as any)(this, new Filesystem, this.getCachedServicesPath()))
             .load($providers);
@@ -129,7 +129,7 @@ class Application extends Container {
      * getDeferredServices method.
      * @returns {any}
      */
-    getDeferredServices() {
+    public getDeferredServices() {
         return this._deferredServices;
     }
 
@@ -138,7 +138,7 @@ class Application extends Container {
      * @param {*} $services
      * @returns {any}
      */
-    setDeferredServices($services: any) {
+    public setDeferredServices($services: any) {
         this._deferredServices = $services;
     }
 
@@ -147,7 +147,7 @@ class Application extends Container {
      * @param {*} $services
      * @returns {any}
      */
-    addDeferredServices($services: any) {
+    public addDeferredServices($services: any) {
         this._deferredServices = this._deferredServices.concat($services);
     }
 
@@ -156,7 +156,7 @@ class Application extends Container {
      * @param {*} $service
      * @returns {any}
      */
-    isDeferredService($service: any) {
+    public isDeferredService($service: any) {
         return this._deferredServices.indexOf($service) > -1
     }
 
@@ -164,7 +164,7 @@ class Application extends Container {
      * hasBeenBootstrapped method.
      * @returns {any}
      */
-    hasBeenBootstrapped() {
+    public hasBeenBootstrapped() {
         return this._hasBeenBootstrapped;
     }
 
@@ -173,7 +173,7 @@ class Application extends Container {
      * @param {*} basePath
      * @returns {any}
      */
-    setBasePath(basePath: any) {
+    public setBasePath(basePath: any) {
         this._basePath = path.resolve(basePath);
         if (worker_threads.isMainThread) {
             process.chdir(this._basePath);
@@ -190,7 +190,7 @@ class Application extends Container {
      * bindPathsInContainer method.
      * @returns {any}
      */
-    bindPathsInContainer() {
+    public bindPathsInContainer() {
         this.instance('path', this.path());
         this.instance('path.base', this.basePath());
         this.instance('path.lang', this.langPath());
@@ -206,7 +206,7 @@ class Application extends Container {
      * isBooted method.
      * @returns {any}
      */
-    isBooted() {
+    public isBooted() {
         return this._booted;
     }
 
@@ -214,7 +214,7 @@ class Application extends Container {
      * boot method.
      * @returns {any}
      */
-    boot() {
+    public boot() {
         let app = ((this as any).instance("config") as any).get("app")
         process.env.TZ = app.timezone
         process.env.NODE_ENV = app.env
@@ -232,7 +232,7 @@ class Application extends Container {
      * @param {*} $force
      * @returns {any}
      */
-    register($provider: any, $force: boolean = false) {
+    public register($provider: any, $force: boolean = false) {
         if (typeof $provider == 'string') {
             const mod = require(path.normalize($provider.startsWith('./') ? path.resolve($provider) : $provider));
             $provider = mod.default || mod;
@@ -260,7 +260,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    markAsRegistered($provider: any) {
+    public markAsRegistered($provider: any) {
         this._serviceProviders.push($provider);
 
     }
@@ -270,7 +270,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    getProvider($provider: any) {
+    public getProvider($provider: any) {
         return this.getProviders($provider)
     }
 
@@ -279,7 +279,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    getProviders($provider: any) {
+    public getProviders($provider: any) {
 
         return this._serviceProviders.find(function (value) {
             return value instanceof $provider
@@ -291,7 +291,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    resolveProvider($provider: any) {
+    public resolveProvider($provider: any) {
         $provider = $provider.default || $provider;
         return new $provider(this);
     }
@@ -301,7 +301,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    bootProvider($provider: any) {
+    public bootProvider($provider: any) {
         $provider.callBootingCallbacks();
 
         if (typeof $provider.boot == 'function') {
@@ -315,7 +315,7 @@ class Application extends Container {
      * loadDeferredProviders method.
      * @returns {any}
      */
-    loadDeferredProviders() {
+    public loadDeferredProviders() {
 
         for (let $provider of this._deferredServices) {
             this.loadDeferredProvider($provider);
@@ -329,7 +329,7 @@ class Application extends Container {
      * @param {*} $provider
      * @returns {any}
      */
-    loadDeferredProvider($provider: any) {
+    public loadDeferredProvider($provider: any) {
         if (!this.isDeferredService($provider)) {
             return;
         }
@@ -344,7 +344,7 @@ class Application extends Container {
      * @param {*} $service
      * @returns {any}
      */
-    registerDeferredProvider($provider: any, $service: any = null) {
+    public registerDeferredProvider($provider: any, $service: any = null) {
 
         let instance = this.register($provider);
 
@@ -360,7 +360,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    path(dir: string = '') {
+    public path(dir: string = '') {
         let appPath = this._appPath ? this._appPath : path.normalize(path.join(this._basePath, 'app'));
 
         return path.normalize(path.join(appPath + dir));
@@ -371,7 +371,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    useAppPath(dir: any) {
+    public useAppPath(dir: any) {
         this._appPath = dir;
 
         this.instance('path', dir);
@@ -384,7 +384,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    basePath(dir: string = '') {
+    public basePath(dir: string = '') {
         return path.normalize(path.join(this._basePath, dir))
     }
 
@@ -393,7 +393,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    bootstrapPath(dir: string = '') {
+    public bootstrapPath(dir: string = '') {
         return path.normalize(path.join(this._basePath, 'bootstrap', dir));
     }
 
@@ -402,7 +402,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    configPath(dir: string = '') {
+    public configPath(dir: string = '') {
         return path.normalize(path.join(this._basePath, 'config', dir));
     }
 
@@ -411,7 +411,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    databasePath(dir: string = '') {
+    public databasePath(dir: string = '') {
         return path.normalize(path.join((this._databasePath ? this._databasePath : path.join(this._basePath, 'database')), dir));
     }
 
@@ -420,7 +420,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    useDatabasePath(dir: any) {
+    public useDatabasePath(dir: any) {
         this._databasePath = dir;
 
         this.instance('path.database', dir);
@@ -432,7 +432,7 @@ class Application extends Container {
      * langPath method.
      * @returns {any}
      */
-    langPath() {
+    public langPath() {
         if (this._langPath) {
             return this._langPath;
         }
@@ -449,7 +449,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    useLangPath(dir: any) {
+    public useLangPath(dir: any) {
         this._langPath = dir;
 
         this.instance('path.lang', dir);
@@ -461,7 +461,7 @@ class Application extends Container {
      * publicPath method.
      * @returns {any}
      */
-    publicPath() {
+    public publicPath() {
         return path.normalize(path.join(this._basePath, 'public'));
     }
 
@@ -469,7 +469,7 @@ class Application extends Container {
      * storagePath method.
      * @returns {any}
      */
-    storagePath() {
+    public storagePath() {
         return this._storagePath ? this._storagePath : path.normalize(path.join(this._basePath, 'storage'));
     }
 
@@ -478,7 +478,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    useStoragePath(dir: any) {
+    public useStoragePath(dir: any) {
         this._storagePath = dir;
 
         this.instance('path.storage', dir);
@@ -491,7 +491,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    resourcePath(dir: string = '') {
+    public resourcePath(dir: string = '') {
         return path.normalize(path.join(this._basePath, 'resources', dir));
     }
 
@@ -500,7 +500,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    viewPath(dir: string = '') {
+    public viewPath(dir: string = '') {
         let basePath = this['config'] ? this['config'].get('view.paths', [])[0] : null;
 
         return path.normalize(path.join((basePath ? basePath : this._basePath + '/resources/view'), dir));
@@ -510,7 +510,7 @@ class Application extends Container {
      * environmentPath method.
      * @returns {any}
      */
-    environmentPath() {
+    public environmentPath() {
         return this._environmentPath ? this._environmentPath : this._basePath;
     }
 
@@ -519,7 +519,7 @@ class Application extends Container {
      * @param {*} dir
      * @returns {any}
      */
-    useEnvironmentPath(dir: any) {
+    public useEnvironmentPath(dir: any) {
         this._environmentPath = dir;
 
         return this;
@@ -530,7 +530,7 @@ class Application extends Container {
      * @param {*} file
      * @returns {any}
      */
-    loadEnvironmentFrom(file: any) {
+    public loadEnvironmentFrom(file: any) {
         this._environmentFile = file;
 
         return this;
@@ -540,7 +540,7 @@ class Application extends Container {
      * environmentFile method.
      * @returns {any}
      */
-    environmentFile() {
+    public environmentFile() {
         return this._environmentFile ? this._environmentFile : '.env';
     }
 
@@ -548,7 +548,7 @@ class Application extends Container {
      * environmentFilePath method.
      * @returns {any}
      */
-    environmentFilePath() {
+    public environmentFilePath() {
         return path.normalize(path.join(this.environmentPath(), this.environmentFile()));
     }
 
@@ -556,7 +556,7 @@ class Application extends Container {
      * isLocal method.
      * @returns {any}
      */
-    isLocal() {
+    public isLocal() {
         return this['env'] === 'local';
     }
 
@@ -564,7 +564,7 @@ class Application extends Container {
      * isProduction method.
      * @returns {any}
      */
-    isProduction() {
+    public isProduction() {
         return this['env'] === 'production';
     }
 
@@ -572,7 +572,7 @@ class Application extends Container {
      * isDownForMaintenance method.
      * @returns {any}
      */
-    isDownForMaintenance() {
+    public isDownForMaintenance() {
         return fs.existsSync(this.storagePath() + '/framework/down');
     }
 
@@ -580,7 +580,7 @@ class Application extends Container {
      * getLocale method.
      * @returns {any}
      */
-    getLocale() {
+    public getLocale() {
         return this['config'].get('app.locale');
     }
 
@@ -588,7 +588,7 @@ class Application extends Container {
      * currentLocale method.
      * @returns {any}
      */
-    currentLocale() {
+    public currentLocale() {
         return this.getLocale();
     }
 
@@ -596,7 +596,7 @@ class Application extends Container {
      * getFallbackLocale method.
      * @returns {any}
      */
-    getFallbackLocale() {
+    public getFallbackLocale() {
         return this['config'].get('app.fallback_locale');
     }
 
@@ -605,7 +605,7 @@ class Application extends Container {
      * @param {*} locale
      * @returns {any}
      */
-    setLocale(locale: any) {
+    public setLocale(locale: any) {
         this['config'].set('app.locale', locale);
 
         this['translator'].setLocale(locale);
@@ -618,7 +618,7 @@ class Application extends Container {
      * @param {*} fallbackLocale
      * @returns {any}
      */
-    setFallbackLocale(fallbackLocale: any) {
+    public setFallbackLocale(fallbackLocale: any) {
         this['config'].set('app.fallback_locale', fallbackLocale);
 
         this['translator'].setFallback(fallbackLocale);
@@ -629,7 +629,7 @@ class Application extends Container {
      * @param {*} locale
      * @returns {any}
      */
-    isLocale(locale: any) {
+    public isLocale(locale: any) {
         return this.getLocale() == locale;
     }
 
@@ -637,7 +637,7 @@ class Application extends Container {
      * getCachedServicesPath method.
      * @returns {any}
      */
-    getCachedServicesPath() {
+    public getCachedServicesPath() {
         return this.normalizeCachePath('APP_SERVICES_CACHE', 'cache/services.json');
     }
 
@@ -645,7 +645,7 @@ class Application extends Container {
      * getCachedPackagesPath method.
      * @returns {any}
      */
-    getCachedPackagesPath() {
+    public getCachedPackagesPath() {
         return this.normalizeCachePath('APP_PACKAGES_CACHE', 'cache/packages.json');
     }
 
@@ -653,7 +653,7 @@ class Application extends Container {
      * configurationIsCached method.
      * @returns {any}
      */
-    configurationIsCached() {
+    public configurationIsCached() {
         return fs.existsSync(this.getCachedConfigPath());
     }
 
@@ -661,7 +661,7 @@ class Application extends Container {
      * getCachedConfigPath method.
      * @returns {any}
      */
-    getCachedConfigPath() {
+    public getCachedConfigPath() {
         return this.normalizeCachePath('APP_CONFIG_CACHE', 'cache/config.json');
     }
 
@@ -669,7 +669,7 @@ class Application extends Container {
      * routesAreCached method.
      * @returns {any}
      */
-    routesAreCached() {
+    public routesAreCached() {
         return this['files'].exists(this.getCachedRoutesPath());
     }
 
@@ -677,7 +677,7 @@ class Application extends Container {
      * getCachedRoutesPath method.
      * @returns {any}
      */
-    getCachedRoutesPath() {
+    public getCachedRoutesPath() {
         return this.normalizeCachePath('APP_ROUTES_CACHE', 'cache/routes-v7.json');
     }
 
@@ -685,7 +685,7 @@ class Application extends Container {
      * eventsAreCached method.
      * @returns {any}
      */
-    eventsAreCached() {
+    public eventsAreCached() {
         return this['files'].exists(this.getCachedEventsPath());
     }
 
@@ -693,7 +693,7 @@ class Application extends Container {
      * getCachedEventsPath method.
      * @returns {any}
      */
-    getCachedEventsPath() {
+    public getCachedEventsPath() {
         return this.normalizeCachePath('APP_EVENTS_CACHE', 'cache/events.json');
     }
 
@@ -703,7 +703,7 @@ class Application extends Container {
      * @param {*} $default
      * @returns {any}
      */
-    normalizeCachePath($key: string, $default: any) {
+    public normalizeCachePath($key: string, $default: any) {
         let $env = Env.get($key)
         if ($env == null) {
             return this.bootstrapPath($default);

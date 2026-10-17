@@ -12,21 +12,21 @@ class FactoryMakeCommand extends GeneratorCommand {
     public declare $app: any;
     public declare $file: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:command';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new Assistant command';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--command [command] ', 'The terminal command that should be assigned'),
     ];
     }
 
-    get $arguments(): any[] {
+    public get $arguments(): any[] {
         return [
         this.createArgument('[name]', 'The name of the command').required()
     ];

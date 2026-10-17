@@ -9,15 +9,15 @@ class ServeCommand extends Command {
 
     $portOffset = 0;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'serve';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Serve the application on the nodejs development server';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--host <host> ', 'The host address to serve the application on').default('127.1.0.0', 'localhost ip'),
         this.createOption('--port [port] ', 'The port to serve the application on').default(8000, 'Recomanded port'),
@@ -42,7 +42,7 @@ class ServeCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         this.line(`<info>Starting Ostro development server:</info> http://${this.host()}:${this.port()}`);
 
         process.env.PORT = this.port()
@@ -56,7 +56,7 @@ class ServeCommand extends Command {
      * serverStarterPath method.
      * @returns {any}
      */
-    serverStarterPath() {
+    public serverStarterPath() {
         return base_path('app.js')
     }
 
@@ -65,7 +65,7 @@ class ServeCommand extends Command {
      * @param {*} $path
      * @returns {any}
      */
-    requireServerFile($path: string) {
+    public requireServerFile($path: string) {
         return require($path)
     }
 
@@ -73,7 +73,7 @@ class ServeCommand extends Command {
      * host method.
      * @returns {any}
      */
-    host() {
+    public host() {
         return this.input.getOption('host');
     }
 
@@ -81,7 +81,7 @@ class ServeCommand extends Command {
      * port method.
      * @returns {any}
      */
-    port() {
+    public port() {
         let $port = this.input.getOption('port')
 
         return $port + this.$portOffset;
@@ -91,7 +91,7 @@ class ServeCommand extends Command {
      * canTryAnotherPort method.
      * @returns {any}
      */
-    canTryAnotherPort() {
+    public canTryAnotherPort() {
         return is_null(this.input.getOption('port')) && (this.input.getOption('tries') > this.$portOffset);
     }
 

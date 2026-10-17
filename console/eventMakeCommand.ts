@@ -11,11 +11,11 @@ class EventMakeCommand extends GeneratorCommand {
     public declare $app: any;
     public declare $file: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:event';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new event class';
     }
 

@@ -11,17 +11,17 @@ class ResourceMakeCommand extends GeneratorCommand {
     public declare $app: any;
     public declare $file: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'make:resource';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create a new resource';
     }
 
     public $type: string = 'Resource';
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('-c, --collection', 'Create a resource collection'),
     ];

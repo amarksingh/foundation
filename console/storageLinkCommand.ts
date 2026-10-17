@@ -6,15 +6,15 @@ import Command from '@ostro/console/command';
 class StorageLinkCommand extends Command {
     [key: string]: any;
 
-    get $signature(): string {
+    public get $signature(): string {
         return 'storage:link';
     }
 
-    get $description(): string {
+    public get $description(): string {
         return 'Create the symbolic links configured for the application';
     }
 
-    get $options(): any[] {
+    public get $options(): any[] {
         return [
         this.createOption('--relative', 'The host address to serve the application on'),
         this.createOption('--force', 'The port to serve the application on')
@@ -35,7 +35,7 @@ class StorageLinkCommand extends Command {
      * @async
      * @returns {any}
      */
-    async handle() {
+    public async handle() {
         let $relative = this.option('relative');
         let links = this.links()
         for (let $link in links) {
@@ -65,7 +65,7 @@ class StorageLinkCommand extends Command {
      * links method.
      * @returns {any}
      */
-    links() {
+    public links() {
         return this.$app['config']['filesystems.links'] || {
             [public_path('storage')]: storage_path('app/public')
         };
@@ -78,7 +78,7 @@ class StorageLinkCommand extends Command {
      * @param {*} $force
      * @returns {any}
      */
-    async isRemovableSymlink($link: any, $force: boolean) {
+    public async isRemovableSymlink($link: any, $force: boolean) {
         return (await isSymbolicLink($link)) && $force;
     }
 }
