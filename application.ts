@@ -394,7 +394,12 @@ class Application extends Container {
      * @returns {any}
      */
     public bootstrapPath(dir: string = '') {
-        return path.normalize(path.join(this._basePath, 'bootstrap', dir));
+        const rootBoot = path.join(this._basePath, 'bootstrap');
+        const buildBoot = path.join(this._basePath, 'build', 'bootstrap');
+        const targetDir = (!fs.existsSync(path.join(rootBoot, 'app.js')) && fs.existsSync(path.join(buildBoot, 'app.js')))
+            ? buildBoot
+            : rootBoot;
+        return path.normalize(path.join(targetDir, dir));
     }
 
     /**
@@ -403,7 +408,12 @@ class Application extends Container {
      * @returns {any}
      */
     public configPath(dir: string = '') {
-        return path.normalize(path.join(this._basePath, 'config', dir));
+        const rootConfig = path.join(this._basePath, 'config');
+        const buildConfig = path.join(this._basePath, 'build', 'config');
+        const targetDir = (!fs.existsSync(path.join(rootConfig, 'app.js')) && fs.existsSync(path.join(buildConfig, 'app.js')))
+            ? buildConfig
+            : rootConfig;
+        return path.normalize(path.join(targetDir, dir));
     }
 
     /**
