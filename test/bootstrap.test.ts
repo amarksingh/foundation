@@ -128,6 +128,7 @@ describe('Bootstrap classes', () => {
 
     test('LoadConfiguration bootstrap loads configs, sets timezone, throws if app missing', () => {
         const tmpConfigDir = path.join(__dirname, 'tmp_config');
+        fs.rmSync(tmpConfigDir, { recursive: true, force: true });
         fs.mkdirSync(tmpConfigDir, { recursive: true });
 
         // Missing app config

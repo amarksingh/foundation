@@ -42,7 +42,8 @@ class LoadConfiguration {
         }
 
         for (const key of files) {
-            $repository.set(key, require(path.normalize(path.join(configPath, key))));
+            const conf: any = require(path.normalize(path.join(configPath, key)));
+            $repository.set(key, (conf && conf.__esModule && conf.default) ? conf.default : conf);
         }
     }
 
