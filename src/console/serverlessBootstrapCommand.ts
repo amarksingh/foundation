@@ -32,7 +32,7 @@ class ServerlessBootstrapCommand extends Command {
      * @returns {any}
      */
     public getAppConfigFile() {
-        return this.$app.basePath('config/app.js')
+        return this.$app.configPath('app.js');
     }
 
     /**
